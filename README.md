@@ -5,12 +5,12 @@ README by Abram Rodgers
 -------------
 | Contents: |
 -------------
-Intro Origen of this Library
+Intro Origin of this Library
 Section 1: Linear Algebra
 Section 2: Calculus
 
-Intro: Origen of this Library
-This program was initially the primary content for a school report. When I was a student in MATH 181 History of Mathematics (Winter 2016) at UC Santa Cruz, we all had to do a historical report on a famous mathematician. We also had to showcase some of that mathematician's work. I chose to write about Carl Gauss and showcase Gaussian Elimination, a particular matrix algorithm which can find a solution for systems of linear equations of nth order. Since this is a pretty standard exercise for students in a computer science course, I figured I could probably write my own version of the very famous algorithm for my math course. After approval from the professor, I wrote up the code over the course of a week or so and included it in my historical report with gratutious comments and documentation (since he did not know C). The school project was very successful and writing more in the library became more of a side project.
+Intro: Origin of this Library
+This program was initially the primary content for a school report. When I was a student in MATH 181 History of Mathematics (Winter 2016) at UC Santa Cruz, we all had to do a historical report on a famous mathematician. We also had to showcase some of that mathematician's work. I chose to write about Carl Gauss and showcase Gaussian Elimination, a particular matrix algorithm which can find a solution for systems of linear equations of nth order. Since this is a pretty standard exercise for students in a computer science course, I figured I could probably write my own version of the very famous algorithm for my math course. After approval from the professor, I wrote up the code over the course of a week or so and included it in my historical report with gratuitous comments and documentation (since he did not know C). The school project was very successful and writing more in the library became more of a side project.
 
 Today the library sits on GitHub to show some of my personal coding skills. Since no algorithm in this package is particularly novel, simply my own take on various computational problems, I decided to make it all public domain. Plenty of alternate versions of these algorithms are open source. If you wish to download and use my code in particular, I would be curious to know what it is being used for. If you wish to ask a question, collaborate on some project, or something else, then just shoot me an email.
 
@@ -21,7 +21,7 @@ Editor: Netbeans For Linux
 -----------------------------
 This library contains several algorithms from an introductory Linear Algebra course.
 
-Notable fucntions are:
+Notable functions are:
 - dot product
 - row swap
 - row scale
