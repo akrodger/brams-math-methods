@@ -22,24 +22,24 @@ Editor: Netbeans For Linux
 This library contains several algorithms from an introductory Linear Algebra course.
 
 Notable fucntions are:
--dot product
--row swap
--row scale
--row elimination
--copy matrix
--row echelon form (Gaussian Elimination)
--reduced row echelon form
--invert matrix
--multiply matrices
+- dot product
+- row swap
+- row scale
+- row elimination
+- copy matrix
+- row echelon form (Gaussian Elimination)
+- reduced row echelon form
+- invert matrix
+- multiply matrices
 
 Planned Functions:
--QR Factorization
+- QR Factorization
 
 -----------------------
 | Section 2: Calculus |
 -----------------------
 So far this only has 2 functions.
--finite integral with small delta approximation
--derivative with small delta approximation
+- finite integral with small delta approximation
+- derivative with small delta approximation
 
 More is planned to be written once I have completed a QR factorization implementation.
