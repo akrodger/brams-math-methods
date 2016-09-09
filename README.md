@@ -14,6 +14,8 @@ This program was initially the primary content for a school report. When I was a
 
 Today the library sits on GitHub to show some of personal coding skills. Since no algorithm in this package is particularly novel, simply my own take on various computational problems, I decided to make it all public domain. Plenty of alternate versions of these algorithms are open source. If you wish to download and use my code in particular, I would be curious to know what it is being used for. If you wish to ask a question, collaborate on some project, or something else, then just shoot me an email.
 
+Editor: Netbeans For Linux
+
 -----------------------------
 | Section 1: Linear Algebra |
 -----------------------------
