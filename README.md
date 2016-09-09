@@ -1,4 +1,4 @@
-# brams-math-mmethods
+# brams-math-methods
 A collection of math computation C libraries written by Abram "Bram" Rodgers.
 README by Abram Rodgers
 # Contact: AKS.Rodgers (at) gmail (dot) com
