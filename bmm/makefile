@@ -25,4 +25,11 @@ brams-math-methods: $(OBJS)
 %.o : $(SRCPATH)%.c
 	$(CC) $(CFLAGS) -c $<
 
+#
+#clean for when you want to remove executables and object files
+#
+
+clean:
+	rm obj/*
+	rm bmm
 
