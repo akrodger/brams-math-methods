@@ -1,4 +1,4 @@
-#include "MathMethods.h"
+#include "../hed/MathMethods.h"
 #include <stdlib.h>
 #include <math.h>
 

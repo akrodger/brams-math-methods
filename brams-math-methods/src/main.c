@@ -8,7 +8,7 @@
 
 
 // User libraries
-#include "MathMethods.h"
+#include "../hed/MathMethods.h"
 
 // **** Set macros and preprocessor directives ****
 
