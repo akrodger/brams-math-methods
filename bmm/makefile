@@ -19,11 +19,11 @@ APP = bmm
 default: brams-math-methods
 
 brams-math-methods: $(OBJS)
-	$(CC) $(CLFAGS) $(OBJS) -o $(APP)
+	$(CC) $(CLFAGS) $(OBJS) -lm -o $(APP)
 	mv *.o $(OBJPATH)
 
 %.o : $(SRCPATH)%.c
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -lm -c $<
 
 #
 #clean for when you want to remove executables and object files

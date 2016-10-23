@@ -45,3 +45,11 @@ So far this only has 2 functions.
 - derivative with small delta approximation
 
 More is planned to be written once I have completed a QR factorization implementation.
+
+--------------------------------
+| Section 3: Numerical Methods |
+--------------------------------
+Currently, this section has one fleshed out operation:
+- polynomial interpolation
+
+Use this function takes a set of (x, y) data points and forms a polynomial with them of a specified degree. It makes use of the linear algebra operations defined in the library to do this. Read the header file for more information.

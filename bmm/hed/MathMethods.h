@@ -227,7 +227,7 @@ void multiply(int m, int n, int p, double left[][n], double right[][p],
 //documentation to be written
 double fintegral(double (*funct)(double), double a, double b);
 
-//approximate slow near a
+//approximate slope near a point
 //documentation to be written
 double derivative(double (*funct)(), double a);
 
@@ -236,5 +236,66 @@ double derivative(double (*funct)(), double a);
 //This one may be very hard:
 //double taylor();
 
+/******************************************************************************
+ *                                                                            *
+ *                              NUMERICAL METHODS                             *
+ *                                                                            *
+ ******************************************************************************/
 
+/*
+ * This function will make a best-fit polynomial of a specified degree. Given 2
+ * vectors representing the x and y coordinates of a graph, the function will
+ * analyze them in the following manner:
+ *             
+ *        (let d be the degree for simplicity) 
+ *              
+ *        1) -> Take (degree + 1) pairs of  x and y data points
+ *        2) -> Pick d
+ *              Load the x[j] data into a matrix like so: 
+ *              
+ *              [  (1)    (x[1])    (x[1])^2   ...   (x[1])^(d)  ]
+ *              [  (1)    (x[2])    (x[2])^2   ...   (x[2])^(d)  ]
+ *         X =  [                               .                ]
+ *              [                               .                ]
+ *              [                               .                ]
+ *              [  (1)   (x[d+1])  (x[d+1])^2  ...  (x[d+1])^(d) ]
+ *
+ *
+ *        3) -> Use the array of y[j] data as a column vector.
+ *
+ *                              [  y[1]  ]
+ *                              [  y[2]  ]
+ *                         y =  [    .   ]
+ *                              [    .   ]
+ *                              [    .   ]
+ *                              [ y[d+1] ]
+ *
+ *        4) -> Use the array c as the vector of unknown coefficients which
+ *              we want to solve for. We set up the matrix equation:
+ *
+ *                                 Xc = y
+ *
+ *        5) -> Since X is invertible by design, it has a solution for c:
+ *
+ *                              c = (X^(-1))y
+ *
+ *        6) -> Do this for every d+1 size subset of our data points.
+ *              After that, take the mean of all of the results. The result
+ *              is a vector of coefficients for a best fit polynomial of 
+ *              degree d.
+ *
+ * @param n the number of (x, y) data points.
+ * 
+ * @param x[n] the set of x data points
+ *
+ * @param y[n] the set of y data points
+ *
+ * @param d the degree of a polynomial you want
+ *
+ * @param c[d+1] the array which will store all the coefficients of the
+ *               the polynomial. c[0] is the constant term, c[d] is the highest
+ *               power's coefficient.
+ */
+void interpolate(int n, double x[n], double y[n],
+                 int d, double c[d + 1]);
 #endif /* MATHMETHODS_H */

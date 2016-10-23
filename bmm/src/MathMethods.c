@@ -342,7 +342,7 @@ double rref(int m, int n, double mat[][n])
     return det;
 }
 
-/* This function takes in a matrix and turns it into its multiplicative inverse
+/* This function takes in a matrix and turns it into its multiplicative inverse.
  * It copies the matrix into an augmented matrix which is twice the width of the 
  * original. The function then does an rref() on the augmented matrix. After 
  * that it takes the right half of the reduced augmented matrix and copies it
@@ -413,11 +413,11 @@ double invert(int m, int n, double mat[][n])
  * right side of the product. This is represented by the argument n. The result
  * of the matrix multiplication is stored in the matrix labeled "product."
  * 
- * @param m the rows of the left matrix in a product
+ * @param m the rows of the left matrix in the product
  * 
  * @param n the columns of the left and the rows of the right in a matrix
  * 
- * @param p the columns of the right of the product
+ * @param p the columns of the right in the product
  * 
  * @param left the left side of the product
  * 
@@ -431,8 +431,8 @@ void multiply(int m, int n, int p, double left[][n], double right[][p],
 {
     int i;
     int j;
-    double v1[n];
-    double v2[n];
+    double *v1 = calloc(n, sizeof(double));
+    double *v2 = calloc(n, sizeof(double));;
     for (i = 0; i < m; i++) {
         for (j = 0; j < p; j++) {
             getRow(m, n, left, i, v1);
@@ -440,6 +440,8 @@ void multiply(int m, int n, int p, double left[][n], double right[][p],
             product[i][j] = dotProduct(n, v1, v2);
         }
     }
+    free(v1);
+    free(v2);
 }
 
 /******************************************************************************
@@ -487,4 +489,160 @@ double fintegral(double (*funct)(double), double a, double b)
 double derivative(double (*funct)(double), double a)
 {
     return (funct(a + delta) - funct(a)) / delta;
+}
+
+/******************************************************************************
+ *                                                                            *
+ *                              NUMERICAL METHODS                             *
+ *                                                                            *
+ ******************************************************************************/
+
+/*
+ * This function will make a fit polynomial of a specified degree. Given 2
+ * vectors representing the x and y coordinates of a graph, the function will
+ * analyze them in the following manner:
+ *             
+ *        (let d be the degree for simplicity) 
+ *              
+ *        1) -> Take (degree + 1) pairs of  x and y data points
+ *        2) -> Pick d
+ *              Load the x[j] data into a matrix like so: 
+ *              
+ *              [  (1)    (x[1])    (x[1])^2   ...   (x[1])^(d)  ]
+ *              [  (1)    (x[2])    (x[2])^2   ...   (x[2])^(d)  ]
+ *         X =  [                               .                ]
+ *              [                               .                ]
+ *              [                               .                ]
+ *              [  (1)   (x[d+1])  (x[d+1])^2  ...  (x[d+1])^(d) ]
+ *
+ *
+ *        3) -> Use the array of y[j] data as a column vector.
+ *
+ *                              [  y[1]  ]
+ *                              [  y[2]  ]
+ *                         y =  [    .   ]
+ *                              [    .   ]
+ *                              [    .   ]
+ *                              [ y[d+1] ]
+ *
+ *        4) -> Use the array c as the vector of unknown coefficients which
+ *              we want to solve for. We set up the matrix equation:
+ *
+ *                                 Xc = y
+ *
+ *        5) -> Since X is invertible by design, it has a solution for c:
+ *
+ *                              c = (X^(-1))y
+ *
+ *        6) -> We do this for the first d+1 points, the second d+1 points, 
+                until eventually we have n - d polynomials.
+ *              After that, take the mean of all of the results. The result
+ *              is a vector of coefficients for a fit polynomial of 
+ *              degree d.
+ *
+ * @param n the number of (x, y) data points.
+ * 
+ * @param x[n] the set of x data points
+ *
+ * @param y[n] the set of y data points
+ *
+ * @param d the degree of a polynomial you want
+ *
+ * @param c[d+1] the array which will store all the coefficients of the
+ *               the polynomial. c[0] is the constant term, c[d] is the highest
+ *               power's coefficient. This will be filled with all zeroes if
+ *               d + 1 > n.
+ * @return void
+ */
+void interpolate(int n, double x[n], double y[n],
+                 int d, double c[d + 1])
+{   
+    //loop iterators
+
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    
+    //this is the number of coefficients. it is also the length of c
+    //such a variable is much easier to read than "d+1" over and over.
+    const int coef = d+1; 
+    //matrix of x values raised to powers
+    double xMat[coef][coef];
+    //intialize xMat
+    for(i = 0; i < coef; i++)
+    {
+        for(j = 0; j < coef; j++)
+        {
+            //printf("\nyou got this far %d\n", j);
+            xMat[i][j] = 0;
+        } 
+    }
+
+    //column vector of y values
+    double yMat[coef][1];
+    //initialize yMat
+    
+    for(j = 0; j < coef; j++)
+    {
+        yMat[coef][0] = 0;
+    }
+    
+    //column vector which is the product of inverse(xMat) and yMat   
+    double pMat[coef][1];
+    //intialize xMat
+    for(i = 0; i < coef; i++)
+    {
+        pMat[i][0] = 0;
+    }
+   
+    // check if we have enough data to build the polynomial
+    if(d+1 > n){
+        //if we don't that's a no-no. set c to zero vector and exit.
+        for(i = 0; i < coef; i++)
+        {
+            c[i] = 0;
+        }
+        return;
+    }
+    
+    //start building the polynomials. there are n - d of them.
+    for(i = 0; i < n - d; i++)
+    {   
+        //build a single polynomial
+        for(j = 0; j < d+1 + 0; j++)
+        {
+            yMat[j][0] = y[j + i];
+            //printf(" %+2.4f ", yMat[j][0]);
+            for(k = 0; k < coef; k++)
+            {
+                xMat[j][k] = x[j + i];
+                xMat[j][k] = powl(xMat[j][k], k);
+                
+                //printf(" %+2.4f ", xMat[j][k]);
+            }
+            //printf("\n");
+              
+        }
+        //take the inverse of the xMat matrix so we can find the 
+        //coefficients of our polynomial
+
+        
+        invert(coef, coef, xMat);
+        //multiply this inverse matrix by yMat to get  one of the 
+        //polynomial coefficient vectors
+        
+        multiply(coef, coef, 1, xMat, yMat, pMat);
+
+        //c has i previous vectors stored in it through an average.
+        //in order for it to have the "weight" of i iterations, we
+        //multiply it by i
+        
+        for(k = 0; k < coef; k++)
+        {
+                c[k] = (i*c[k] + pMat[k][0]) / (i + 1); 
+                //denominator is i + 1 because of the weighted average
+        }
+    }
+    //done
+    return;
 }
