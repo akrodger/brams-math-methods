@@ -1,44 +1,38 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
     <title>Bram&#39;s Math Methods by akrodger</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-dark.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
   </head>
+
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/akrodger/brams-math-methods">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/akrodger/brams-math-methods/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/akrodger/brams-math-methods/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
 
-    <div class="wrapper">
+    <header>
+      <div class="container">
+        <h1>Bram&#39;s Math Methods</h1>
+        <h2>A collection of math computation C libraries written by Abram &quot;Bram&quot; Rodgers.</h2>
 
-      <section>
-        <div id="title">
-          <h1>Bram&#39;s Math Methods</h1>
-          <p>A collection of math computation C libraries written by Abram &quot;Bram&quot; Rodgers.</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/akrodger">akrodger</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
-        </div>
+        <section id="downloads">
+          <a href="https://github.com/akrodger/brams-math-methods/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/akrodger/brams-math-methods/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/akrodger/brams-math-methods" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
 
-        <p>README by Abram Rodgers</p>
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="brams-math-methods" class="anchor" href="#brams-math-methods" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>brams-math-methods</h1>
+
+<p>A collection of math computation C libraries written by Abram "Bram" Rodgers.
+README by Abram Rodgers</p>
 
 <h1>
 <a id="contact-aksrodgers-at-gmail-dot-com" class="anchor" href="#contact-aksrodgers-at-gmail-dot-com" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contact: AKS.Rodgers (at) gmail (dot) com</h1>
@@ -73,11 +67,11 @@
 </tbody>
 </table>
 
-<p>This program was initially the primary content for a school report. When I was a student in MATH 181 History of Mathematics (Winter 2016) at UC Santa Cruz, we all had to do a historical report on a famous mathematician. We also had to showcase some of that mathematician's work. I chose to write about Carl Gauss and showcase Gaussian Elimination, a particular matrix algorithm which can find a solution for systems of linear equations of nth order. Since this is a pretty standard exercise for students in a computer science course, I figured I could probably write my own version of the very famous algorithm for my math course. After approval from the professor, I wrote up the code over the course of a week or so and included it in my historical report with gratuitous comments and documentation (since he did not know C). The school project was very successful and adding to the library became more of a side project.</p>
+<p>This program was initially the primary content for a school report. When I was a student in MATH 181 History of Mathematics (Winter 2016) at UC Santa Cruz, we all had to do a historical report on a famous mathematician. We also had to showcase some of that mathematician's work. I chose to write about Carl Gauss and showcase Gaussian Elimination, a particular matrix algorithm which can find a solution for systems of linear equations of nth order. Since this is a pretty standard exercise for students in a computer science course, I figured I could probably write my own version of the very famous algorithm for my math course. After approval from the professor, I wrote up the code over the course of a week or so and included it in my historical report with gratuitous comments and documentation (since he did not know C). The school project was very successful and writing more in the library became more of a side project.</p>
 
 <p>Today the library sits on GitHub to show some of my personal coding skills. Since no algorithm in this package is particularly novel, simply my own take on various computational problems, I decided to make it all public domain. Plenty of alternate versions of these algorithms are open source. If you wish to download and use my code in particular, I would be curious to know what it is being used for. If you wish to ask a question, collaborate on some project, or something else, then just shoot me an email.</p>
 
-<p>Please read README.md. While much of it the same as this webpage, there is important information about the makefile there.</p>
+<p>Run make in brams-math-methods to compile program. Note, you make run into an error noting that a file named 'obj' does not exist. If you enounter this, make obj in the same directory as the makefile and try to make again.</p>
 
 <hr>
 
@@ -133,10 +127,29 @@
 </ul>
 
 <p>More is planned to be written once I have completed a QR factorization implementation.</p>
-      </section>
 
+<hr>
+
+<table>
+<thead>
+<tr>
+<th>Section 3: Numerical Methods</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+<p>Currently, this section has one fleshed out operation:</p>
+
+<ul>
+<li>polynomial interpolation</li>
+</ul>
+
+<p>Use this function takes a set of (x, y) data points and forms a polynomial with them of a specified degree. It makes use of the linear algebra operations defined in the library to do this. Read the header file for more information.</p>
+      </section>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
     
   </body>
 </html>
