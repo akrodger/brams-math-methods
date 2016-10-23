@@ -138,5 +138,8 @@ int main(void)
     }
     printf("\n\nYou did it, Hooray!\n");
 
+    free(x);
+    free(y);
+    free(arr);
     return 0;
 }
