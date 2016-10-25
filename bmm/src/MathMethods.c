@@ -573,7 +573,6 @@ void interpolate(int n, double x[n], double y[n],
     {
         for(j = 0; j < coef; j++)
         {
-            //printf("\nyou got this far %d\n", j);
             xMat[i][j] = 0;
         } 
     }
@@ -589,12 +588,12 @@ void interpolate(int n, double x[n], double y[n],
     
     //column vector which is the product of inverse(xMat) and yMat   
     double pMat[coef][1];
-    //intialize xMat
+    //intialize pMat
     for(i = 0; i < coef; i++)
     {
         pMat[i][0] = 0;
-    }
-   
+    } 
+    
     // check if we have enough data to build the polynomial
     if(d+1 > n){
         //if we don't that's a no-no. set c to zero vector and exit.
@@ -611,16 +610,14 @@ void interpolate(int n, double x[n], double y[n],
         //build a single polynomial
         for(j = 0; j < d+1 + 0; j++)
         {
+            //this fills in the y-value vector
             yMat[j][0] = y[j + i];
-            //printf(" %+2.4f ", yMat[j][0]);
+            
+            //this for loop fills in the x-value matrix
             for(k = 0; k < coef; k++)
             {
-                xMat[j][k] = x[j + i];
-                xMat[j][k] = powl(xMat[j][k], k);
-                
-                //printf(" %+2.4f ", xMat[j][k]);
+                xMat[j][k] = powl(x[j+i] , k);
             }
-            //printf("\n");
               
         }
         //take the inverse of the xMat matrix so we can find the 
