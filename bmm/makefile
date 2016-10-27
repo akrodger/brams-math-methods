@@ -20,6 +20,7 @@ default: brams-math-methods
 
 brams-math-methods: $(OBJS)
 	$(CC) $(CLFAGS) $(OBJS) -lm -o $(APP)
+	mkdir -p -- "obj"
 	mv *.o $(OBJPATH)
 
 %.o : $(SRCPATH)%.c
@@ -28,8 +29,10 @@ brams-math-methods: $(OBJS)
 #
 #clean for when you want to remove executables and object files
 #
+# if obj doesnt exit then make it, thats what the mkdir lines do
 
 clean:
+	mkdir -p -- "obj"
 	rm obj/*
 	rm bmm
 
