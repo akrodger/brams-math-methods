@@ -6,9 +6,11 @@ README by Abram Rodgers
 | Contents: |
 -------------
 - Intro: Origin of this Library
+- Section 0: Library Usage
 - Section 1: Linear Algebra
 - Section 2: Calculus
-
+- Section 3: Numerical Methods
+- Section 4: Integer Stack Implementation
 ---------------------------------
 | Intro: Origin of this Library |
 ---------------------------------
@@ -25,11 +27,11 @@ Library Dependencies: Nothing other than gcc and make
 
 Usage:
 
--Run make in the bmm directory
+- Run make in the bmm directory
 
--LinAlg : This program is a hard coded demonstration of the linear Algebra operations
+- LinAlg : This program is a hard coded demonstration of the linear Algebra operations
 
--Numer : This is a nice little Interpolation Tester Program. Prints out a polynomial of the form (n * x^(n-1)) (for the nth term) after calculating a number of points to interpolate along. Uses the meanInterpolate() function, a combinatorial version of Lagrange Interpolation. Usage instructions built into the program it, run ./Numer for instructions.
+- Numer : This is a nice little Interpolation Tester Program. Prints out a polynomial of the form (n * x^(n-1)) (for the nth term) after calculating a number of points to interpolate along. Uses the meanInterpolate() function, a combinatorial version of Lagrange Interpolation. Usage instructions built into the program it, run ./Numer for instructions.
 
 -----------------------------
 | Section 1: Linear Algebra |
