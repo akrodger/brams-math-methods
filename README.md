@@ -61,7 +61,7 @@ So far this only has 2 functions.
 --------------------------------
 | Section 3: Numerical Methods |
 --------------------------------
-Currently, this section has one fleshed out operation:
+Two major operations are here:
 - polynomial interpolation
 - mean polynomial interpolation
 
