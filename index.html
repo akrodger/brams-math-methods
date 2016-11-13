@@ -51,8 +51,11 @@ README by Abram Rodgers</p>
 
 <ul>
 <li>Intro: Origin of this Library</li>
+<li>Section 0: Library Usage</li>
 <li>Section 1: Linear Algebra</li>
 <li>Section 2: Calculus</li>
+<li>Section 3: Numerical Methods</li>
+<li>Section 4: Integer Stack Implementation</li>
 </ul>
 
 <hr>
@@ -69,9 +72,31 @@ README by Abram Rodgers</p>
 
 <p>This program was initially the primary content for a school report. When I was a student in MATH 181 History of Mathematics (Winter 2016) at UC Santa Cruz, we all had to do a historical report on a famous mathematician. We also had to showcase some of that mathematician's work. I chose to write about Carl Gauss and showcase Gaussian Elimination, a particular matrix algorithm which can find a solution for systems of linear equations of nth order. Since this is a pretty standard exercise for students in a computer science course, I figured I could probably write my own version of the very famous algorithm for my math course. After approval from the professor, I wrote up the code over the course of a week or so and included it in my historical report with gratuitous comments and documentation (since he did not know C). The school project was very successful and writing more in the library became more of a side project.</p>
 
-<p>Today the library sits on GitHub to show some of my personal coding skills. Since no algorithm in this package is particularly novel, simply my own take on various computational problems, I decided to make it all public domain. Plenty of alternate versions of these algorithms are open source. If you wish to download and use my code in particular, I would be curious to know what it is being used for. If you wish to ask a question, collaborate on some project, or something else, then just shoot me an email.</p>
+<p>Today the library sits on GitHub to show some of my personal coding skills. Since no algorithm in this package was particularly novel, simply my own take on various computational problems, I decided to make it all public domain at first. Plenty of alternate versions of the Linear Algebra algorithms are open source. However, after writing the numerical methods functions, I decided to open source the whole package, since statistical software is a bit more novel than some intro Linear Algebra algorithms.</p>
 
-<p>Run make in brams-math-methods to compile program. Note, you make run into an error noting that a file named 'obj' does not exist. If you enounter this, make obj in the same directory as the makefile and try to make again.</p>
+<p>If you wish to download and use my code in particular, I would be curious to know what it is being used for. If you wish to ask a question, collaborate on some project, or something else, then just shoot me an email.</p>
+
+<hr>
+
+<table>
+<thead>
+<tr>
+<th>Section 0: Library Usage</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+<p>Library Dependencies: Nothing other than gcc and make</p>
+
+<p>Usage:</p>
+
+<ul>
+<li><p>Run make in the bmm directory</p></li>
+<li><p>LinAlg : This program is a hard coded demonstration of the linear Algebra operations</p></li>
+<li><p>Numer : This is a nice little Interpolation Tester Program. Prints out a polynomial of the form (n * x^(n-1)) (for the nth term) after calculating a number of points to interpolate along. Uses the meanInterpolate() function, a combinatorial version of Lagrange Interpolation. Usage instructions built into the program it, run ./Numer for instructions.</p></li>
+</ul>
 
 <hr>
 
@@ -126,8 +151,6 @@ README by Abram Rodgers</p>
 <li>derivative with small delta approximation</li>
 </ul>
 
-<p>More is planned to be written once I have completed a QR factorization implementation.</p>
-
 <hr>
 
 <table>
@@ -140,13 +163,33 @@ README by Abram Rodgers</p>
 </tbody>
 </table>
 
-<p>Currently, this section has one fleshed out operation:</p>
+<p>Two major operations are here:</p>
 
 <ul>
 <li>polynomial interpolation</li>
+<li>mean polynomial interpolation</li>
 </ul>
 
-<p>Use this function takes a set of (x, y) data points and forms a polynomial with them of a specified degree. It makes use of the linear algebra operations defined in the library to do this. Read the header file for more information.</p>
+<p>This function takes a set of (x, y) data points and forms a polynomial with them of a specified degree. It makes use of the linear algebra operations defined in the library to do this. Read the header file for more information.</p>
+
+<p>The intrpolate() and meanInterpolate() functions are considered UNSTABLE! Seems not to work very well for polynomials of degree hgiher than about 10. This could be due to a number of factors, including something possibly wrong in the linear algebra section.</p>
+
+<p>More is planned to be written once I have completed a QR factorization implementation.
+NOTE: QR factorization is shelved for now in favor of polynomial interpolation.</p>
+
+<hr>
+
+<table>
+<thead>
+<tr>
+<th>Section 4: Integer Stack Implementation</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+<p>This is an implementation of a stack data structure written by me. The reason for this is simply because having a stack to run computations with is insanely useful. Currently, it is only used in the Numerical Methods section. MathMethods depends on Stack, so make sure to have them in the same directory.</p>
       </section>
     </div>
 
