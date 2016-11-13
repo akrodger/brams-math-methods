@@ -18,6 +18,16 @@ Today the library sits on GitHub to show some of my personal coding skills. Sinc
 
 Run make in brams-math-methods to compile program. Note, you make run into an error noting that a file named 'obj' does not exist. If you enounter this, make obj in the same directory as the makefile and try to make again.
 
+----------------------------
+| Section 0: Library Usage |
+----------------------------
+Library Dependencies: Nothing other than gcc and make
+
+Usage:
+-Run make in the bmm directory
+-LinAlg : This program is a hard coded demonstration of the linear Algebra operations
+-Numer : This a a nice little Interpolation Tester Program. Prints out a polynomial of the form (n * x^(n-1)) (for the nth term) after calculating a number of points to interpolate along. Uses the meanInterpolate() function, a combinatorial version of Lagrange Interpolation. Usage instructions built into the program it, run ./Numer for instructions.
+
 -----------------------------
 | Section 1: Linear Algebra |
 -----------------------------
@@ -44,12 +54,23 @@ So far this only has 2 functions.
 - finite integral with small delta approximation
 - derivative with small delta approximation
 
-More is planned to be written once I have completed a QR factorization implementation.
 
 --------------------------------
 | Section 3: Numerical Methods |
 --------------------------------
 Currently, this section has one fleshed out operation:
 - polynomial interpolation
+- mean polynomial interpolation
 
-Use this function takes a set of (x, y) data points and forms a polynomial with them of a specified degree. It makes use of the linear algebra operations defined in the library to do this. Read the header file for more information.
+This function takes a set of (x, y) data points and forms a polynomial with them of a specified degree. It makes use of the linear algebra operations defined in the library to do this. Read the header file for more information.
+
+The intrpolate() and meanInterpolate() functions are considered UNSTABLE! Seems not to work very well for polynomials of degree hgiher than about 10. This could be due to a number of factors, including something possibly wrong in the linear algebra section.
+
+
+More is planned to be written once I have completed a QR factorization implementation.
+NOTE: QR factorization is shelved for now in favor of polynomial interpolation.
+
+-------------------------------------------
+| Section 4: Integer Stack Implementation |
+-------------------------------------------
+This is an implementation of a stack data structure written by me. The reason for this is simply because having a stack to run computations with is insanely useful. Currently, it is only used in the Numerical Methods section. MathMethods depends on Stack, so make sure to have them in the same directory.

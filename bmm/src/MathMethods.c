@@ -1,6 +1,7 @@
-#include "../hed/MathMethods.h"
+#include "MathMethods.h"
 #include <stdlib.h>
 #include <math.h>
+//#include "Stack.h"
 
 /******************************************************************************
  *                                                                            *
@@ -8,15 +9,15 @@
  *                                                                            *
  ******************************************************************************/
 
-//unless otherwise defined, delta is a small number near zero
-static double delta = EPSILON;
+//unless otherwise defined, DELTA is a small number near zero
+static double DELTA = EPSILON;
 
-/*This function is used to set a static system variable called delta.
- *delta is used to take integrals, derivatives, and other values
+/*This function is used to set a static system variable called DELTA.
+ *DELTA is used to take integrals, derivatives, and other values
  */
 void setDelta(double d)
 {
-    delta = d;
+    DELTA = d;
 }
 
 /******************************************************************************
@@ -25,7 +26,8 @@ void setDelta(double d)
  *                                                                            *
  ******************************************************************************/
 
-/* Fetch the values of the r number row and store the in the argument "store"
+/** 
+ * Fetch the values of the r number row and store the in the argument "store"
  * 
  * @param m the number of rows of the matrix mat
  * 
@@ -46,7 +48,8 @@ void getRow(int m, int n, double mat[][n], int r, double store[n])
     return;
 }
 
-/* Fetch the values of the c number col and store the in the argument "store"
+/** 
+ * Fetch the values of the c number col and store the in the argument "store"
  * 
  * @param m the number of rows of the matrix mat
  * 
@@ -67,7 +70,8 @@ void getCol(int m, int n, double mat[][n], int c, double store[n])
     return;
 }
 
-/* Compute the dot product of two vectors with length m
+/** 
+ * Compute the dot product of two vectors with length m
  * 
  * @param m the length of the vectors v1 and v2
  * 
@@ -87,7 +91,8 @@ double dotProduct(int m, double v1[m], double v2[m])
     return dot;
 }
 
-/* Function: SwapRows()
+/** 
+ * Function: SwapRows()
  * This function takes in an n-column matrix. We assume that row1 and row2 are 
  * valid rows inside of your n-column matrix. We swap the values within row1 and
  * row2. This means the matrix gets modified.
@@ -112,7 +117,8 @@ void swapRows(int n, double mat[][n], int r1, int r2)
     return;
 }
 
-/* Function: ScaleRow
+/** 
+ * Function: ScaleRow
  * Take in an n-column matrix and scale the the r row of your matrix by a double
  * labeled scaleBy.
  * 
@@ -134,7 +140,8 @@ void scaleRow(int n, double mat[][n], int r, double scaleBy)
     return;
 }
 
-/* This is the classic Eliminate operation. Takes in a matrix with n columns,
+/** 
+ * This is the classic Eliminate operation. Takes in a matrix with n columns,
  * then subtracts elimBy * r2 (row 2) from r1 (row 1). We don't use this
  * function in our ref() function because of the slightly nuanced way we
  * wrote it. It works as is and I would only save a couple lines of code.
@@ -142,6 +149,8 @@ void scaleRow(int n, double mat[][n], int r, double scaleBy)
  * 
  * @param n the number of columns
  * 
+ * @param mat the matrix to operate on
+ *
  * @param r1 the row to subtract from
  * 
  * @param r2 the row to eliminate by
@@ -158,7 +167,8 @@ void elimRow(int n, double mat[][n], int r1, int r2, double elimBy)
     return;
 }
 
-/* Copy the values of matrix "from" into matrix "to".
+/** 
+ * Copy the values of matrix "from" into matrix "to".
  * 
  * @param m the number of rows
  * 
@@ -181,7 +191,8 @@ void copy(int m, int n, double from[][n], double to[][n])
     }
 }
 
-/* Function: ref() AKA Row Echelon Form
+/** 
+ * Function: ref() AKA Row Echelon Form
  * This is an implementation of the well-known Gaussian Elimination
  * algorithm taught in an introductory Linear Algebra course. It takes in a 
  * matrix of "doubles," which are high-precision finite decimal expansions of 
@@ -226,14 +237,14 @@ double ref(int m, int n, double mat[][n])
         /* due to floating point rounding, we may end up with the difference
          * between a number and another being nonzero, even when by our
          * calculations by hand, they are equal. The constant
-         * EPSILON is a buffer to make sure we still treat zeros
+         * DELTA is a buffer to make sure we still treat zeros
          * properly. A note: fabs(x) is a function such that it takes a real
          * number and returns the real number's magnitude. "fabs" is short for
          * "floating point absolute value"
          */
-        if (fabs(mat[i][j]) < EPSILON) {//if matrix's ij value is near zero
+        if (fabs(mat[i][j]) < DELTA) {//if matrix's ij value is near zero
             for (x = i; x < m; x++) {//iterate through rows (vertically)
-                if (fabs(mat[x][j]) > EPSILON) {
+                if (fabs(mat[x][j]) > DELTA) {
                     //if we find a nonzero entry below, swap them
                     swapRows(n, mat, i, x);
                     det *= -1; //det -> negative det after a swap
@@ -261,9 +272,10 @@ double ref(int m, int n, double mat[][n])
         //the upper limits of these loops
         for (x = i + 1; x < m; x++) {
             for (y = n - 1; y >= j; y--) {
-                //due to order of computation, this loop is computer backwards.
-                //this is a rather advanced C topic. Think about it for a bit
-                //and perhaps it makes a bit more sense.
+                //due to order of computation, this loop is computed backwards.
+                //We do not use the elimRow() function because the lower limit
+                //of the loop is j not necessarily zero.
+                //this saves a bit of computation time
                 mat[x][y] -= mat[i][y] * mat[x][j];
             }
         }
@@ -274,7 +286,8 @@ double ref(int m, int n, double mat[][n])
     return det;
 }
 
-/* Function: rref() AKA Reduced Row Echelon Form
+/** 
+ * Function: rref() AKA Reduced Row Echelon Form
  * This function calls ref() once to make sure that it toying with a matrix
  * in row echelon form. After that it starts iterating from row (m - 1) all 
  * the way to the top, eliminating the values of the leading ones as it goes.
@@ -314,7 +327,7 @@ double rref(int m, int n, double mat[][n])
         //first we find the first pivot position, from the bottom up
         for (x = i; x >= 0; x--) {
             for (y = 0; y < n; y++) {
-                if (mat[x][y] > EPSILON) {
+                if (mat[x][y] > DELTA) {
                     i = x;
                     j = y;
                     foundPivotFlag = 1;
@@ -342,7 +355,8 @@ double rref(int m, int n, double mat[][n])
     return det;
 }
 
-/* This function takes in a matrix and turns it into its multiplicative inverse.
+/** 
+ * This function takes in a matrix and turns it into its multiplicative inverse.
  * It copies the matrix into an augmented matrix which is twice the width of the 
  * original. The function then does an rref() on the augmented matrix. After 
  * that it takes the right half of the reduced augmented matrix and copies it
@@ -364,8 +378,10 @@ double invert(int m, int n, double mat[][n])
     if (m != n) {
         return 0;
     }
-
+	
+	
     double checkMat[m][n];
+
     //use this matrix to check what the determinant is before we try to find
     //and inverse.
 
@@ -373,10 +389,10 @@ double invert(int m, int n, double mat[][n])
 
     det = ref(m, n, checkMat);
 
-    if (fabs(det) < EPSILON) {
+    if (fabs(det) < DELTA) {
         return 0;
     }
-
+	
     double augMat[m][2 * n];
 
     //instead of using the copy function, we must use a custom loop
@@ -407,7 +423,8 @@ double invert(int m, int n, double mat[][n])
 
 }
 
-/* This function multiplies two matrices. The left and left sides of a matrix
+/** 
+ * This function multiplies two matrices. The left and left sides of a matrix
  * product must share a corresponding column/row match up. That is to say that
  * the columns of the left side of the product are the same as the rows of the
  * right side of the product. This is represented by the argument n. The result
@@ -450,8 +467,17 @@ void multiply(int m, int n, int p, double left[][n], double right[][p],
  *                                                                            *
  ******************************************************************************/
 
-/*
- *finite integral
+/**
+ * fintegral(): finite integral.
+ * This function uses a Riemann Sum method to approximate the integral of a
+ * function. 
+ *
+ * @param double (*funct)(double) a pointer to a function which takes a double
+ *                                  and returns a double
+ *
+ * @param a the lower limit of integration
+ *
+ * @param b the upper limit of integration
  */
 double fintegral(double (*funct)(double), double a, double b)
 {
@@ -475,20 +501,26 @@ double fintegral(double (*funct)(double), double a, double b)
 
     //calulate the riemann sum
     while (index < b) {
-        riemann += funct(index) * delta;
-        index += delta;
+        riemann += funct(index) * DELTA;
+        index += DELTA;
     }
 
     //multiply by the factor mentioned to get the finite integral approximation
     return riemann * backwards;
 }
 
-/*
- * approximate derivative
+/**
+ * derivative(): Uses the limit definition of a derivative to approximate the 
+ *                  slope near a point
+ *
+ * @param double (*funct)(double) a pointer to a function which takes a double
+ *                                  and returns a double
+ *
+ * @param a the point to approximate the derivative near
  */
 double derivative(double (*funct)(double), double a)
 {
-    return (funct(a + delta) - funct(a)) / delta;
+    return (funct(a + DELTA) - funct(a)) / DELTA;
 }
 
 /******************************************************************************
@@ -497,149 +529,258 @@ double derivative(double (*funct)(double), double a)
  *                                                                            *
  ******************************************************************************/
 
-/*
- * This function will make a fit polynomial of a specified degree. Given 2
- * vectors representing the x and y coordinates of a graph, the function will
- * analyze them in the following manner:
- *             
- *        (let d be the degree for simplicity) 
+/**
+ *  Finds the "n choose r" value. also known as the binomial coefficient.
+ * 
+ * @param n the size of the set to choose from
+ * @param r the number choose from a set.
+ */
+long int binomialCoef( long int n, long int r )
+{
+    //loop iterator
+    int i = 0;
+    //the return value
+    int pascal = n;
+    if (r > n)
+    {
+        return 0; //invalid choice case
+    }
+
+    if ((r * 2) > n)
+    {
+        //the binomial coefficient is symmetric about the center of 
+        //Pascal's triangle, so we use this one trick:
+        r = n-r; //click here to find out my one trick! mathematicians hate me!
+    }
+
+    if (r == 0)
+    {
+        return 1; //only 1 way to choose nothing
+    }
+
+    for(i = 2; i <= r; i++ ) { //this simulates traversing Pascal's triangle
+        pascal *= (n-i+1);
+        pascal /= i;
+    }
+    //it is only fitting that pascal would traverse his triangle.
+    return pascal;
+}
+
+/**
+ * This function will make a polynomial of degree n-1 given n points. It uses
+ * an algorithm known as lagrange interpolation. The function executes in the 
+ * following manner:
+ *
+ *        (let n-1 be the order/degree for simplicity) 
  *              
- *        1) -> Take (degree + 1) pairs of  x and y data points
- *        2) -> Pick d
- *              Load the x[j] data into a matrix like so: 
+ *        1) -> Take n pairs of  x and y data points
+ *        2) -> For the set of points, load them into a matrix like so:
  *              
+ *              [  (1)    (x[0])    (x[0])^2   ...   (x[0])^(d)  ]
  *              [  (1)    (x[1])    (x[1])^2   ...   (x[1])^(d)  ]
- *              [  (1)    (x[2])    (x[2])^2   ...   (x[2])^(d)  ]
  *         X =  [                               .                ]
  *              [                               .                ]
  *              [                               .                ]
- *              [  (1)   (x[d+1])  (x[d+1])^2  ...  (x[d+1])^(d) ]
+ *              [  (1)   (x[n-1])  (x[n-1])^2  ...  (x[n-1])^(d) ]
  *
  *
- *        3) -> Use the array of y[j] data as a column vector.
+ *        3) -> Use the array of y data as a column vector.
  *
+ *                              [  y[0]  ]
  *                              [  y[1]  ]
- *                              [  y[2]  ]
  *                         y =  [    .   ]
  *                              [    .   ]
  *                              [    .   ]
- *                              [ y[d+1] ]
+ *                              [ y[n-1] ]
+ *
  *
  *        4) -> Use the array c as the vector of unknown coefficients which
  *              we want to solve for. We set up the matrix equation:
  *
  *                                 Xc = y
  *
- *        5) -> Since X is invertible by design, it has a solution for c:
+ *
+ *        5) -> Since X is invertible by design, it has a solution for c :
  *
  *                              c = (X^(-1))y
  *
- *        6) -> We do this for the first d+1 points, the second d+1 points, 
-                until eventually we have n - d polynomials.
- *              After that, take the mean of all of the results. The result
- *              is a vector of coefficients for a fit polynomial of 
- *              degree d.
  *
- * @param n the number of (x, y) data points.
- * 
+ * @param n the number of data points. (one higher than the degree)
+ *
  * @param x[n] the set of x data points
  *
  * @param y[n] the set of y data points
  *
- * @param d the degree of a polynomial you want
- *
- * @param c[d+1] the array which will store all the coefficients of the
+ * @param c[n] the array which will store all the coefficients of the
  *               the polynomial. c[0] is the constant term, c[d] is the highest
- *               power's coefficient. This will be filled with all zeroes if
- *               d + 1 > n.
- * @return void
+ *               power's coefficient.
  */
-void interpolate(int n, double x[n], double y[n],
-                 int d, double c[d + 1])
+void interpolate(long int n, double x[n], double y[n], double c[n])
 {   
     //loop iterators
 
     int i = 0;
     int j = 0;
-    int k = 0;
     
-    //this is the number of coefficients. it is also the length of c
-    //such a variable is much easier to read than "d+1" over and over.
-    const int coef = d+1; 
+    //n is the number of coefficients. it is also the length of c, x, and y
+    //this is essentially the most important number to the algorithm
+    
     //matrix of x values raised to powers
-    double xMat[coef][coef];
-    //intialize xMat
-    for(i = 0; i < coef; i++)
+    double xMat[n][n];
+    //intialize xMat right after declaring
+    //(to avoid eldritch C memory issues.)
+    for(i = 0; i < n; i++)
     {
-        for(j = 0; j < coef; j++)
+        for(j = 0; j < n; j++)
         {
-            xMat[i][j] = 0;
+            xMat[i][j] = pow(x[i] , j); 
+            //value of of the (i,j) entry is the i number to the j power
         } 
     }
 
     //column vector of y values
-    double yMat[coef][1];
-    //initialize yMat
-    
-    for(j = 0; j < coef; j++)
+    double yMat[n][1];
+    //initialize yMat right after declaring
+    //(to avoid eldritch C memory issues.)
+    //This may seem odd, but it is done so we can use the linear algebra
+    //functions written above. y[j] is technically a row vector.
+    //we need a column vector to do the operations.
+    for(i = 0; i < n; i++)
     {
-        yMat[coef][0] = 0;
+        yMat[i][0] = y[i];
     }
     
     //column vector which is the product of inverse(xMat) and yMat   
-    double pMat[coef][1];
-    //intialize pMat
-    for(i = 0; i < coef; i++)
+    double pMat[n][1];
+    //intialize pMat right after declaring
+    //(to avoid eldritch C memory issues.)
+    for(i = 0; i < n; i++)
     {
         pMat[i][0] = 0;
     } 
+        
+    //now building a single polynomial:
+    //take the inverse of the xMat matrix so we can find the 
+    //coefficients of our polynomial
     
-    // check if we have enough data to build the polynomial
-    if(d+1 > n){
-        //if we don't that's a no-no. set c to zero vector and exit.
-        for(i = 0; i < coef; i++)
-        {
-            c[i] = 0;
-        }
-        return;
-    }
+    invert(n, n, xMat);
+
+    //multiply this inverse matrix by yMat to get  one of the 
+    //polynomial coefficient vectors
     
-    //start building the polynomials. there are n - d of them.
-    for(i = 0; i < n - d; i++)
-    {   
-        //build a single polynomial
-        for(j = 0; j < d+1 + 0; j++)
-        {
-            //this fills in the y-value vector
-            yMat[j][0] = y[j + i];
-            
-            //this for loop fills in the x-value matrix
-            for(k = 0; k < coef; k++)
-            {
-                xMat[j][k] = powl(x[j+i] , k);
-            }
-              
-        }
-        //take the inverse of the xMat matrix so we can find the 
-        //coefficients of our polynomial
-
-        
-        invert(coef, coef, xMat);
-        //multiply this inverse matrix by yMat to get  one of the 
-        //polynomial coefficient vectors
-        
-        multiply(coef, coef, 1, xMat, yMat, pMat);
-
-        //c has i previous vectors stored in it through an average.
-        //in order for it to have the "weight" of i iterations, we
-        //multiply it by i
-        
-        for(k = 0; k < coef; k++)
-        {
-                c[k] = (i*c[k] + pMat[k][0]) / (i + 1); 
-                //denominator is i + 1 because of the weighted average
-        }
+    multiply(n, n, 1, xMat, yMat, pMat);
+    
+    //now that we have the coefficients of our polynomial,
+    //load the output into c.
+    for(i = 0; i < n; i++)
+    {
+            c[i] = pMat[i][0];
     }
     //done
+    return;
+}
+
+
+/**
+ * This function will make a best-fit polynomial of a specified degree. Given 2
+ * vectors representing the x and y coordinates of a graph, the function will
+ * analyze them in the following manner:
+ *             
+ *        1) ->  Call the interpolate function using the given x and y vectors
+ *
+ *        2) -> Do this for recursively for every n size subset of our data 
+ *              points, taking the mean of the results as you compute. The 
+ *              result is a vector of coefficients for a best fit polynomial of 
+ *              degree d.
+ *  
+ *  (NOTE)  2)-> Recursive computation finds a num_coefs size subset of the x,y
+ *               data pairs then calls interpolate() on them to compute.
+ *               only guaranteed to work if you pass -1 top path 
+                 and pass NULL to *combo.
+ *
+ * @param path an iterator for recursive computation. 
+ *                ALWAYS PASS AS -1 TO INITIALIZE
+ * 
+ * @param *combo this is for combinatorially iterating through possible 
+ *                  indeces when interpolating. 
+ *                  ALWAYS PASS AS NULL POINTER TO INITIALIZE!
+ *
+ * @param num_points the number of (x, y) data points.
+ * 
+ * @param x[num_points] the set of x data points
+ *
+ * @param y[num_points] the set of y data points
+ *
+ * @param num_coefs one more than the degree of a polynomial you want
+ *
+ * @param c[num_coefs] the array which will store all the coefficients of the
+ *               the polynomial. c[0] is the constant term, c[d] is the highest
+ *               power's coefficient.
+ */
+void meanInterpolate(long int path, Stack *combo, long int num_points, 
+                    double x[num_points], double y[num_points], 
+                    long int num_coefs, double c[num_coefs])
+{   
+    
+    //loop iterator
+
+    long int i = 0;
+    //these two arrays hold the particular data for a given subset of the points
+    double combo_x[num_coefs];
+    double combo_y[num_coefs];
+    //this array is similar to the two above, but for coefficients
+    double combo_c[num_coefs];
+    
+    long int popValue = 0;
+
+
+    if(path == -1)
+    {
+        //Initialize Stack at the start of the recursion
+        StackInit(&combo, num_coefs);
+    } else {
+        //already partially recursed
+        StackPush(combo, path);
+    }
+
+    //if we have a subset (not end of path)
+    if(StackGetSize(combo) == num_coefs)
+    { 
+        //process combinatorial data
+        for(i = 0; i < num_coefs; i++)
+        {
+            //make the placeholder arrays equal to the specific x, y values
+            combo_x[i] = x[combo->stackItems[i]];
+            combo_y[i] = y[combo->stackItems[i]];
+        }
+        interpolate(num_coefs, combo_x, combo_y, combo_c);
+
+        for(i = 0; i < num_coefs; i++)
+        {
+            c[i] += combo_c[i];
+        }
+
+        StackPop(combo, &popValue);
+
+
+        return;
+    }
+
+    for (i = path + 1; i < num_points; i++)  //go down all paths > current
+    {  
+        meanInterpolate(i, combo, num_points, x, y, num_coefs, c);
+    }
+
+    StackPop(combo, &popValue);
+
+    if(path == -1)
+    {        
+        StackFree(combo);
+
+        for(i = 0; i < num_coefs; i++)
+        {
+            c[i] /= binomialCoef(num_points, num_coefs);
+        }
+    } 
     return;
 }

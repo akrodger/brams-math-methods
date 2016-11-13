@@ -4,51 +4,22 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-//CMPE13 Support Library
 
 
 // User libraries
-#include "../hed/MathMethods.h"
-
-// **** Set macros and preprocessor directives ****
+#include "MathMethods.h"
+#include "Stack.h"
 
 #define  ROWS 4
 #define  COLS 4
 
-// **** Define global, module-level, or external variables here ****
-
-// **** Declare function prototypes ****
 
 int main(void)
 {
-    /******************************************************************************
-     * Your code goes in between this comment and the following one with asterisks.
-     *****************************************************************************/
-
 
     int i;
     int j;
     
-    double *x = calloc(5, sizeof(double));
-    
-    x[0] = 1;
-    x[1] = 3;
-    x[2] = 4;
-    x[3] = -5;
-    x[4] = -20;
-    //double z[5] = {0, 0, 0, 0, 0};
-    
-    double *y = calloc(5, sizeof(double));
-    
-    y[0] = 0.01;
-    y[1] = 21.93;
-    y[2] = 39.5;
-    y[3] = 29.82;
-    y[4] = 735.3;
-
-    
-
-    double *arr = calloc(3, sizeof(double));
 
     //double myMatrix = topRow;
     double myMatrix[ROWS][COLS] = {
@@ -117,29 +88,8 @@ int main(void)
         }
     }
 
-    printf("\n\nI will interpolate these (x, y) pairs into a parabola:\n");
-    
-    for(j = 0; j < 5; j++)
-    {   
-        (j<4) ? printf(" ") : 0;  //print an extra space to make it pretty
-        printf(" (%+2.4f   ,  %+2.4f)\n", x[j], y[j]);
-    }
-    
-    
-    interpolate(5, x, y, 2, arr);
-    printf("\nThe  parabola is:\n\n    y = ");
-    for(j = 0; j < 3; j++)
-    {
-        printf(" %2.4f x^(%d) ", (float) arr[j], j);
-        if(j < 2)
-        {
-            printf("+");
-        }
-    }
+
     printf("\n\nYou did it, Hooray!\n");
 
-    free(x);
-    free(y);
-    free(arr);
     return 0;
 }
