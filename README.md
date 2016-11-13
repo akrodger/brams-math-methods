@@ -11,6 +11,7 @@ README by Abram Rodgers
 - Section 2: Calculus
 - Section 3: Numerical Methods
 - Section 4: Integer Stack Implementation
+
 ---------------------------------
 | Intro: Origin of this Library |
 ---------------------------------
