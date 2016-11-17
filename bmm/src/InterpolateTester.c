@@ -121,5 +121,7 @@ int main(int argc, char **argv)
     free(x);
     free(y);
     free(arr);
+
+    return 0;
 }
 
