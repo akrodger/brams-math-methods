@@ -26,9 +26,9 @@ NUMERICS = "Numer"
 
 default: brams-math-methods
 
-brams-math-methods: $(LIN_OBJS) $(NUM_OBJS)
-	$(CC) $(CLFAGS) $(LIN_OBJS) -lm -o $(LINEAR_ALGEBRA)
+brams-math-methods: $(NUM_OBJS) $(LIN_OBJS)
 	$(CC) $(CLFAGS) $(NUM_OBJS) -lm -o $(NUMERICS)
+	$(CC) $(CLFAGS) $(LIN_OBJS) -lm -o $(LINEAR_ALGEBRA)
 	mkdir -p -- "obj"
 	mv *.o $(OBJPATH)
     
