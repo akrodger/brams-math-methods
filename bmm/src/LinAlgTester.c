@@ -10,24 +10,42 @@
 #include "MathMethods.h"
 #include "Stack.h"
 
-#define  ROWS 4
-#define  COLS 4
 
 
-int main(void)
+int main(int argc, char **argv)
 {
 
     int i;
     int j;
+
+    if(argc < 3 || 4 < argc)
+	{
+		printf("\nUsage: LinAlg [ROWS] [COLS] [BUFFER]\n"
+		"NOTE: 3rd argument is optional floating point percision setting.\n\n");
+		return 1;
+	}
+
+    char *end = NULL;
+	int ROWS = strtol(argv[1], &end, 0);
     
+    int COLS = strtol(argv[2], &end, 0);
+
+    if(argv[3] != NULL)
+	{
+		double deltaBuffer = strtod(argv[3], &end);
+		setDelta(deltaBuffer);
+	}
 
     //double myMatrix = topRow;
-    double myMatrix[ROWS][COLS] = {
-        {7, 3, 1, 4},
-        {15, 7, 3, 9},
-        {6, 5, 3, 1},
-        {10, 2, 0, 8},
-    };
+    double myMatrix[ROWS][COLS];
+    
+    for(i = 0; i < ROWS; i++)
+    {
+        for(j = 0; j < COLS; j++)
+        {
+            myMatrix[i][j] = pow(i, j);
+        }
+    }
 
     double copiedMat[ROWS][COLS];
 

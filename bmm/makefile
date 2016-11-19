@@ -37,6 +37,18 @@ brams-math-methods: $(NUM_OBJS) $(LIN_OBJS)
 	$(CC) $(CFLAGS) -lm -c $<
 
 #
+#make using the object files stored in the obj folder. crashes if obects not 
+#present.
+#
+
+objects:
+	mv obj/*.o .
+	$(CC) $(CLFAGS) $(NUM_OBJS) -lm -o $(NUMERICS)
+	$(CC) $(CLFAGS) $(LIN_OBJS) -lm -o $(LINEAR_ALGEBRA)
+	mkdir -p -- "obj"
+	mv *.o $(OBJPATH)
+
+#
 #clean for when you want to remove executables and object files
 #
 # if obj doesnt exit then make it, thats what the mkdir lines do
@@ -47,3 +59,5 @@ clean:
 	rm $(LINEAR_ALGEBRA)
 	rm $(NUMERICS)
 
+
+    
