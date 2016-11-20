@@ -4,8 +4,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-//CMPE13 Support Library
-
 
 // User libraries
 #include "MathMethods.h"
