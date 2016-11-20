@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 {
 	if(argc < 3 || 4 < argc)
 	{
-		printf("\nUsage: interpolate [NUM_POINTS] [TERMS] [BUFFER]\n"
+		printf("\nUsage: Numer [NUM_POINTS] [TERMS] [BUFFER]\n"
 		"NOTE: 3rd argument is optional floating point percision setting.\n\n");
 		return 1;
 	}
