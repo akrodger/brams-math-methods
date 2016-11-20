@@ -31,7 +31,7 @@ Usage:
 
 - Run make in the bmm directory
 
-- LinAlg : This program is a hard coded demonstration of the linear Algebra operations
+- LinAlg : This program is a showcase of the Linear Algebra operations. It loads a matrix with values that are known to be invertible (the i-j entry is just i to the power of j). It then inverts this matrix and multipliea the inverse by the original matrix to confirm that a matrix times its inverse is the identity. run ./LinAlg for usage instructions. (You get to choose the dimensions. Note that if you give it a non-square matrix, the inverse has no actual meaning, nor does the resultant multiplication)
 
 - Numer : This is a nice little Interpolation Tester Program. Prints out a polynomial of the form (n * x^(n-1)) (for the nth term) after calculating a number of points to interpolate along. Uses the meanInterpolate() function, a combinatorial version of Lagrange Interpolation. Usage instructions built into the program it, run ./Numer for instructions.
 
