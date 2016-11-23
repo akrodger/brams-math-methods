@@ -58,6 +58,3 @@ clean:
 	rm obj/*
 	rm $(LINEAR_ALGEBRA)
 	rm $(INTERPOLATOR)
-
-
-    
