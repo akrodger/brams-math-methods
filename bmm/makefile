@@ -57,7 +57,7 @@ clean:
 	mkdir -p -- "obj"
 	rm obj/*
 	rm $(LINEAR_ALGEBRA)
-	rm $(INTERPOLATORs)
+	rm $(INTERPOLATOR)
 
 
     
