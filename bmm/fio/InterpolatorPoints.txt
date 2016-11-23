@@ -1,0 +1,11 @@
+~ First line of file
+~ "This text is not read by the parser"
+t: 5
+x: The colon is not read by the parser, only the x. This text also not read.
+1   2   4   6    7
+~ As many spaces as you want can be between numbers
+
+~ The above line is ignored completely.
+y:
+3 4 -6 6     -8
+~ Last Line of file

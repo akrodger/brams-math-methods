@@ -25,7 +25,7 @@ If you wish to download and use my code in particular, I would be curious to kno
 ----------------------------
 | Section 0: Library Usage |
 ----------------------------
-Library Dependencies: Nothing other than gcc and make
+Library Dependencies: Nothing other than gcc and make. Program located in folder bmm.
 
 Usage:
 
@@ -33,7 +33,37 @@ Usage:
 
 - LinAlg : This program is a showcase of the Linear Algebra operations. It loads a matrix with values that are known to be invertible (the i-j entry is just i to the power of j). It then inverts this matrix and multipliea the inverse by the original matrix to confirm that a matrix times its inverse is the identity. run ./LinAlg for usage instructions. (You get to choose the dimensions. Note that if you give it a non-square matrix, the inverse has no actual meaning, nor does the resultant multiplication)
 
-- Numer : This is a nice little Interpolation Tester Program. Prints out a polynomial of the form (n * x^(n-1)) (for the nth term) after calculating a number of points to interpolate along. Uses the meanInterpolate() function, a combinatorial version of Lagrange Interpolation. Usage instructions built into the program it, run ./Numer for instructions.
+- interpolator : This program reads in a list of (x,y) data pairs from the file "bmm/fio/InterpolatorPoints.txt". Then it will run meanInterpolate() on those points.
+
+InterpolatorPoints.txt formatting:
+
+    - Any line starting with a '~' is skipped. Any text after that is not read at all.
+
+    - A line starting with a "t:" (colon optional) indicates that the line has an integer which indicates how many terms are in the polynomial you want to approximate. (Terms in a polynomial is equal to the degree minus 1.)
+
+    - A line starting with 'x' indicates that the line contains the x coordinates of the array of data points serparated by spaces. There may not be trailing sapces after the last number..
+
+    - A line starting with 'y' indicates that the line contains the y coordinates of the array of data points serparated by spaces. There may not be trailing sapces after the last number.
+
+    - A line starthing with any other character throws and error and tells you to format the file properly.
+
+    - Parser also ignores a line which contains no text. That is, it is just nothing but a "newline" or "line feed". This is treated the same as though it saw a '~'.
+
+    - Note: No lines may between 'x' or 'y' and their corresponding coordinates on the next line.
+
+Example of a valid file:
+
+~ First line of file
+~ "This text is not read by the parser"
+t: 5
+x: The colon is not read by the parser, only the x. This text also not read.
+1   2   4   6    7
+~ As many spaces as you want can be between numbers
+
+~ The above line is ignored completely.
+y:
+3 4 -6 6     -8
+~ Last Line of file
 
 -----------------------------
 | Section 1: Linear Algebra |

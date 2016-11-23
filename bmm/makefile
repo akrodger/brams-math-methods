@@ -10,7 +10,7 @@ SRCPATH = src/
 
 OBJPATH = obj/
 
-NUM_SRCS = InterpolateTester.c MathMethods.c Stack.c
+NUM_SRCS = Interpolator.c MathMethods.c Stack.c
 
 NUM_OBJS = $(NUM_SRCS:.c=.o)
 
@@ -19,15 +19,15 @@ LIN_SRCS = LinAlgTester.c MathMethods.c Stack.c
 LIN_OBJS = $(LIN_SRCS:.c=.o)
 
 #This is the name of the executable that showcases the linear algebra functs
-LINEAR_ALGEBRA = LinAlg
+LINEAR_ALGEBRA = "LinAlg"
 
 #This is the name of the executable that showcases the numerical methods functs
-NUMERICS = "Numer"
+INTERPOLATOR = "interpolator"
 
 default: brams-math-methods
 
 brams-math-methods: $(NUM_OBJS) $(LIN_OBJS)
-	$(CC) $(CLFAGS) $(NUM_OBJS) -lm -o $(NUMERICS)
+	$(CC) $(CLFAGS) $(NUM_OBJS) -lm -o $(INTERPOLATOR)
 	$(CC) $(CLFAGS) $(LIN_OBJS) -lm -o $(LINEAR_ALGEBRA)
 	mkdir -p -- "obj"
 	mv *.o $(OBJPATH)
@@ -43,7 +43,7 @@ brams-math-methods: $(NUM_OBJS) $(LIN_OBJS)
 
 objects:
 	mv obj/*.o .
-	$(CC) $(CLFAGS) $(NUM_OBJS) -lm -o $(NUMERICS)
+	$(CC) $(CLFAGS) $(NUM_OBJS) -lm -o $(INTERPOLATOR)
 	$(CC) $(CLFAGS) $(LIN_OBJS) -lm -o $(LINEAR_ALGEBRA)
 	mkdir -p -- "obj"
 	mv *.o $(OBJPATH)
@@ -57,7 +57,7 @@ clean:
 	mkdir -p -- "obj"
 	rm obj/*
 	rm $(LINEAR_ALGEBRA)
-	rm $(NUMERICS)
+	rm $(INTERPOLATORs)
 
 
     
