@@ -101,7 +101,7 @@ Two major operations are here:
 
 This function takes a set of (x, y) data points and forms a polynomial with them of a specified degree. It makes use of the linear algebra operations defined in the library to do this. Read the header file for more information.
 
-The intrpolate() and meanInterpolate() functions are considered UNSTABLE! Seems not to work very well for polynomials of degree hgiher than about 10. This could be due to a number of factors, including something possibly wrong in the linear algebra section.
+The intrpolate() and meanInterpolate() functions are considered UNSTABLE! Seems not to work very well for polynomials of degree hgiher than about 10. There is an in-depth analysis of the github page's "Issues" section.
 
 
 More is planned to be written once I have completed a QR factorization implementation.
