@@ -39,7 +39,7 @@ InterpolatorPoints.txt formatting:
 
     - Any line starting with a '~' is skipped. Any text after that is not read at all.
 
-    - A line starting with a "t:" (colon optional) indicates that the line has an integer which indicates how many terms are in the polynomial you want to approximate. (Terms in a polynomial is equal to the degree minus 1.)
+    - A line starting with a "t:" (colon optional) indicates that the line has an integer which indicates how many terms are in the polynomial you want to approximate. (Terms in a polynomial is equal to the degree plus 1.)
 
     - A line starting with 'x' indicates that the line contains the x coordinates of the array of data points serparated by spaces. There may not be trailing sapces after the last number..
 
