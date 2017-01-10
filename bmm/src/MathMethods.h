@@ -43,6 +43,7 @@ void setDelta(double d);
  ******************************************************************************/
  
 /** 
+ * Function: getRow()
  * Fetch the values of the r number row and store the in the argument "store"
  * 
  * @param m the number of rows of the matrix mat
