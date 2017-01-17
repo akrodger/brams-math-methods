@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     double product[ROWS][COLS];
 
 
-    copy(ROWS, COLS, myMatrix, copiedMat);
+    copyMatrix(ROWS, COLS, myMatrix, copiedMat);
 
 
     double det = ref(ROWS, COLS, copiedMat);
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     printf("\n\nAnd this is its determinant %+2.4f according to ref().",
             (float) det);
 
-    copy(ROWS, COLS, myMatrix, copiedMat);
+    copyMatrix(ROWS, COLS, myMatrix, copiedMat);
 
     det = invert(ROWS, COLS, copiedMat);
 
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 
     printf("\n\nThis is the Product of A and its inverse:\n");
 
-    multiply(ROWS, COLS, COLS, myMatrix, copiedMat, product);
+    matrixMultiply(ROWS, COLS, COLS, myMatrix, copiedMat, product);
 
     for (i = 0; i < ROWS; i++) {
         printf("\n");

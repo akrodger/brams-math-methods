@@ -59,6 +59,7 @@ void setDelta(double d);
 void getRow(int m, int n, double mat[][n], int r, double store[n]);
 
 /** 
+ * Function: getCol()
  * Fetch the values of the c number col and store the in the argument "store"
  * 
  * @param m the number of rows of the matrix mat
@@ -74,6 +75,7 @@ void getRow(int m, int n, double mat[][n], int r, double store[n]);
 void getCol(int m, int n, double mat[][n], int c, double store[n]);
 
 /** 
+ * Function: dotProduct()
  * Compute the dot product of two vectors with length m
  * 
  * @param m the length of the vectors v1 and v2
@@ -85,6 +87,32 @@ void getCol(int m, int n, double mat[][n], int c, double store[n]);
  * @return the dot product of v1 and v2
  */
 double dotProduct(int m, double v1[m], double v2[m]);
+
+/** 
+ * Function: euclideanNorm()
+ * Compute the euclidean norm (aka magnitude or spatial length) of a given 
+ * real valued m-vector
+ * 
+ * @param m the length of the vector v
+ * 
+ * @param v the vector which will be evaluated
+ */
+double euclideanNorm(int m, double v[m]);
+
+/**
+ *  Function: vectorProject();
+ *  This function computes the projection of v1 onto v2 using the
+ *  dotProduct() function. The result of the projection is stored in proj
+ *
+ * @param m the length of the vectors v1, v2, and proj
+ *
+ * @param v1 the which will be projected (projected from)
+ *
+ * @param v2 the vector which will recieve the projection. (projected onto)
+ *
+ * @param proj the stored result of the projection computation
+ */
+void vectorProject(int m, double v1[m], double v2[], double proj[m]);
 
 /** 
  * Function: SwapRows()
@@ -103,7 +131,7 @@ double dotProduct(int m, double v1[m], double v2[m]);
 void swapRows(int n, double mat[][n], int r1, int r2);
 
 /** 
- * Function: ScaleRow
+ * Function: ScaleRow()
  * Take in an n-column matrix and scale the the r row of your matrix by a double
  * labeled scaleBy.
  * 
@@ -119,6 +147,7 @@ void swapRows(int n, double mat[][n], int r1, int r2);
 void scaleRow(int n, double mat[][n], int r, double scaleBy);
 
 /** 
+ * Function: elimRow()
  * This is the classic Eliminate operation. Takes in a matrix with n columns,
  * then subtracts elimBy * r2 (row 2) from r1 (row 1). We don't use this
  * function in our ref() function because of the slightly nuanced way we
@@ -139,6 +168,7 @@ void scaleRow(int n, double mat[][n], int r, double scaleBy);
 void elimRow(int n, double mat[][n], int r1, int r2, double elimBy);
 
 /** 
+ * Function: copyMatrix()
  * Copy the values of matrix "from" into matrix "to".
  * 
  * @param m the number of rows
@@ -150,7 +180,7 @@ void elimRow(int n, double mat[][n], int r1, int r2, double elimBy);
  * @param to the matrix to copy into
  *
  */
-void copy(int m, int n, double from[][n], double to[][n]);
+void copyMatrix(int m, int n, double from[][n], double to[][n]);
 
 /** 
  * Function: ref() AKA Row Echelon Form
@@ -206,6 +236,7 @@ double ref(int m, int n, double mat[][n]);
 double rref(int m, int n, double mat[][n]);
 
 /** 
+ * Function: invert()
  * This function takes in a matrix and turns it into its multiplicative inverse.
  * It copies the matrix into an augmented matrix which is twice the width of the 
  * original. The function then does an rref() on the augmented matrix. After 
@@ -222,6 +253,7 @@ double rref(int m, int n, double mat[][n]);
 double invert(int m, int n, double mat[][n]);
 
 /** 
+ * Function: matrixMultiply()
  * This function multiplies two matrices. The left and left sides of a matrix
  * product must share a corresponding column/row match up. That is to say that
  * the columns of the left side of the product are the same as the rows of the
@@ -241,7 +273,7 @@ double invert(int m, int n, double mat[][n]);
  * @param product the result of our multiplication
  * 
  */
-void multiply(int m, int n, int p, double left[][n], double right[][p],
+void matrixMultiply(int m, int n, int p, double left[][n], double right[][p],
         double product[][p]);
 
 /******************************************************************************
@@ -251,7 +283,7 @@ void multiply(int m, int n, int p, double left[][n], double right[][p],
  ******************************************************************************/
 
 /**
- * fintegral(): finite integral.
+ * Function: fintegral() (aka finite integral)
  * This function uses a Riemann Sum method to approximate the integral of a
  * function. 
  *
@@ -265,8 +297,9 @@ void multiply(int m, int n, int p, double left[][n], double right[][p],
 double fintegral(double (*funct)(double), double a, double b);
 
 /**
- * derivative(): Uses the limit definition of a derivative to approximate the 
- *                  slope near a point
+ *  Function: derivative()
+ *  Uses the limit definition of a derivative to approximate the 
+ *  slope near a point
  *
  * @param double (*funct)(double) a pointer to a function which takes a double
  *                                  and returns a double
@@ -289,7 +322,8 @@ double derivative(double (*funct)(double), double a);
  ******************************************************************************/
 
 /**
- *  Finds the "n choose r" value. also known as the binomial coefficient.
+ * Function: binomialCoef()
+ * Finds the "n choose r" value. also known as the binomial coefficient.
  * 
  * @param n the size of the set to choose from
  * @param r the number choose from a set.
@@ -297,6 +331,7 @@ double derivative(double (*funct)(double), double a);
 long int binomialCoef( long int n, long int r );
 
 /**
+ * Function: lagrangeInterpolate()
  * This function will make a polynomial of degree n-1 given n points. It uses
  * an algorithm known as lagrange interpolation. The function executes in the 
  * following manner:
@@ -345,9 +380,10 @@ long int binomialCoef( long int n, long int r );
  *               the polynomial. c[0] is the constant term, c[d] is the highest
  *               power's coefficient.
  */
-void interpolate(long int n, double x[n], double y[n], double c[n]);
+void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n]);
 
 /**
+ * Function: meanInterpolate()
  * This function will make a best-fit polynomial of a specified degree. Given 2
  * vectors representing the x and y coordinates of a graph, the function will
  * analyze them in the following manner:
@@ -360,7 +396,7 @@ void interpolate(long int n, double x[n], double y[n], double c[n]);
  *              degree d.
  *  
  *  (NOTE)  2)-> Recursive computation finds a num_coefs size subset of the x,y
- *               data pairs then calls interpolate() on them to compute.
+ *               data pairs then calls lagrangeInterpolate() on them to compute.
  *               only guaranteed to work if you pass -1 to path.
  *
  * @param path an iterator for recursive computation. 

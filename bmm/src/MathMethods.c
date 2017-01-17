@@ -26,7 +26,7 @@ void setDelta(double d)
  *                                                                            *
  ******************************************************************************/
 
-/** 
+/**
  * Function: getRow() 
  * Fetch the values of the r number row and store the in the argument "store"
  * 
@@ -50,6 +50,7 @@ void getRow(int m, int n, double mat[][n], int r, double store[n])
 }
 
 /** 
+ * Function: getCol()
  * Fetch the values of the c number col and store the in the argument "store"
  * 
  * @param m the number of rows of the matrix mat
@@ -72,6 +73,7 @@ void getCol(int m, int n, double mat[][n], int c, double store[n])
 }
 
 /** 
+ * Function: dotProduct()
  * Compute the dot product of two vectors with length m
  * 
  * @param m the length of the vectors v1 and v2
@@ -90,6 +92,27 @@ double dotProduct(int m, double v1[m], double v2[m])
         dot += v1[i] * v2[i];
     }
     return dot;
+}
+
+/** 
+ * Function: euclideanNorm()
+ * Compute the euclidean norm (aka magnitude or spatial length) of a given 
+ * real valued m-vector
+ * 
+ * @param m the length of the vector v
+ * 
+ * @param v the vector which will be evaluated
+ */
+double euclideanNorm(int m, double v[m])
+{
+    double squareOfMagnitude = 0;
+    int j;
+    for( j = 0; j < m; j++)
+    {
+        squareOfMagnitude += v[j] * v[j];
+    }
+
+    return sqrt(squareOfMagnitude);
 }
 
 /** 
@@ -119,7 +142,7 @@ void swapRows(int n, double mat[][n], int r1, int r2)
 }
 
 /** 
- * Function: ScaleRow
+ * Function: ScaleRow()
  * Take in an n-column matrix and scale the the r row of your matrix by a double
  * labeled scaleBy.
  * 
@@ -169,6 +192,7 @@ void elimRow(int n, double mat[][n], int r1, int r2, double elimBy)
 }
 
 /** 
+ * Function: elimRow()
  * Copy the values of matrix "from" into matrix "to".
  * 
  * @param m the number of rows
@@ -180,7 +204,7 @@ void elimRow(int n, double mat[][n], int r1, int r2, double elimBy)
  * @param to the matrix to copy into
  *
  */
-void copy(int m, int n, double from[][n], double to[][n])
+void copyMatrix(int m, int n, double from[][n], double to[][n])
 {
     int i;
     int j;
@@ -357,6 +381,7 @@ double rref(int m, int n, double mat[][n])
 }
 
 /** 
+ * Function: invert()
  * This function takes in a matrix and turns it into its multiplicative inverse.
  * It copies the matrix into an augmented matrix which is twice the width of the 
  * original. The function then does an rref() on the augmented matrix. After 
@@ -386,7 +411,7 @@ double invert(int m, int n, double mat[][n])
     //use this matrix to check what the determinant is before we try to find
     //and inverse.
 
-    copy(m, n, mat, checkMat);
+    copyMatrix(m, n, mat, checkMat);
 
     det = ref(m, n, checkMat);
 
@@ -425,6 +450,7 @@ double invert(int m, int n, double mat[][n])
 }
 
 /** 
+ * Function: matrixMultiply()
  * This function multiplies two matrices. The left and left sides of a matrix
  * product must share a corresponding column/row match up. That is to say that
  * the columns of the left side of the product are the same as the rows of the
@@ -444,7 +470,7 @@ double invert(int m, int n, double mat[][n])
  * @param product the result of our multiplication
  * 
  */
-void multiply(int m, int n, int p, double left[][n], double right[][p],
+void matrixMultiply(int m, int n, int p, double left[][n], double right[][p],
         double product[][p])
 {
     int i;
@@ -469,7 +495,7 @@ void multiply(int m, int n, int p, double left[][n], double right[][p],
  ******************************************************************************/
 
 /**
- * fintegral(): finite integral.
+ * Function: fintegral() (aka finite integral)
  * This function uses a Riemann Sum method to approximate the integral of a
  * function. 
  *
@@ -511,8 +537,9 @@ double fintegral(double (*funct)(double), double a, double b)
 }
 
 /**
- * derivative(): Uses the limit definition of a derivative to approximate the 
- *                  slope near a point
+ *  Function: derivative()
+ *  Uses the limit definition of a derivative to approximate the 
+ *  slope near a point
  *
  * @param double (*funct)(double) a pointer to a function which takes a double
  *                                  and returns a double
@@ -531,7 +558,8 @@ double derivative(double (*funct)(double), double a)
  ******************************************************************************/
 
 /**
- *  Finds the "n choose r" value. also known as the binomial coefficient.
+ * Function: binomialCoef()
+ * Finds the "n choose r" value. also known as the binomial coefficient.
  * 
  * @param n the size of the set to choose from
  * @param r the number choose from a set.
@@ -568,6 +596,7 @@ long int binomialCoef( long int n, long int r )
 }
 
 /**
+ * Function: lagrangeInterpolate()
  * This function will make a polynomial of degree n-1 given n points. It uses
  * an algorithm known as lagrange interpolation. The function executes in the 
  * following manner:
@@ -616,7 +645,7 @@ long int binomialCoef( long int n, long int r )
  *               the polynomial. c[0] is the constant term, c[d] is the highest
  *               power's coefficient.
  */
-void interpolate(long int n, double x[n], double y[n], double c[n])
+void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n])
 {   
     //loop iterators
 
@@ -669,7 +698,7 @@ void interpolate(long int n, double x[n], double y[n], double c[n])
     //multiply this inverse matrix by yMat to get  one of the 
     //polynomial coefficient vectors
     
-    multiply(n, n, 1, xMat, yMat, pMat);
+    matrixMultiply(n, n, 1, xMat, yMat, pMat);
     
     //now that we have the coefficients of our polynomial,
     //load the output into c.
@@ -683,6 +712,7 @@ void interpolate(long int n, double x[n], double y[n], double c[n])
 
 
 /**
+ * Function: meanInterpolate()
  * This function will make a best-fit polynomial of a specified degree. Given 2
  * vectors representing the x and y coordinates of a graph, the function will
  * analyze them in the following manner:
@@ -695,7 +725,7 @@ void interpolate(long int n, double x[n], double y[n], double c[n])
  *              degree d.
  *  
  *  (NOTE)  2)-> Recursive computation finds a num_coefs size subset of the x,y
- *               data pairs then calls interpolate() on them to compute.
+ *               data pairs then calls lagrangeInterpolate() on them to compute.
  *               only guaranteed to work if you pass -1 top path 
                  and pass NULL to *combo.
  *
@@ -754,7 +784,7 @@ void meanInterpolate(long int path, Stack *combo, long int num_points,
             combo_x[i] = x[combo->stackItems[i]];
             combo_y[i] = y[combo->stackItems[i]];
         }
-        interpolate(num_coefs, combo_x, combo_y, combo_c);
+        lagrangeInterpolate(num_coefs, combo_x, combo_y, combo_c);
 
         for(i = 0; i < num_coefs; i++)
         {
