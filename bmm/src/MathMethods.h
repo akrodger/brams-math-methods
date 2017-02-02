@@ -331,16 +331,16 @@ double derivative(double (*funct)(double), double a);
 long int binomialCoef( long int n, long int r );
 
 /**
- * Function: lagrangeInterpolate()
+ * Function: vanderInterpolate()
  * This function will make a polynomial of degree n-1 given n points. It uses
- * an algorithm known as lagrange interpolation. The function executes in the 
+ * an algorithm known as Vandermonde Interpolation. The function executes in the 
  * following manner:
  *
- *        (let n-1 be the order/degree for simplicity) 
- *              
- *        1) -> Take n pairs of  x and y data points
- *        2) -> For the set of points, load them into a matrix like so:
- *              
+ *		(let n-1 be the order/degree for simplicity) 
+ *			  
+ *		1) -> Take n pairs of  x and y data points
+ *		2) -> For the set of points, load them into a matrix like so:
+ *			  
  *              [  (1)    (x[0])    (x[0])^2   ...   (x[0])^(d)  ]
  *              [  (1)    (x[1])    (x[1])^2   ...   (x[1])^(d)  ]
  *         X =  [                               .                ]
@@ -349,7 +349,7 @@ long int binomialCoef( long int n, long int r );
  *              [  (1)   (x[n-1])  (x[n-1])^2  ...  (x[n-1])^(d) ]
  *
  *
- *        3) -> Use the array of y data as a column vector.
+ *		3) -> Use the array of y data as a column vector.
  *
  *                              [  y[0]  ]
  *                              [  y[1]  ]
@@ -359,15 +359,15 @@ long int binomialCoef( long int n, long int r );
  *                              [ y[n-1] ]
  *
  *
- *        4) -> Use the array c as the vector of unknown coefficients which
- *              we want to solve for. We set up the matrix equation:
+ *		4) -> Use the array c as the vector of unknown coefficients which
+ *			  we want to solve for. We set up the matrix equation:
  *
- *                                 Xc = y
+ *								 Xc = y
  *
  *
- *        5) -> Since X is invertible by design, it has a solution for c :
+ *		5) -> Since X is invertible by design, it has a solution for c :
  *
- *                              c = (X^(-1))y
+ *							  c = (X^(-1))y
  *
  *
  * @param n the number of data points. (one higher than the degree)
@@ -377,8 +377,40 @@ long int binomialCoef( long int n, long int r );
  * @param y[n] the set of y data points
  *
  * @param c[n] the array which will store all the coefficients of the
- *               the polynomial. c[0] is the constant term, c[d] is the highest
- *               power's coefficient.
+ *			   the polynomial. c[0] is the constant term, c[d] is the highest
+ *			   power's coefficient.
+ */
+void vanderInterpolate(long int n, double x[n], double y[n], double c[n]);
+
+/**
+ * Function: lagrangeInterpolate()
+ * This function calculates the same polynomial which the Vandermonde method
+ * does, but instead it uses the less numerically touchy method of computing.
+ * This method uses a set of lagrange polynomials as a basis for the
+ * n-dimensional double-valued polynomial vector space. The computation
+ * does not involve inverting a matrix, where as the Vandermonde method does.
+ *
+ * For a set of n data points, we construct a polynomial of degree n-1
+ * where the polynomial is a linear combination of a lagrange basis formed 
+ * with the given set of data points.
+ * 
+ * The kth memeber of the basis l[k] is 
+ *
+ *		l[k](s) = PODUCT(j=0 to j=n-1, skip j=k) (s - x[j])/(x[k] - x[j])
+ *
+ * The final polynomial F(s) is a linear combination of this basis:
+ * 
+ * 		F(s) = SUM(k=0 to k=n-1) y[k] * l[k](s)
+ *
+ * @param n the number of data points. (one higher than the degree)
+ *
+ * @param x[n] the set of x data points
+ *
+ * @param y[n] the set of y data points
+ *
+ * @param c[n] the array which will store all the coefficients of the
+ *			   the polynomial. c[0] is the constant term, c[d] is the highest
+ *			   power's coefficient.
  */
 void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n]);
 
