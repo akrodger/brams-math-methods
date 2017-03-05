@@ -11,6 +11,7 @@ README by Abram Rodgers
 - Section 2: Calculus
 - Section 3: Numerical Methods
 - Section 4: Integer Stack Implementation
+- Section 5: Special Thanks
 
 ---------------------------------
 | Intro: Origin of this Library |
@@ -111,3 +112,9 @@ NOTE: QR factorization is shelved for now in favor of polynomial interpolation.
 | Section 4: Integer Stack Implementation |
 -------------------------------------------
 This is an implementation of a stack data structure written by me. The reason for this is simply because having a stack to run computations with is insanely useful. Currently, it is only used in the Numerical Methods section. MathMethods depends on Stack, so make sure to have them in the same directory.
+
+-----------------------------
+| Section 5: Special Thanks |
+-----------------------------
+- James Iwamasa
+In fall 2016, James Iwamasa, a personal friend from the computer science department at UC Santa Cruz, helped me implement. For the mean polynomial interpolation  algorithm, James implemented a recursive algorithm in C++ using vector objects to find all subsets of a list of integers. Then I converted this code, restructured it to work with the stack library, then optimized memory usage so that my laptop wouldn't crash  due to RAM filling up for large enough sets of integers.
