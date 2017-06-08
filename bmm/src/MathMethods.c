@@ -22,6 +22,56 @@ void setDelta(double d)
 
 /******************************************************************************
  *                                                                            *
+ *                       MEMORY MANAGEMENT OF MATRICES                        *
+ *                                                                            *
+ ******************************************************************************/
+/**
+ * Function: initMat()
+ * Take the m by n dimensional matrix Mat and allocates memory for it.
+ * Sets Each entry of the matrix to zero.
+ *
+ * To free the memory, simply use free(mat) where mat is your matrix
+ *
+ * @param m the number of rows of the matrix mat
+ * 
+ * @param n the number of cols of the matrix mat
+ * 
+ * @param mat the matrix you wish to initialize
+ */
+void initMat(int m, int n, double (*mat)[n])
+{
+	int i = 0;
+	int j = 0;
+	mat = malloc(sizeof(double)*m*n);
+	for(i = 0; i < m; i++)
+	{
+		for(j = 0; j < n; j++)
+		{
+			mat[i][j] = 0;
+		}	
+	}
+}
+
+/**
+ * Function: vectorCopy()
+ * Copy v1 into v2
+ * 
+ * @param n the length of v1 and v2
+ *
+ * @param v1 a vector of doubles. length n. Copying from this one.
+ *
+ * @param v2 a vector of doubles. length n. Copying to this one.
+ */
+void vectorCopy(int n, double *v1, double *v2)
+{
+	int i = 0;
+	for(i = 0; i < n; i++)
+	{
+		v2[i] = v1[i];
+	}
+}
+/******************************************************************************
+ *                                                                            *
  *                         LINEAR ALGEBRA OPERATIONS                          *
  *                                                                            *
  ******************************************************************************/
@@ -38,9 +88,9 @@ void setDelta(double d)
  * 
  * @param r the row you want to read
  * 
- * @the store the vector you wish to store into
+ * @param store the vector you wish to store into
  */
-void getRow(int m, int n, double mat[][n], int r, double store[n])
+void getRow(int m, int n, double (*mat)[n], int r, double store[n])
 {
 	int j;
 	for (j = 0; j < n; j++) {
@@ -63,7 +113,7 @@ void getRow(int m, int n, double mat[][n], int r, double store[n])
  * 
  * @the store the vector you wish to store into
  */
-void getCol(int m, int n, double mat[][n], int c, double store[n])
+void getCol(int m, int n, double (*mat)[n], int c, double store[n])
 {
 	int i;
 	for (i = 0; i < m; i++) {
@@ -129,7 +179,7 @@ double euclideanNorm(int m, double v[m])
  * 
  * @param row2 your other row
  */
-void swapRows(int n, double mat[][n], int r1, int r2)
+void swapRows(int n, double (*mat)[n], int r1, int r2)
 {
 	int j;
 	double temp;
@@ -155,7 +205,7 @@ void swapRows(int n, double mat[][n], int r1, int r2)
  * @param scaleBy the scalar you wish to multiply the row by
  * 
  */
-void scaleRow(int n, double mat[][n], int r, double scaleBy)
+void scaleRow(int n, double (*mat)[n], int r, double scaleBy)
 {
 	int j;
 	for (j = 0; j < n; j++) {
@@ -182,7 +232,7 @@ void scaleRow(int n, double mat[][n], int r, double scaleBy)
  * @param elimBy the scalar to multiply by r2
  * 
  */
-void elimRow(int n, double mat[][n], int r1, int r2, double elimBy)
+void elimRow(int n, double (*mat)[n], int r1, int r2, double elimBy)
 {
 	int j;
 	for (j = 0; j < n; j++) {
@@ -204,7 +254,7 @@ void elimRow(int n, double mat[][n], int r1, int r2, double elimBy)
  * @param to the matrix to copy into
  *
  */
-void copyMatrix(int m, int n, double from[][n], double to[][n])
+void copyMatrix(int m, int n, double (*from)[n], double (*to)[n])
 {
 	int i;
 	int j;
@@ -240,7 +290,7 @@ void copyMatrix(int m, int n, double from[][n], double to[][n])
  *		  if the matrix was not square, we return a zero, which is just a 
  *		  placeholder value so that we dont return garbage.
  */
-double ref(int m, int n, double mat[][n])
+double ref(int m, int n, double (*mat)[n])
 {
 	int x = 0;
 	int y = 0;
@@ -252,7 +302,7 @@ double ref(int m, int n, double mat[][n])
 	//this is going to be the first nonzero column, starting from the left
 	//when this flag goes up, our matrix did 
 	int noPivotColFlag = 0;
-	//this next int flag is for when our whole row is a zero row
+	//this next int flag is for if we find a row of zero (i.e. not invertible)
 	double det = 1;
 	//check if our matrix is square.
 	if (m != n) {
@@ -336,7 +386,7 @@ double ref(int m, int n, double mat[][n])
  *		  return zero. We assume you understand that this zero has no
  *		  correlation to a determinant for the m not equal to n case.
  */
-double rref(int m, int n, double mat[][n])
+double rref(int m, int n, double (*mat)[n])
 {
 	double det = ref(m, n, mat);
 	//these are our loop iterators, x and y:
@@ -395,7 +445,7 @@ double rref(int m, int n, double mat[][n])
  * @param return det(mat) if the matrix was invertible, return 0 otherwise
  * 
  */
-double invert(int m, int n, double mat[][n])
+double invert(int m, int n, double (*mat)[n])
 {
 	double det = 0;
 	int i;
@@ -470,8 +520,8 @@ double invert(int m, int n, double mat[][n])
  * @param product the result of our multiplication
  * 
  */
-void matrixMultiply(int m, int n, int p, double left[][n], double right[][p],
-		double product[][p])
+void matrixMultiply(int m, int n, int p, double (*left)[n], double (*right)[p],
+		double (*product)[p])
 {
 	int i;
 	int j;
@@ -490,14 +540,14 @@ void matrixMultiply(int m, int n, int p, double left[][n], double right[][p],
 
 /******************************************************************************
  *                                                                            *
- *                      ANALYSIS AND CALCULUS OPERATIONS                      *
+ *                 NUMERICAL ANALYSIS AND CALCULUS OPERATIONS                 *
  *                                                                            *
  ******************************************************************************/
 
 /**
- * Function: fintegral() (aka finite integral)
- * This function uses a Riemann Sum method to approximate the integral of a
- * function. 
+ * Function: rectIntegral() 
+ * This function uses a Riemann Sum method with fixed width size over rectangles
+ * to approximate the integral of a function mapping from doubles to doubles. 
  *
  * @param double (*funct)(double) a pointer to a function which takes a double
  *								  and returns a double
@@ -506,7 +556,7 @@ void matrixMultiply(int m, int n, int p, double left[][n], double right[][p],
  *
  * @param b the upper limit of integration
  */
-double fintegral(double (*funct)(double), double a, double b)
+double rectIntegral(double (*funct)(double), double a, double b)
 {
 	//value of a reimann sum
 	double riemann = 0;
@@ -537,25 +587,31 @@ double fintegral(double (*funct)(double), double a, double b)
 }
 
 /**
- *  Function: derivative()
+ *  Function: simpleDerivative()
  *  Uses the limit definition of a derivative to approximate the 
- *  slope near a point
+ *  slope near a point. Literally only 1 line as a 1st order approx.
  *
  * @param double (*funct)(double) a pointer to a function which takes a double
  *								  and returns a double
  *
  * @param a the point to approximate the derivative near
  */
-double derivative(double (*funct)(double), double a)
+double simpleDerivative(double (*funct)(double), double a)
 {
 	return (funct(a + DELTA) - funct(a)) / DELTA;
 }
 
-/******************************************************************************
- *                                                                            *
- *                              NUMERICAL METHODS                             *
- *                                                                            *
- ******************************************************************************/
+/**
+ * This function uses Adams Bashforth 3-step method to solving systems of 
+ * systems of ordinary differential equations. 
+ *
+void adamsBash3(int n, double* (*funct)(double*),
+				double* y_initial, double period, double deltaT, int iostep
+				long int numPnts, double (*y_solved)[numPnts], double *time)
+{
+	
+}*/
+
 
 /**
  * Function: binomialCoef()
@@ -570,20 +626,17 @@ long int binomialCoef( long int n, long int r )
 	int i = 0;
 	//the return value
 	int pascal = n;
-	if (r > n)
-	{
+	if (r > n) {
 		return 0; //invalid choice case
 	}
 
-	if ((r * 2) > n)
-	{
+	if ((r * 2) > n) {
 		//the binomial coefficient is symmetric about the center of 
 		//Pascal's triangle, so we use this one trick:
 		r = n-r; //click here to find out my one trick! mathematicians hate me!
 	}
 
-	if (r == 0)
-	{
+	if (r == 0) {
 		return 1; //only 1 way to choose nothing
 	}
 
@@ -659,10 +712,8 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
 	double xMat[n][n];
 	//intialize xMat right after declaring
 	//(to avoid eldritch C memory issues.)
-	for(i = 0; i < n; i++)
-	{
-		for(j = 0; j < n; j++)
-		{
+	for(i = 0; i < n; i++) {
+		for(j = 0; j < n; j++) {
 			xMat[i][j] = pow(x[i] , j); 
 			//value of of the (i,j) entry is the i number to the j power
 		} 
@@ -675,8 +726,7 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
 	//This may seem odd, but it is done so we can use the linear algebra
 	//functions written above. y[j] is technically a row vector.
 	//we need a column vector to do the operations.
-	for(i = 0; i < n; i++)
-	{
+	for(i = 0; i < n; i++) {
 		yMat[i][0] = y[i];
 	}
 	
@@ -684,8 +734,7 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
 	double pMat[n][1];
 	//intialize pMat right after declaring
 	//(to avoid eldritch C memory issues.)
-	for(i = 0; i < n; i++)
-	{
+	for(i = 0; i < n; i++) {
 		pMat[i][0] = 0;
 	} 
 	
@@ -702,8 +751,7 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
 	
 	//now that we have the coefficients of our polynomial,
 	//load the output into c.
-	for(i = 0; i < n; i++)
-	{
+	for(i = 0; i < n; i++) {
 		c[i] = pMat[i][0];
 	}
 	//done
@@ -731,6 +779,8 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
  * 
  * 		F(s) = SUM(k=0 to k=n-1) y[k] * l[k](s)
  *
+ * 
+ * 
  * @param n the number of data points. (one higher than the degree)
  *
  * @param x[n] the set of x data points
@@ -741,16 +791,11 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
  *			   the polynomial. c[0] is the constant term, c[d] is the highest
  *			   power's coefficient.
  */
+/*Not Yet implemented
 void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n])
 {
-	/*Since meanInterpolate depends on this function, in order to keep the
-	 *the github hosted code running, I will simply pass the arguments to
-	 *the vandermonde function for now. This will be filled in with the
-	 *full implementation later.
-	 */
-	vanderInterpolate(n, x, y, c);
-	return;
-}
+}*/
+
 /**
  * Function: meanInterpolate()
  * This function will make a best-fit polynomial of a specified degree. Given 2
@@ -765,7 +810,7 @@ void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n])
  *			  degree d.
  *  
  *  (NOTE)  2)-> Recursive computation finds a num_coefs size subset of the x,y
- *			   data pairs then calls lagrangeInterpolate() on them to compute.
+ *			   data pairs then calls vanderInterpolate() on them to compute.
  *			   only guaranteed to work if you pass -1 top path 
  *				and pass NULL to *combo.
  *
@@ -805,8 +850,7 @@ void meanInterpolate(long int path, Stack *combo, long int num_points,
 	long int popValue = 0;
 
 
-	if(path == -1)
-	{
+	if(path == -1) {
 		//Initialize Stack at the start of the recursion
 		StackInit(&combo, num_coefs);
 	} else {
@@ -815,19 +859,16 @@ void meanInterpolate(long int path, Stack *combo, long int num_points,
 	}
 
 	//if we have a subset (not end of path)
-	if(StackGetSize(combo) == num_coefs)
-	{ 
+	if(StackGetSize(combo) == num_coefs) { 
 		//process combinatorial data
-		for(i = 0; i < num_coefs; i++)
-		{
+		for(i = 0; i < num_coefs; i++) {
 			//make the placeholder arrays equal to the specific x, y values
 			combo_x[i] = x[combo->stackItems[i]];
 			combo_y[i] = y[combo->stackItems[i]];
 		}
-		lagrangeInterpolate(num_coefs, combo_x, combo_y, combo_c);
+		vanderInterpolate(num_coefs, combo_x, combo_y, combo_c);
 
-		for(i = 0; i < num_coefs; i++)
-		{
+		for(i = 0; i < num_coefs; i++) {
 			c[i] += combo_c[i];
 		}
 
@@ -837,19 +878,16 @@ void meanInterpolate(long int path, Stack *combo, long int num_points,
 		return;
 	}
 
-	for (i = path + 1; i < num_points; i++)  //go down all paths > current
-	{  
+	for (i = path + 1; i < num_points; i++) { //go down all paths > current
 		meanInterpolate(i, combo, num_points, x, y, num_coefs, c);
 	}
 
 	StackPop(combo, &popValue);
 
-	if(path == -1)
-	{		
+	if(path == -1) {		
 		StackFree(combo);
 
-		for(i = 0; i < num_coefs; i++)
-		{
+		for(i = 0; i < num_coefs; i++) {
 			c[i] /= binomialCoef(num_points, num_coefs);
 		}
 	} 

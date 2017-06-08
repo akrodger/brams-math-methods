@@ -31,11 +31,42 @@
 #define NULL 0
 #endif
 
+
 /*This function is used to set a static system variable called delta.
  *delta is used to take integrals, derivatives, and other values
  */
 void setDelta(double d);
 
+/******************************************************************************
+ *                                                                            *
+ *                       MEMORY MANAGEMENT OF MATRICES                        *
+ *                                                                            *
+ ******************************************************************************/
+
+/**
+ * Function: initMat()
+ * Take the m by n dimensional matrix Mat and allocates memory for it.
+ * Sets Each entry of the matrix to zero.
+ *
+ * @param m the number of rows of the matrix mat
+ * 
+ * @param n the number of cols of the matrix mat
+ * 
+ * @param mat the matrix you wish to initialize
+ */
+void initMat(int m, int n, double (*mat)[n]);
+
+/**
+ * Function: vectorCopy()
+ * Copy v1 into v2
+ * 
+ * @param n the length of v1 and v2
+ *
+ * @param v1 a vector of doubles. length n. Copying from this one.
+ *
+ * @param v2 a vector of doubles. length n. Copying to this one.
+ */
+void vectorCopy(int n, double *v1, double *v2);
 /******************************************************************************
  *                                                                            *
  *                         LINEAR ALGEBRA OPERATIONS                          *
@@ -54,9 +85,9 @@ void setDelta(double d);
  * 
  * @param r the row you want to read
  * 
- * @the store the vector you wish to store into
+ * @param store the vector you wish to store into
  */
-void getRow(int m, int n, double mat[][n], int r, double store[n]);
+void getRow(int m, int n, double (*mat)[n], int r, double store[n]);
 
 /** 
  * Function: getCol()
@@ -72,7 +103,7 @@ void getRow(int m, int n, double mat[][n], int r, double store[n]);
  * 
  * @the store the vector you wish to store into
  */
-void getCol(int m, int n, double mat[][n], int c, double store[n]);
+void getCol(int m, int n, double (*mat)[n], int c, double store[n]);
 
 /** 
  * Function: dotProduct()
@@ -112,7 +143,7 @@ double euclideanNorm(int m, double v[m]);
  *
  * @param proj the stored result of the projection computation
  */
-void vectorProject(int m, double v1[m], double v2[], double proj[m]);
+void vectorProject(int m, double v1[m], double v2[m], double proj[m]);
 
 /** 
  * Function: SwapRows()
@@ -128,7 +159,7 @@ void vectorProject(int m, double v1[m], double v2[], double proj[m]);
  * 
  * @param row2 your other row
  */
-void swapRows(int n, double mat[][n], int r1, int r2);
+void swapRows(int n, double (*mat)[n], int r1, int r2);
 
 /** 
  * Function: ScaleRow()
@@ -144,7 +175,7 @@ void swapRows(int n, double mat[][n], int r1, int r2);
  * @param scaleBy the scalar you wish to multiply the row by
  * 
  */
-void scaleRow(int n, double mat[][n], int r, double scaleBy);
+void scaleRow(int n, double (*mat)[n], int r, double scaleBy);
 
 /** 
  * Function: elimRow()
@@ -165,7 +196,7 @@ void scaleRow(int n, double mat[][n], int r, double scaleBy);
  * @param elimBy the scalar to multiply by r2
  * 
  */
-void elimRow(int n, double mat[][n], int r1, int r2, double elimBy);
+void elimRow(int n, double (*mat)[n], int r1, int r2, double elimBy);
 
 /** 
  * Function: copyMatrix()
@@ -180,7 +211,7 @@ void elimRow(int n, double mat[][n], int r1, int r2, double elimBy);
  * @param to the matrix to copy into
  *
  */
-void copyMatrix(int m, int n, double from[][n], double to[][n]);
+void copyMatrix(int m, int n, double (*from)[n], double (*to)[n]);
 
 /** 
  * Function: ref() AKA Row Echelon Form
@@ -206,7 +237,7 @@ void copyMatrix(int m, int n, double from[][n], double to[][n]);
  *          if the matrix was not square, we return a zero, which is just a 
  *          placeholder value so that we dont return garbage.
  */
-double ref(int m, int n, double mat[][n]);
+double ref(int m, int n, double (*mat)[n]);
 
 /** 
  * Function: rref() AKA Reduced Row Echelon Form
@@ -233,7 +264,7 @@ double ref(int m, int n, double mat[][n]);
  *          return zero. We assume you understand that this zero has no
  *          correlation to a determinant for the m not equal to n case.
  */
-double rref(int m, int n, double mat[][n]);
+double rref(int m, int n, double (*mat)[n]);
 
 /** 
  * Function: invert()
@@ -250,7 +281,7 @@ double rref(int m, int n, double mat[][n]);
  * @param return det(mat) if the matrix was invertible, return 0 otherwise
  * 
  */
-double invert(int m, int n, double mat[][n]);
+double invert(int m, int n, double (*mat)[n]);
 
 /** 
  * Function: matrixMultiply()
@@ -274,52 +305,54 @@ double invert(int m, int n, double mat[][n]);
  * 
  */
 void matrixMultiply(int m, int n, int p, double left[][n], double right[][p],
-        double product[][p]);
+        double (*product)[p]);
 
 /******************************************************************************
  *                                                                            *
- *                      ANALYSIS AND CALCULUS OPERATIONS                      *
+ *                 NUMERICAL ANALYSIS AND CALCULUS OPERATIONS                 *
  *                                                                            *
  ******************************************************************************/
 
 /**
- * Function: fintegral() (aka finite integral)
- * This function uses a Riemann Sum method to approximate the integral of a
- * function. 
+ * Function: rectIntegral() 
+ * This function uses a Riemann Sum method with fixed width size over rectangles
+ * to approximate the integral of a function mapping from doubles to doubles. 
  *
  * @param double (*funct)(double) a pointer to a function which takes a double
- *                                  and returns a double
+ *								  and returns a double
  *
  * @param a the lower limit of integration
  *
  * @param b the upper limit of integration
  */
-double fintegral(double (*funct)(double), double a, double b);
+double rectIntegral(double (*funct)(double), double a, double b);
 
 /**
- *  Function: derivative()
+ *  Function: simpleDerivative()
  *  Uses the limit definition of a derivative to approximate the 
- *  slope near a point
+ *  slope near a point. Literally only 1 line as a 1st order approx.
  *
  * @param double (*funct)(double) a pointer to a function which takes a double
- *                                  and returns a double
+ *								  and returns a double
  *
  * @param a the point to approximate the derivative near
  */
-double derivative(double (*funct)(double), double a);
+double simpleDerivative(double (*funct)(double), double a);
 
 //Sneak Preview: Planned functions:
 
 //double parSum( [takes a function pointer for a sequence] );
 
-//This one may be very hard:
+//This one may be a little hard:
 //double taylor();
 
-/******************************************************************************
- *                                                                            *
- *                              NUMERICAL METHODS                             *
- *                                                                            *
- ******************************************************************************/
+/**
+ * This function uses Adams Bashforth 3-step method to solving systems of 
+ * systems of ordinary differential equations. 
+ */
+void adamsBash3(int n, double* (*funct)(double*),
+				double* y_initial, double period, double deltaT, int iostep,
+				long int numPnts, double (*y_solved)[numPnts], double *time);
 
 /**
  * Function: binomialCoef()
@@ -412,7 +445,8 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n]);
  *			   the polynomial. c[0] is the constant term, c[d] is the highest
  *			   power's coefficient.
  */
-void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n]);
+//Not Yet Implemented
+//void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n]);
 
 /**
  * Function: meanInterpolate()
@@ -428,7 +462,7 @@ void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n]);
  *              degree d.
  *  
  *  (NOTE)  2)-> Recursive computation finds a num_coefs size subset of the x,y
- *               data pairs then calls lagrangeInterpolate() on them to compute.
+ *               data pairs then calls vanderInterpolate() on them to compute.
  *               only guaranteed to work if you pass -1 to path.
  *
  * @param path an iterator for recursive computation. 
