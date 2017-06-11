@@ -396,13 +396,13 @@ double simpleDerivative(double (*funct)(double), double a);
  * systems of ordinary differential equations. A derivation for AB3 is on
  * wikipedia. Points are saved to the argument y_initial.
  *
- * Words of Caution: Make sure numPnts is an an integer multiple of iostep
- *					If you neglect to do this, the solver may crash. Note that
- *					in the case of (iostep == numPnts) being true, we actually
- * 					simply return the last point in the iteration. So if I
- * 					tell the solver to compute 5000 points and saved to 
- *					y_solve once every 5000 poinths, then y_solve will be 
- *					an n by 1 column vector containing the last point computed.
+ * Words of Caution: 2 things. First. numPnts = total number of solves + 1. This
+ *					 is because we don't need to solve for initial point. Also,
+ *					 note that in the case of (iostep == numPnts) being true, we
+ *					 actually simply return the last point in the iteration. So 
+ *					 if Itell the solver to compute 5000 points and saved to
+ *					 y_solve once every 5000 poinths, then y_solve will be an n 
+ *					 by 1 column vector containing the last point computed.
  *
  * @param n The dimension of the differential equation.
  * 
@@ -419,7 +419,8 @@ double simpleDerivative(double (*funct)(double), double a);
  *					number of iterations. Make sure to make this larger if
  *					you want to use a really small deltaT.
  *
- * @param numPnts This is the number of points the solver finds.
+ * @param numPnts This is the number of points the solver finds. Must be at
+ * 					at least 
  *
  * @param (*y_solved)[(numPnts - (numPnts % iostep))/iostep] 
  *						The matrix containing the ODE numerical

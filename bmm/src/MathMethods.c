@@ -669,13 +669,13 @@ double simpleDerivative(double (*funct)(double), double a)
  * systems of ordinary differential equations. A derivation for AB3 is on
  * wikipedia. Points are saved to the argument y_initial.
  *
- * Words of Caution: Make sure numPnts is an an integer multiple of iostep
- *					If you neglect to do this, the solver may crash. Note that
- *					in the case of (iostep == numPnts) being true, we actually
- * 					simply return the last point in the iteration. So if I
- * 					tell the solver to compute 5000 points and saved to 
- *					y_solve once every 5000 poinths, then y_solve will be 
- *					an n by 1 column vector containing the last point computed.
+ * Words of Caution: 2 things. First. numPnts = total number of solves + 1. This
+ *					 is because we don't need to solve for initial point. Also,
+ *					 note that in the case of (iostep == numPnts) being true, we
+ *					 actually simply return the last point in the iteration. So 
+ *					 if Itell the solver to compute 5000 points and saved to
+ *					 y_solve once every 5000 poinths, then y_solve will be an n 
+ *					 by 1 column vector containing the last point computed.
  *
  * @param n The dimension of the differential equation.
  * 
@@ -692,7 +692,8 @@ double simpleDerivative(double (*funct)(double), double a)
  *					number of iterations. Make sure to make this larger if
  *					you want to use a really small deltaT.
  *
- * @param numPnts This is the number of points the solver finds.
+ * @param numPnts This is the number of points the solver finds. Must be at
+ * 					at least 
  *
  * @param (*y_solved)[(numPnts - (numPnts % iostep))/iostep] 
  *						The matrix containing the ODE numerical
@@ -737,15 +738,15 @@ void adamsBash3(int n, void (*vecField)(double[n], double[n]),
 	}
 	
 	//These lines are equivalent to the MATLAB code: (fun is vecField)
-	//yj = yjm2 + DT*0.5*(fun(yjm2+DT*fun(yjm2)) + fun(yjm2));
-	vecField(yjm2, tempVec1);
+	//yj = yjm1 + DT*0.5*(fun(yjm1+DT*fun(yjm1)) + fun(yjm1));
+	vecField(yjm1, tempVec1);
 	arrayScale(n, tempVec1, deltaT, tempVec1);
-	arrayAdd(n, yjm2, tempVec1, tempVec1);
+	arrayAdd(n, yjm1, tempVec1, tempVec1);
 	vecField(tempVec1, tempVec2);
-	vecField(yjm2, tempVec1);
+	vecField(yjm1, tempVec1);
 	arrayAdd(n, tempVec1, tempVec2, tempVec1);
 	arrayScale(n, tempVec1, 0.5*deltaT, tempVec1);
-	arrayAdd(n, tempVec1, yjm2, yj);
+	arrayAdd(n, tempVec1, yjm1, yj);
 	//Step Time Forward
 	tj += deltaT;
 	//if( 2 % iostep == 0){
@@ -759,7 +760,7 @@ void adamsBash3(int n, void (*vecField)(double[n], double[n]),
 	if(1 == iostep){
 		for (j = 0; j < n; j++) {
 			y_solve[j][numSaved] = yjm1[j];
-		}		
+		}
 		numSaved++;
 	}
 	if(2 % iostep == 0){
@@ -802,11 +803,34 @@ void adamsBash3(int n, void (*vecField)(double[n], double[n]),
 		copyArray(n, yjp1, yj);
 		i++;
 	}
+	//This last section does some handling for when someone sets iostep=numPnts
+	//Basically, we choose to give back the last iteration of the solve.
+	//numPnts == 1 means only return inital condition.
 	if(iostep == numPnts){
-		for (j = 0; j < n; j++) {
-				y_solve[j][0] = yjp1[j];
-			}
-		time[0] = tj;
+		if(iostep == 1){//numPnts == 1 means only return inital condition.
+			for (j = 0; j < n; j++) {
+					y_solve[j][0] = yjm2[j];
+				}		
+			time[0] = 0;
+		}
+		if(iostep == 2){//numPnts == 2 means only return 1 step forward
+			for (j = 0; j < n; j++) {
+					y_solve[j][0] = yjm1[j];
+				}		
+			time[0] = deltaT;
+		}
+		if(iostep == 3){//numPnts == 3 means only return 2 steps foward.
+			for (j = 0; j < n; j++) {
+					y_solve[j][0] = yj[j];
+				}		
+			time[0] = deltaT + deltaT;
+		}
+		if(iostep > 3){//numPnts == 1 means only return late position
+			for (j = 0; j < n; j++) {
+					y_solve[j][0] = yjp1[j];
+				}		
+			time[0] = tj;
+		}
 	}
 	free(tempVec1);
 	free(tempVec2);
