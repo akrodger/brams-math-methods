@@ -112,6 +112,8 @@ int main(int argc, char **argv)
 	{
 		cosineWave[j] = yPlot[0][j];
 		sineWave[j] = yPlot[1][j];
+		printf("\n\ncosine: %f\nsine: %f\ntime: %f\n", 
+					yPlot[0][j],yPlot[1][j], t[j]);
 	}
     gnuplot_resetplot(h1) ;
     gnuplot_setstyle(h1, "linespoints") ;
