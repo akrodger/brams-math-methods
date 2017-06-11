@@ -26,50 +26,46 @@ void setDelta(double d)
  *                                                                            *
  ******************************************************************************/
 /**
- * Function: initMat()
- * Take the m by n dimensional matrix Mat and allocates memory for it.
- * Sets Each entry of the matrix to zero.
+ * Macro: initMat()
+ * just a shortcut for doing calloc() on a matrix.
  *
- * To free the memory, simply use free(mat) where mat is your matrix
+ * A Word on how memory is managed with matrices and vectors:
+ * A m and n matrix is a n m by n 2D array of doubles with C99 representation.
+ * An m by 1 matrix is a column vector.
+ * Let vec be a column vector. the vec[0] is an an array of length n, almost.
+ * It is the memory location of the the column vector, and therefore may be
+ * used as such. An exploitation of this fact is in the matrixMultiply function.
  *
+ * Actual definition is in header.
+ * 
  * @param m the number of rows of the matrix mat
  * 
  * @param n the number of cols of the matrix mat
  * 
  * @param mat the matrix you wish to initialize
  */
-void initMat(int m, int n, double (*mat)[n])
-{
-	int i = 0;
+// #define initMat(m, n, mat) mat = calloc((m)*(n), sizeof(double))
+
+/** 
+ * Function: copyArry()
+ * Copy the values of array "from" into array "to".
+ * Just a helper function for copying from one 1D array to another
+ * 
+ * @param n the number of entries
+ * 
+ * @param from the array with desired values
+ * 
+ * @param to the array to copy into
+ *
+ */
+static void copyArray(int n, double *from, double *to)
+{	
 	int j = 0;
-	mat = malloc(sizeof(double)*m*n);
-	for(i = 0; i < m; i++)
-	{
-		for(j = 0; j < n; j++)
-		{
-			mat[i][j] = 0;
-		}	
+	for (j = 0; j < n; j++) {
+		to[j] = from[j];
 	}
 }
 
-/**
- * Function: vectorCopy()
- * Copy v1 into v2
- * 
- * @param n the length of v1 and v2
- *
- * @param v1 a vector of doubles. length n. Copying from this one.
- *
- * @param v2 a vector of doubles. length n. Copying to this one.
- */
-void vectorCopy(int n, double *v1, double *v2)
-{
-	int i = 0;
-	for(i = 0; i < n; i++)
-	{
-		v2[i] = v1[i];
-	}
-}
 /******************************************************************************
  *                                                                            *
  *                         LINEAR ALGEBRA OPERATIONS                          *
@@ -88,7 +84,7 @@ void vectorCopy(int n, double *v1, double *v2)
  * 
  * @param r the row you want to read
  * 
- * @param store the vector you wish to store into
+ * @param store the array you wish to store into
  */
 void getRow(int m, int n, double (*mat)[n], int r, double store[n])
 {
@@ -111,7 +107,7 @@ void getRow(int m, int n, double (*mat)[n], int r, double store[n])
  * 
  * @param c the column you want to read
  * 
- * @the store the vector you wish to store into
+ * @the store the array you wish to store into
  */
 void getCol(int m, int n, double (*mat)[n], int c, double store[n])
 {
@@ -134,12 +130,12 @@ void getCol(int m, int n, double (*mat)[n], int c, double store[n])
  * 
  * @return the dot product of v1 and v2
  */
-double dotProduct(int m, double v1[m], double v2[m])
+double dotProduct(int m, double (*v1)[1], double (*v2)[1])
 {
 	double dot = 0;
 	int i;
 	for (i = 0; i < m; i++) {
-		dot += v1[i] * v2[i];
+		dot += v1[i][0] * v2[i][0];
 	}
 	return dot;
 }
@@ -153,13 +149,13 @@ double dotProduct(int m, double v1[m], double v2[m])
  * 
  * @param v the vector which will be evaluated
  */
-double euclideanNorm(int m, double v[m])
+double euclideanNorm(int m, double (*v)[1])
 {
 	double squareOfMagnitude = 0;
 	int j;
 	for( j = 0; j < m; j++)
 	{
-		squareOfMagnitude += v[j] * v[j];
+		squareOfMagnitude += v[j][0] * v[j][0];
 	}
 
 	return sqrt(squareOfMagnitude);
@@ -215,6 +211,7 @@ void scaleRow(int n, double (*mat)[n], int r, double scaleBy)
 }
 
 /** 
+ * Function: elimRow()
  * This is the classic Eliminate operation. Takes in a matrix with n columns,
  * then subtracts elimBy * r2 (row 2) from r1 (row 1). We don't use this
  * function in our ref() function because of the slightly nuanced way we
@@ -242,8 +239,10 @@ void elimRow(int n, double (*mat)[n], int r1, int r2, double elimBy)
 }
 
 /** 
- * Function: elimRow()
+ * Function: copyMatrix()
  * Copy the values of matrix "from" into matrix "to".
+ * You can use this as a reguar array copy by setting n=1 and passing 2 arrays
+ * C might get mad at you though and send all those "warnings"
  * 
  * @param m the number of rows
  * 
@@ -525,17 +524,81 @@ void matrixMultiply(int m, int n, int p, double (*left)[n], double (*right)[p],
 {
 	int i;
 	int j;
-	double *v1 = calloc(n, sizeof(double));
-	double *v2 = calloc(n, sizeof(double));;
+	double (*v1)[1] = calloc(n, sizeof(double));
+	double (*v2)[1] = calloc(n, sizeof(double));;
 	for (i = 0; i < m; i++) {
 		for (j = 0; j < p; j++) {
-			getRow(m, n, left, i, v1);
-			getCol(n, p, right, j, v2);
+			getRow(m, n, left, i, v1[0]);
+			getCol(n, p, right, j, v2[0]);
 			product[i][j] = dotProduct(n, v1, v2);
 		}
 	}
 	free(v1);
 	free(v2);
+}
+
+/**
+ * Function: arrayAdd()
+ * Add the corresponding elements of two 1D arrays of doubles. 
+ * Return value is the last argument.
+ *
+ * @param m the length of the arrays.
+ *
+ * @param left the left addend
+ *
+ * @param right the right addend
+ *
+ * @param sum the sum of the left and the right
+ */
+void arrayAdd(int m, double *left, double *right, double *sum)
+{
+	int j;
+	for(j = 0; j < m; j++){
+		sum[j] = left[j] + right[j];
+	}
+}
+/**
+ * Function: arrayScale()
+ * Multiplies all elements of an array of doubles by a number.
+ *
+ * @param m the length of the arrays.
+ *
+ * @param arr the array to be scaled
+ *
+ * @param scaleBy the double with which you scale the vector
+ *
+ * @param scaled the scaled array
+ */
+void arrayScale(int m, double *arr, double scaleBy, double *scaled)
+{
+	int j;
+	for(j = 0; j < m; j++){
+		scaled[j] =  scaleBy*arr[j];
+	}
+}
+
+/**
+ * Function: arrayAdd()
+ * Add the corresponding elements of two matrices. 
+ * Return value is the last argument.
+ *
+ * @param m the number of rows.
+ *
+ * @param n the number of columns
+ *
+ * @param left the left addend
+ *
+ * @param right the right addend
+ *
+ * @param sum the sum of the left and the right
+ */
+void matrixAdd(int m, int n, double (*left)[n], double (*right)[n], 
+				double (*sum)[n])
+{
+	int j;
+	for(j = 0; j < n; j++){
+		arrayAdd(m, left[j], right[j], sum[j]);
+	}
 }
 
 /******************************************************************************
@@ -603,15 +666,148 @@ double simpleDerivative(double (*funct)(double), double a)
 
 /**
  * This function uses Adams Bashforth 3-step method to solving systems of 
- * systems of ordinary differential equations. 
+ * systems of ordinary differential equations.
  *
-void adamsBash3(int n, double* (*funct)(double*),
-				double* y_initial, double period, double deltaT, int iostep
-				long int numPnts, double (*y_solved)[numPnts], double *time)
+ * Words of Caution: Make sure numPnts is an an integer multiple of iostep
+ *					If you neglect to do this, the solver may crash.
+ *
+ * @param n The dimension of the differential equation.
+ * 
+ * @param void (*vecField)(double[n], double[n])) Function pointer to the
+ * 				vector/flow field. The first argument is the input to the
+ *				field, the second argument is the output.
+ *
+ * @param (*y_initial)[1] an n-dimensional column vector which gives the 
+ * 							initial condition of the ODE
+ *
+ * @param deltaT The time step for the solver to use
+ * 
+ * @param iostep The ode saves a point to the solution once every iostep
+ *					number of iterations. Make sure to make this larger if
+ *					you want to use a really small deltaT.
+ *
+ * @param numPnts This is the number of points the solver finds.
+ *
+ * @param (*y_solved)[(numPnts - (numPnts % iostep))/iostep] 
+ *						The matrix containing the ODE numerical
+ *						solution. Every column is a point on the trajectory.
+ *
+ * @param *time an array containing the time at each point.
+ */
+void adamsBash3(int n, void (*vecField)(double[n], double[n]),
+				double (*y_initial)[1], double deltaT, 
+				int iostep, long int numPnts,
+				double (*y_solve)[(numPnts - (numPnts % iostep))/iostep], 
+				double *time)
 {
+	//Initialize all memory needed to solve ODE:
+	double *tempVec1 = calloc(n, sizeof(double));
+	double *tempVec2 = calloc(n, sizeof(double));
+	double *yjm2 = calloc(n, sizeof(double));
+	double *yjm1 = calloc(n, sizeof(double));
+	double *yj = calloc(n, sizeof(double));
+	double *yjp1 = calloc(n, sizeof(double));
+	long int i = 0;	
+	int j = 0;
+	int numSaved = -1;
+	double tj = 0;
+	time[0] = tj;
+	copyArray(n, y_initial[0], yjm2);
 	
-}*/
-
+	//These Several lines are equivalent to the MATLAB code:
+	//yjm1 = y0 + DT*0.5*(vecField(y0+DT*vecField(y0,)) + vecField(y0));
+	vecField(y_initial[0], tempVec1);
+ 	arrayScale(n, tempVec1, deltaT, tempVec1);
+	arrayAdd(n, y_initial[0], tempVec1, tempVec1);
+	vecField(tempVec1, tempVec2);
+	vecField(y_initial[0], tempVec1);
+	arrayAdd(n, tempVec1, tempVec2, tempVec1);
+	arrayScale(n, tempVec1, 0.5*deltaT, tempVec1);
+	arrayAdd(n, y_initial[0], tempVec1, yjm1);
+	//Step Time Forward
+	tj += deltaT;
+	if(1 == iostep){
+		time[1] = tj;
+	}
+	
+	//These lines are equivalent to the MATLAB code: (fun is vecField)
+	//yj = yjm2 + DT*0.5*(fun(yjm2+DT*fun(yjm2)) + fun(yjm2));
+	vecField(yjm2, tempVec1);
+	arrayScale(n, tempVec1, deltaT, tempVec1);
+	arrayAdd(n, yjm2, tempVec1, tempVec1);
+	vecField(tempVec1, tempVec2);
+	vecField(yjm2, tempVec1);
+	arrayAdd(n, tempVec1, tempVec2, tempVec1);
+	arrayScale(n, tempVec1, 0.5*deltaT, tempVec1);
+	arrayAdd(n, tempVec1, yjm2, yj);
+	//Step Time Forward
+	tj += deltaT;
+	if( 2 % iostep == 0){
+	 	time[2] = tj;
+	}
+	//Store the current solution values:
+	for (j = 0; j < n; j++) {
+		y_solve[j][0] = yjm2[j];		
+		numSaved++;
+	}
+	if(1 == iostep){
+		for (j = 0; j < n; j++) {
+			y_solve[j][numSaved] = yjm1[j];
+		}		
+		numSaved++;
+	}
+	if(2 % iostep == 0){
+		for (j = 0; j < n; j++) {
+			y_solve[j][numSaved] = yj[j];
+		}		
+		numSaved++;
+	}
+	
+	//Done with kickstart, starting the AB3 iterations
+	i = 3;
+	while(i < numPnts){
+		//Step Time Forward
+		tj += deltaT;
+		// The following section is equivalent to the MATLAB code:
+		//yjp1= yj+(DT/12)*(23*fun(yj)-16*fun(yjm1)+5*fun(yjm2));
+		vecField(yj, tempVec1);
+		arrayScale(n, tempVec1, 23, tempVec1);
+		vecField(yjm1, tempVec2);
+		arrayScale(n, tempVec2, -16, tempVec2);
+		arrayAdd(n, tempVec1, tempVec2, tempVec1);
+		vecField(yjm2, tempVec2);
+		arrayScale(n, tempVec2, 5, tempVec2);
+		arrayAdd(n, tempVec1, tempVec2, tempVec1);
+		arrayScale(n, tempVec1, deltaT/12.0, tempVec1);
+		arrayAdd(n, yj, tempVec1, yjp1);
+		//Every iostep iterations, we must save the state of the ODE at time tj:
+		if( (i % iostep == 0) && 
+				(numSaved < (numPnts - (numPnts % iostep))/iostep)){
+			for (j = 0; j < n; j++) {
+				y_solve[j][numSaved] = yjp1[j];
+			}
+			time[numSaved] = tj;
+			numSaved++;
+		}
+		//Iteration i done. Now shifting old values over by 1 step.
+		copyArray(n, yjm1, yjm2);
+		copyArray(n, yj, yjm1);
+		copyArray(n, yjp1, yj);
+		i++;
+	}
+	if(iostep == numPnts){
+		for (j = 0; j < n; j++) {
+				y_solve[j][0] = yjp1[j];
+			}
+		time[0] = tj;
+	}
+	free(tempVec1);
+	free(tempVec2);
+	free(yj);
+	free(yjm1);
+	free(yjm2);
+	free(yjp1);
+}
 
 /**
  * Function: binomialCoef()

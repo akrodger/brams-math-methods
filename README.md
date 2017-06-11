@@ -26,7 +26,11 @@ If you wish to download and use my code in particular, I would be curious to kno
 ----------------------------
 | Section 0: Library Usage |
 ----------------------------
-Library Dependencies: Nothing other than gcc and make. Program located in folder bmm.
+Program located in folder bmm.
+Library Dependencies: 
+	- gcc
+	- make
+	- gnuplot
 
 Usage:
 
@@ -66,6 +70,8 @@ Example of a valid file:
     3 4 -6 6     -8
     ~ Last Line of file
 
+- OdeSovler : This program uses the Adams-Bashforth ODE solver to compute a trajector of an LpCircle. Plotting is done in gnuplot using freely available code by N. Devillard. (Devillard's code included in bmm/src folder.)
+
 -----------------------------
 | Section 1: Linear Algebra |
 -----------------------------
@@ -85,24 +91,19 @@ Notable functions are:
 Planned Functions:
 - QR Factorization
 
------------------------
-| Section 2: Calculus |
------------------------
-So far this only has 2 functions.
+---------------------------------------------
+| Section 2: Calculus and Numerical Methods |
+---------------------------------------------
+There are 5 functions here:
 - finite integral with small delta approximation
 - derivative with small delta approximation
-
-
---------------------------------
-| Section 3: Numerical Methods |
---------------------------------
-Two major operations are here:
-- polynomial interpolation
+- Adams-Bashforth Orinary 3 step Differential Equation Solver
+- Vandermonde polynomial interpolation
 - mean polynomial interpolation
 
-This function takes a set of (x, y) data points and forms a polynomial with them of a specified degree. It makes use of the linear algebra operations defined in the library to do this. Read the header file for more information.
+Adams-Bashforth is a method for using local polynomial interpolation to find the solutions to n-dimensional ODEs. I implement it here in full generality. Keep note that this function may use a ton of memory if you set the IO step too low.
 
-The lagrangeIntrpolate() and meanInterpolate() functions are now considered stable! There is an analysis of this on my issues page. Turns out that there are only so many things we can do with double percision floating point numbers.
+Mean polynomial interpolation takes a set of (x, y) data points and forms a polynomial with them of a specified degree. It makes use of the linear algebra operations defined in the library to do this. Read the header file for more information.
 
 
 More is planned to be written once I have completed a QR factorization implementation.

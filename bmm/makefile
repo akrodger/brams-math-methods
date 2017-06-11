@@ -18,17 +18,31 @@ LIN_SRCS = LinAlgTester.c MathMethods.c Stack.c
 
 LIN_OBJS = $(LIN_SRCS:.c=.o)
 
+LP_SRCS = ODE_Solver_LpCircle.c MathMethods.c Stack.c gnuplot_i.c
+
+LP_OBJS = $(LP_SRCS:.c=.o)
+
+TEST_SRCS = testing_ground.c MathMethods.c Stack.c gnuplot_i.c
+
+TEST_OBJS = $(TEST_SRCS:.c=.o)
 #This is the name of the executable that showcases the linear algebra functs
 LINEAR_ALGEBRA = "LinAlg"
 
 #This is the name of the executable that showcases the numerical methods functs
 INTERPOLATOR = "interpolator"
 
+#This is the name of the executable that showcases AB3 ODE Solver and Lp Circles
+LP_CIRCLE = "OdeSolver"
+
+#This is the name of the executable that is used for testing new funcitons
+TESTING = "testing"
+
 default: brams-math-methods
 
-brams-math-methods: $(NUM_OBJS) $(LIN_OBJS)
+brams-math-methods: $(NUM_OBJS) $(LIN_OBJS) $(LP_OBJS)
 	$(CC) $(CLFAGS) $(NUM_OBJS) -lm -o $(INTERPOLATOR)
 	$(CC) $(CLFAGS) $(LIN_OBJS) -lm -o $(LINEAR_ALGEBRA)
+	$(CC) $(CLFAGS) $(LP_OBJS) -lm -o $(LP_CIRCLE)
 	mkdir -p -- "obj"
 	mv *.o $(OBJPATH)
     
@@ -40,6 +54,11 @@ brams-math-methods: $(NUM_OBJS) $(LIN_OBJS)
 #make using the object files stored in the obj folder. crashes if obects not 
 #present.
 #
+
+tests: $(TEST_OBJS)
+	$(CC) $(CLFAGS) $(TEST_OBJS) -lm -o $(TESTING)
+	mkdir -p -- "obj"
+	mv *.o $(OBJPATH)
 
 objects:
 	mv obj/*.o .
@@ -55,6 +74,11 @@ objects:
 
 clean:
 	mkdir -p -- "obj"
-	rm obj/*
-	rm $(LINEAR_ALGEBRA)
-	rm $(INTERPOLATOR)
+	rm -f obj/*
+	rm -f $(LINEAR_ALGEBRA)
+	rm -f $(INTERPOLATOR)
+	rm -f $(LP_CIRCLE)
+	rm -f $(TESTING)
+	rm -f gnuplot*
+	rm -f *.png
+

@@ -44,29 +44,29 @@ void setDelta(double d);
  ******************************************************************************/
 
 /**
- * Function: initMat()
- * Take the m by n dimensional matrix Mat and allocates memory for it.
- * Sets Each entry of the matrix to zero.
+ * Macro: initMat()
+ * just a shortcut for doing calloc() on a matrix. Calloc initializes values to
+ * zero. 
  *
+ * A Word on how memory is managed with matrices and vectors:
+ * A m and n matrix is a n m by n 2D array of doubles with C99 representation.
+ * An m by 1 matrix is a column vector.
+ * Let vec be a column vector. the vec[0] is an an array of length n, almost.
+ * It is the memory location of the the column vector, and therefore may be
+ * used as such. An exploitation of this fact is in the matrixMultiply function.
+ *
+ * Actual definition is in header.
+ * 
  * @param m the number of rows of the matrix mat
  * 
  * @param n the number of cols of the matrix mat
  * 
  * @param mat the matrix you wish to initialize
  */
-void initMat(int m, int n, double (*mat)[n]);
+#ifndef initMat
+#define initMat(m, n, mat) mat = calloc((m)*(n), sizeof(double))
+#endif
 
-/**
- * Function: vectorCopy()
- * Copy v1 into v2
- * 
- * @param n the length of v1 and v2
- *
- * @param v1 a vector of doubles. length n. Copying from this one.
- *
- * @param v2 a vector of doubles. length n. Copying to this one.
- */
-void vectorCopy(int n, double *v1, double *v2);
 /******************************************************************************
  *                                                                            *
  *                         LINEAR ALGEBRA OPERATIONS                          *
@@ -85,7 +85,7 @@ void vectorCopy(int n, double *v1, double *v2);
  * 
  * @param r the row you want to read
  * 
- * @param store the vector you wish to store into
+ * @param store the array you wish to store into
  */
 void getRow(int m, int n, double (*mat)[n], int r, double store[n]);
 
@@ -101,7 +101,7 @@ void getRow(int m, int n, double (*mat)[n], int r, double store[n]);
  * 
  * @param c the column you want to read
  * 
- * @the store the vector you wish to store into
+ * @the store the array you wish to store into
  */
 void getCol(int m, int n, double (*mat)[n], int c, double store[n]);
 
@@ -117,7 +117,7 @@ void getCol(int m, int n, double (*mat)[n], int c, double store[n]);
  * 
  * @return the dot product of v1 and v2
  */
-double dotProduct(int m, double v1[m], double v2[m]);
+double dotProduct(int m, double (*v1)[1], double (*v2)[1]);
 
 /** 
  * Function: euclideanNorm()
@@ -128,7 +128,7 @@ double dotProduct(int m, double v1[m], double v2[m]);
  * 
  * @param v the vector which will be evaluated
  */
-double euclideanNorm(int m, double v[m]);
+double euclideanNorm(int m, double (*v)[1]);
 
 /**
  *  Function: vectorProject();
@@ -143,7 +143,7 @@ double euclideanNorm(int m, double v[m]);
  *
  * @param proj the stored result of the projection computation
  */
-void vectorProject(int m, double v1[m], double v2[m], double proj[m]);
+void vectorProject(int m, double (*v1)[1], double (*v2)[1], double (*proj)[1]);
 
 /** 
  * Function: SwapRows()
@@ -201,7 +201,9 @@ void elimRow(int n, double (*mat)[n], int r1, int r2, double elimBy);
 /** 
  * Function: copyMatrix()
  * Copy the values of matrix "from" into matrix "to".
- * 
+ * You can use this as a reguar array copy by setting n=1 and passing 2 arrays
+ * C might get mad at you though and send all those "warnings"
+ *
  * @param m the number of rows
  * 
  * @param n the number of cols
@@ -306,7 +308,50 @@ double invert(int m, int n, double (*mat)[n]);
  */
 void matrixMultiply(int m, int n, int p, double left[][n], double right[][p],
         double (*product)[p]);
-
+/**
+ * Function: arrayAdd()
+ * Add the corresponding elements of two 1D arrays of doubles. 
+ * Return value is the last argument.
+ *
+ * @param m the length of the arrays.
+ *
+ * @param left the left addend
+ *
+ * @param right the right addend
+ *
+ * @param sum the sum of the left and the right
+ */
+void arrayAdd(int m, double *left, double *right, double *sum);
+/**
+ * Function: arrayScale()
+ * Multiplies all elements of an array of doubles by a number.
+ *
+ * @param m the length of the arrays.
+ *
+ * @param arr the array to be scaled
+ *
+ * @param scaleBy the double with which you scale the vector
+ *
+ * @param scaled the scaled array
+ */
+void arrayScale(int m, double *arr, double scaleBy, double *scaled);
+/**
+ * Function: arrayAdd()
+ * Add the corresponding elements of two matrices. 
+ * Return value is the last argument.
+ *
+ * @param m the number of rows.
+ *
+ * @param n the number of columns
+ *
+ * @param left the left addend
+ *
+ * @param right the right addend
+ *
+ * @param sum the sum of the left and the right
+ */
+void matrixAdd(int m, int n, double (*left)[n], double (*right)[n], 
+				double (*sum)[n]);
 /******************************************************************************
  *                                                                            *
  *                 NUMERICAL ANALYSIS AND CALCULUS OPERATIONS                 *
@@ -348,11 +393,39 @@ double simpleDerivative(double (*funct)(double), double a);
 
 /**
  * This function uses Adams Bashforth 3-step method to solving systems of 
- * systems of ordinary differential equations. 
+ * systems of ordinary differential equations.
+ *
+ * Words of Caution: Make sure numPnts is an an integer multiple of iostep
+ *					If you neglect to do this, the solver may crash.
+ *
+ * @param n The dimension of the differential equation.
+ * 
+ * @param void (*vecField)(double[n], double[n])) Function pointer to the
+ * 				vector/flow field. The first argument is the input to the
+ *				field, the second argument is the output.
+ *
+ * @param (*y_initial)[1] an n-dimensional column vector which gives the 
+ * 							initial condition of the ODE
+ *
+ * @param deltaT The time step for the solver to use
+ * 
+ * @param iostep The ode saves a point to the solution once every iostep
+ *					number of iterations. Make sure to make this larger if
+ *					you want to use a really small deltaT.
+ *
+ * @param numPnts This is the number of points the solver finds.
+ *
+ * @param (*y_solved)[(numPnts - (numPnts % iostep))/iostep] 
+ *						The matrix containing the ODE numerical
+ *						solution. Every column is a point on the trajectory.
+ *
+ * @param *time an array containing the time at each point.
  */
-void adamsBash3(int n, double* (*funct)(double*),
-				double* y_initial, double period, double deltaT, int iostep,
-				long int numPnts, double (*y_solved)[numPnts], double *time);
+void adamsBash3(int n, void (*vecField)(double[n], double[n]),
+				double (*y_initial)[1], double deltaT, 
+				int iostep, long int numPnts,
+				double (*y_solve)[(numPnts - (numPnts % iostep))/iostep], 
+				double *time);
 
 /**
  * Function: binomialCoef()
