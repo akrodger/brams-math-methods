@@ -112,8 +112,8 @@ int main(int argc, char **argv)
 	{
 		cosineWave[j] = yPlot[0][j];
 		sineWave[j] = yPlot[1][j];
-		printf("\n\ncosine: %f\nsine: %f\ntime: %f\n", 
-					yPlot[0][j],yPlot[1][j], t[j]);
+		//printf("\n\ncosine: %f\nsine: %f\ntime: %f\n", 
+		//			yPlot[0][j],yPlot[1][j], t[j]);
 	}
     gnuplot_resetplot(h1) ;
     gnuplot_setstyle(h1, "linespoints") ;
@@ -134,11 +134,9 @@ int main(int argc, char **argv)
     gnuplot_plot_xy(h1, cosineWave, sineWave, memLevel, "Lp Circle");
 	
 	
-	//below funct is bugged
 	gnuplot_close(h1) ;
 	printf("\nDone with circle. Saved to \"Lp_Circ.png\"\n\n");
 	
-	//above funct is bugged
 	free(y0[0]);
 	free(yPlot[0]);
 	free(t);
