@@ -373,6 +373,28 @@ void matrixAdd(int m, int n, double (*left)[n], double (*right)[n],
 double rectIntegral(double (*funct)(double), double a, double b);
 
 /**
+ * Function: simpIntegral() 
+ * This function uses integrated interpolating parabolas
+ * to approximate the integral of a function mapping from doubles to doubles.
+ * the static double DELTA is used as the assumed separation between integrating
+ * parabolas.
+ *
+ * Technically, this is the Cavalieri-Simpson rule, meaning we use averaged
+ * midpoints. 
+ *
+ * Formula named for Thomas Simpson (1710-1761) but Kepler was using similar
+ * methods 100 years earlier. (Citation: Wikipedia page on Simpson Rule)
+ *
+ * @param double (*funct)(double) a pointer to a function which takes a double
+ *								  and returns a double
+ *
+ * @param a the lower limit of integration
+ *
+ * @param b the upper limit of integration
+ */
+double simpIntegral(double (*funct)(double), double a, double b);
+
+/**
  *  Function: simpleDerivative()
  *  Uses the limit definition of a derivative to approximate the 
  *  slope near a point. Literally only 1 line as a 1st order approx.

@@ -650,6 +650,68 @@ double rectIntegral(double (*funct)(double), double a, double b)
 }
 
 /**
+ * Function: simpIntegral() 
+ * This function uses integrated interpolating parabolas
+ * to approximate the integral of a function mapping from doubles to doubles.
+ * the static double DELTA is used as the assumed separation between integrating
+ * parabolas.
+ *
+ * Technically, this is the Cavalieri-Simpson rule, meaning we use averaged
+ * midpoints. 
+ *
+ * Formula named for Thomas Simpson (1710-1761) but Kepler was using similar
+ * methods 100 years earlier. (Citation: Wikipedia page on Simpson Rule)
+ *
+ * @param double (*funct)(double) a pointer to a function which takes a double
+ *								  and returns a double
+ *
+ * @param a the lower limit of integration
+ *
+ * @param b the upper limit of integration
+ */
+double simpIntegral(double (*funct)(double), double a, double b)
+{
+	//value of a reimann sum
+	double simpson = 0;
+	//index to calulate an integral with
+	long int index = 0;
+	//n is the number of iterations
+	long int n = (long int)abs((long int)((a - b)/DELTA));
+	//a flag and swap value for when you integrate from higher to lower
+	double backwards = 1;
+	//x_k and x_kp1 are the k^th and (k+1)^th points in the integration domain
+	double x_k = 0;
+	double x_kp1 = 0;
+	//x_bar is the average of x_k and x_kp1 at the k^th iteration
+	double x_bar = 0;
+
+	//use negative of an integral property
+	if (b < a) {
+		backwards = b;
+		b = a;
+		a = backwards;
+		backwards = -1;
+	}
+
+	//first iteration, x_k is left bound.
+	x_k = a;
+	x_kp1 = a + DELTA;
+
+	//calulate the riemann sum
+	while (index < n) {
+		x_bar = (x_k + x_kp1)/2;
+		simpson += (funct(x_k) +  4*funct(x_bar) + funct(x_kp1))*DELTA;
+		x_k += DELTA;
+		x_kp1 += DELTA;
+		printf("index: %d %f\n", index, simpson);
+		index++;
+	}
+
+	//multiply through by the factors needed for the simpson rule.
+	return (simpson * backwards)/6;
+}
+
+/**
  *  Function: simpleDerivative()
  *  Uses the limit definition of a derivative to approximate the 
  *  slope near a point. Literally only 1 line as a 1st order approx.

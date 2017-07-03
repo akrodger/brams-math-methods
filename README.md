@@ -93,8 +93,8 @@ Planned Functions:
 ---------------------------------------------
 | Section 2: Calculus and Numerical Methods |
 ---------------------------------------------
-There are 5 functions here:
-- finite integral with small delta approximation
+There are several functions here:
+- Two types of finite integral with small delta approximation
 - derivative with small delta approximation
 - Adams-Bashforth Orinary 3 step Differential Equation Solver
 - Vandermonde polynomial interpolation
