@@ -109,7 +109,7 @@ Mean polynomial approximation takes a set of (x, y) data points and forms a poly
 
 Least Squares is an algorithm commonly used in statistical analysis to find a function which represents a set of measurements. We give the algorithm a linearly independent array of pointers to functions of the form 
 
-double foo(double)
+	double foo(double)
 
 We then compute the projection matrix of the x data points with respect to this array, minimizing the error from a linear combination of functions and the y values. The result is a set of coordinates, equivalent to the coeficients of either of polynomial approximation functions mentioned above.
 
