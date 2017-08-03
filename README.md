@@ -113,6 +113,7 @@ Least Squares is an algorithm commonly used in statistical analysis to find a fu
 
 We then compute the projection matrix of the x data points with respect to this array, minimizing the error from a linear combination of functions and the y values. The result is a set of coordinates, equivalent to the coeficients of either of polynomial approximation functions mentioned above.
 
+If you know what a Fourier Series is, then consider Least Squares to be generalization of Fourier. Instead of summing up a number of trig functions, we can sum up any set of linearly independent functions. However, the Fourier form of certain functions has the gaurantee of convergence (meaning error goes to zero). Least Squares only finds the smallest possible error, which may be nonzero.
 
 -------------------------------------------
 | Section 3: Integer Stack Implementation |
