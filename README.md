@@ -82,39 +82,46 @@ Notable functions are:
 - row scale
 - row elimination
 - copy matrix
+- transpose matrix
 - row echelon form (Gaussian Elimination)
 - reduced row echelon form
 - invert matrix
 - multiply matrices
 
 Planned Functions:
-- QR Factorization
+- QR Factorization.
+Currently, the design problem with QR is how to represent complex eigenvalues. I'm considering forking this library to C++ and using a complex numbers class. Considering that using complex numbers would minimally double the number of floating point operations per function. I'm not sure if this is a good idea. I may work on it just for the mathematical exercise though.
 
 ---------------------------------------------
 | Section 2: Calculus and Numerical Methods |
 ---------------------------------------------
 There are several functions here:
 - Two types of finite integral with small delta approximation
-- derivative with small delta approximation
+- Derivative with small delta approximation
 - Adams-Bashforth Orinary 3 step Differential Equation Solver
 - Vandermonde polynomial interpolation
-- mean polynomial interpolation
+- Mean Polynomial approximation
+- Least Squares Approximation (Unstable, still in testing)
 
 Adams-Bashforth is a method for using local polynomial interpolation to find the solutions to n-dimensional ODEs. I implement it here in full generality. Keep note that this function may use a ton of memory if you set the IO step too low.
 
-Mean polynomial interpolation takes a set of (x, y) data points and forms a polynomial with them of a specified degree. It makes use of the linear algebra operations defined in the library to do this. Read the header file for more information.
+Mean polynomial approximation takes a set of (x, y) data points and forms a polynomial with them of a specified degree. It makes use of the linear algebra operations defined in the library to do this. Read the header file for more information.
 
+Least Squares is an algorithm commonly used in statistical analysis to find a function which represents a set of measurements. We give the algorithm a linearly independent array of pointers to functions of the form 
 
-More is planned to be written once I have completed a QR factorization implementation.
-NOTE: QR factorization is shelved for now in favor of polynomial interpolation.
+double foo(double)
+
+We then compute the projection matrix of the x data points with respect to this array, minimizing the error from a linear combination of functions and the y values. The result is a set of coordinates, equivalent to the coeficients of either of polynomial approximation functions mentioned above.
+
 
 -------------------------------------------
 | Section 3: Integer Stack Implementation |
 -------------------------------------------
-This is an implementation of a stack data structure written by me. The reason for this is simply because having a stack to run computations with is insanely useful. Currently, it is only used in the Numerical Methods section. MathMethods depends on Stack, so make sure to have them in the same directory.
+This is an implementation of a stack data structure written by me. The reason for this is simply because having a stack to run computations with is useful. Currently, it is only used in the Numerical Methods section. MathMethods depends on Stack, so make sure to have them in the same directory.
 
 -----------------------------
 | Section 4: Special Thanks |
 -----------------------------
 - James Iwamasa
-In fall 2016, James Iwamasa, a personal friend from the computer science department at UC Santa Cruz, helped me implement. For the mean polynomial interpolation  algorithm, James implemented a recursive algorithm in C++ using vector objects to find all subsets of a list of integers. Then I converted this code, restructured it to work with the stack library, then optimized memory usage so that my laptop wouldn't crash  due to RAM filling up for large enough sets of integers.
+
+In fall 2016, James Iwamasa, a personal friend from the computer science department at UC Santa Cruz, helped me implement the meanPolynomial() function. For the mean polynomial approximation  algorithm, James implemented a recursive algorithm in C++ using vector objects to find all subsets of a list of integers. Then I converted this code to C, restructured it to work with the stack library, then optimized memory usage so that my laptop wouldn't crash due to RAM filling up for large enough sets of integers.

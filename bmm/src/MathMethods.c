@@ -1,3 +1,17 @@
+/* 
+ * File:   MathMethods.c
+ * Author: Abram Rodgers
+ * Email@ aks.rodgers@gmail.com 
+ *
+ * This is a computational methods library. Somewhat meant to exhibit the kinds
+ * of math I am familiar with, but also for useful application in the future.
+ * 
+ *
+ * Created on March 10, 2016, 12:07 AM
+ *
+ * This short intro added August 1, 2017 when I realized I hadn't signed this.
+ */
+
 #include "MathMethods.h"
 #include <stdlib.h>
 #include <math.h>
@@ -261,6 +275,44 @@ void copyMatrix(int m, int n, double (*from)[n], double (*to)[n])
 	for (i = 0; i < m; i++) {
 		for (j = 0; j < n; j++) {
 			to[i][j] = from[i][j];
+		}
+	}
+}
+/**
+ * Function: transpose()
+ * The transpose of an m by n matrix A is the n by m matrix A' such that the
+ * elements of the rows of A are the elements of the columns of A'.
+ * 
+ * Other single-matrix manipulation functions in this library directly
+ * manipulate the given matrix. (See ref and invert functions as examples.)
+ * However an m by n and an n by m 2D array might not be handled the same way
+ * in memory, depending on what processor one uses. (E.g. I compiled this
+ * library on a microcontroller and weird memory stuff happened with index out
+ * of bounds.) For this reason, we require that the matrix we wish to transpose
+ * and the storage location of the transposed matrix are different.
+ *
+ * However, it is worth noting that memory allocation for m by n and n by m are
+ * identical. In theoy, it could work so that transpose(m, n, A, A); is valid.
+ * I don't think this is worth implementing though, as it would need a swapping
+ * mechanism. If you disagree email me, it'd interesting to know what you think.
+ *
+ * @param m the number of rows in mat.
+ * 
+ * @param n the number of columns mat.
+ *
+ * @mat the matrix to transpose.
+ *
+ * @matTranspose the matrix to store the transpose in.
+ */
+void transpose(int m, int n, double (*mat)[n], double (*matTranspose)[m])
+{
+	//iterators
+	int i = 1;
+	int j = 0;
+	
+	for(; i < m; i++){
+		for(; j < n; j++){
+			matTranspose[j][i] = mat[i][j];
 		}
 	}
 }
@@ -703,7 +755,7 @@ double simpIntegral(double (*funct)(double), double a, double b)
 		simpson += (funct(x_k) +  4*funct(x_bar) + funct(x_kp1))*DELTA;
 		x_k += DELTA;
 		x_kp1 += DELTA;
-		printf("index: %d %f\n", index, simpson);
+		//printf("index: %d %f\n", index, simpson);
 		index++;
 	}
 
@@ -1086,11 +1138,11 @@ void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n])
 }*/
 
 /**
- * Function: meanInterpolate()
- * This function will make a best-fit polynomial of a specified degree. Given 2
- * vectors representing the x and y coordinates of a graph, the function will
+ * Function: meanPolynomial()
+ * This function will make a "best-fit" polynomial of a specified degree. Given
+ * 2 vectors representing the x and y coordinates of a graph, the function will
  * analyze them in the following manner:
- *			 
+ *
  *		1) ->  Call the interpolate function using the given x and y vectors
  *
  *		2) -> Do this for recursively for every n size subset of our data 
@@ -1122,23 +1174,18 @@ void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n])
  *			   the polynomial. c[0] is the constant term, c[d] is the highest
  *			   power's coefficient.
  */
-void meanInterpolate(long int path, Stack *combo, long int num_points, 
+void meanPolynomial(long int path, Stack *combo, long int num_points, 
 					double x[num_points], double y[num_points], 
 					long int num_coefs, double c[num_coefs])
-{   
-	
+{   	
 	//loop iterator
-
 	long int i = 0;
 	//these two arrays hold the particular data for a given subset of the points
 	double combo_x[num_coefs];
 	double combo_y[num_coefs];
 	//this array is similar to the two above, but for coefficients
 	double combo_c[num_coefs];
-	
 	long int popValue = 0;
-
-
 	if(path == -1) {
 		//Initialize Stack at the start of the recursion
 		StackInit(&combo, num_coefs);
@@ -1146,7 +1193,6 @@ void meanInterpolate(long int path, Stack *combo, long int num_points,
 		//already partially recursed
 		StackPush(combo, path);
 	}
-
 	//if we have a subset (not end of path)
 	if(StackGetSize(combo) == num_coefs) { 
 		//process combinatorial data
@@ -1156,23 +1202,16 @@ void meanInterpolate(long int path, Stack *combo, long int num_points,
 			combo_y[i] = y[combo->stackItems[i]];
 		}
 		vanderInterpolate(num_coefs, combo_x, combo_y, combo_c);
-
 		for(i = 0; i < num_coefs; i++) {
 			c[i] += combo_c[i];
 		}
-
 		StackPop(combo, &popValue);
-
-
 		return;
 	}
-
 	for (i = path + 1; i < num_points; i++) { //go down all paths > current
-		meanInterpolate(i, combo, num_points, x, y, num_coefs, c);
+		meanPolynomial(i, combo, num_points, x, y, num_coefs, c);
 	}
-
 	StackPop(combo, &popValue);
-
 	if(path == -1) {		
 		StackFree(combo);
 
@@ -1181,4 +1220,79 @@ void meanInterpolate(long int path, Stack *combo, long int num_points,
 		}
 	} 
 	return;
+}
+
+/**
+ * Function: discreteLeastSquares()
+ * The "meanPolynomial" function above computes the average polynomial of 
+ * a certain degree with repect to a data set. Here's a more general algorithm.
+ *
+ * Where as above, we had a polynomial of degree num_coefs-1. For brevity, say
+ * num_coefs-1 = m. Therefore, we can consider the polynomial to be a set of
+ * m functions. The goal of Least Squares approximation is to represent a data
+ * set with a sum of many functions. Moreover, we don't want to iterate through
+ * a huge number of subsets to do it. (Like in meanPolynomial.) We use linear
+ * algebra to solve this problem. 
+ *
+ * Core idea:
+ * double (*phi[m])(double) is an array of m mappings from doubles to doubles.
+ * Assume they are linearly inderpendent of one another. Now sample each of the 
+ * n many x-axis data points at every function. Store these in an m by n matrix.
+ * Call this matrix B. Let B' be the transpose of B. Assume y is a vector with
+ * all the y data points. The coordinate vector of the data set with respect to
+ * the phi functions will be:
+ *								a = (((B'B)^-1)B')y
+ * The proof of this fact requires some rather advanced applications of linear
+ * algebra an some multivariable calculus. I did my undergraduate thesis on this
+ * subject, you can email me for my writing on this. It is also on Wikipedia,
+ * although the Wikipedia article is a little dense.
+ */
+void discreteLeastSquares(int n, double x[n], double y[n], int m,
+							double (*phi[m])(double), double result[m])
+{
+	int i = 0;
+	int j = 0;
+	//matrix of phi functions evaluated at x values
+	double (*bMat)[m];
+	initMat(n, m, bMat);
+	//the transpose of bMat
+	double (*bMatTr)[n];
+	initMat(m, n, bMatTr);
+	/* bMat is n by m, which goes against the usual convention of alphabetical
+	*  order of the size. I do this though because I prefer the convention
+	*  of letting n represent the data set, as in previous function fit models.
+	*/
+	//This matrix is the n by n+1 which will have bMatTr*bMat in first n by n
+	//entries. In the last column, we have bMatTr*y. We do rref() on this matrix
+	//and the result in the last column is the least squares coordinates.
+	double (*leastSqr)[n+1];
+	initMat(n, n+1, leastSqr);
+	//This n by n matrix has the sole purpose of being the product of
+	//and bMatTr. It will be copied into leastSqr.
+	double (*tempMat)[n];
+	initMat(n, n, tempMat);
+	for(i = 0; i < m; i++){
+		for(j = 0; j < n; j++){
+			bMat[i][j] = (*phi[j])(x[i]);
+		}
+	}
+	transpose(n, m, bMat, bMatTr);	
+	matrixMultiply(n, m, n, bMat, bMatTr, tempMat);
+	//Now multiply bMatTr and y. Not using matrix multiply because y is
+	//in the wrong format. We also load tempMat into leastSqr.
+	for(i = 0; i < n; i++){
+		for(j = 0; j < n; j++){
+			leastSqr[i][n] += bMatTr[i][j] * y[j];
+			leastSqr[i][j] = tempMat[i][j];
+		}
+	}
+	//solve the system of equations arrising from the least squares condition
+	rref(n, n+1, leastSqr);
+	for(i=0; i < m; i++){
+		result[i] = leastSqr[i][n];
+	}
+	free(bMat);
+	free(bMatTr);
+	free(leastSqr);
+	free(tempMat);
 }

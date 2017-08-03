@@ -1,7 +1,9 @@
 /* 
  * File:   MathMethods.h
  * Author: Abram Rodgers
+ * Email: aks.rodgers@gmail.com
  * 
+ *
  * This is a computational methods library. Somewhat meant to exhibit the kinds
  * of math I am familiar with, but also for useful application in the future.
  * 
@@ -214,6 +216,34 @@ void elimRow(int n, double (*mat)[n], int r1, int r2, double elimBy);
  *
  */
 void copyMatrix(int m, int n, double (*from)[n], double (*to)[n]);
+
+/**
+ * Function: transpose()
+ * The transpose of an m by n matrix A is the n by m matrix A' such that the
+ * elements of the rows of A are the elements of the columns of A'.
+ * 
+ * Other single-matrix manipulation functions in this library directly
+ * manipulate the given matrix. (See ref and invert functions as examples.)
+ * However an m by n and an n by m 2D array might not be handled the same way
+ * in memory, depending on what processor one uses. (E.g. I compiled this
+ * library on a microcontroller and weird memory stuff happened with index out
+ * of bounds.) For this reason, we require that the matrix we wish to transpose
+ * and the storage location of the transposed matrix are different.
+ *
+ * However, it is worth noting that memory allocation for m by n and n by m are
+ * identical. In theoy, it could work so that transpose(m, n, A, A); is valid.
+ * I don't think this is worth implementing though, as it would need a swapping
+ * mechanism. If you disagree email me, it'd interesting to know what you think.
+ *
+ * @param m the number of rows in mat.
+ * 
+ * @param n the number of columns mat.
+ *
+ * @mat the matrix to transpose.
+ *
+ * @matTranspose the matrix to store the transpose in.
+ */
+void transpose(int m, int n, double (*mat)[n], double (*matTranspose)[m]);
 
 /** 
  * Function: ref() AKA Row Echelon Form
@@ -551,9 +581,9 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n]);
 //void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n]);
 
 /**
- * Function: meanInterpolate()
- * This function will make a best-fit polynomial of a specified degree. Given 2
- * vectors representing the x and y coordinates of a graph, the function will
+ * Function: meanPolynomial()
+ * This function will make a "best-fit" polynomial of a specified degree. Given
+ * 2 vectors representing the x and y coordinates of a graph, the function will
  * analyze them in the following manner:
  *             
  *        1) ->  Call the interpolate function using the given x and y vectors
@@ -586,7 +616,35 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n]);
  *               the polynomial. c[0] is the constant term, c[d] is the highest
  *               power's coefficient.
  */
-void meanInterpolate(long int path, Stack *combo, long int num_points, 
+void meanPolynomial(long int path, Stack *combo, long int num_points, 
                     double x[num_points], double y[num_points], 
                     long int num_coefs, double c[num_coefs]);
+
+/**
+ * Function: discreteLeastSquares()
+ * The "meanPolynomial" function above computes the average polynomial of 
+ * a certain degree with repect to a data set. Here's a more general algorithm.
+ *
+ * Where as above, we had a polynomial of degree num_coefs-1. For brevity, say
+ * num_coefs-1 = m. Therefore, we can consider the polynomial to be a set of
+ * m functions. The goal of Least Squares approximation is to represent a data
+ * set with a sum of many functions. Moreover, we don't want to iterate through
+ * a huge number of subsets to do it. (Like in meanPolynomial.) We use linear
+ * algebra to solve this problem. 
+ *
+ * Core idea:
+ * double (*phi[m])(double) is an array of m mappings from doubles to doubles.
+ * Assume they are linearly inderpendent of one another. Now sample each of the 
+ * n many x-axis data points at every function. Store these in an m by n matrix.
+ * Call this matrix B. Let B' be the transpose of B. Assume y is a vector with
+ * all the y data points. The coordinate vector of the data set with respect to
+ * the phi functions will be:
+ *								a = (((B'B)^-1)B')y
+ * The proof of this fact requires some rather advanced applications of linear
+ * algebra an some multivariable calculus. I did my undergraduate thesis on this
+ * subject, you can email me for my writing on this. It is also on Wikipedia,
+ * although the Wikipedia article is a little dense.
+ */
+void discreteLeastSquares(int n, double x[n], double y[n], int m,
+							double (*phi[m])(double), double result[m]);
 #endif /* MATHMETHODS_H */

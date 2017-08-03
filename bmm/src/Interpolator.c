@@ -162,7 +162,7 @@ int main(int argc, char **argv)
     }
     printf("\n\n");
 
-    meanInterpolate(-1, NULL, numPoints, x, y, terms, arr);
+    meanPolynomial(-1, NULL, numPoints, x, y, terms, arr);
 	//interpolate(terms, x, y, arr);
     printf("\nThe  polynomial is:\n\ny = ");
     for(i = 0; i < terms; i++)
