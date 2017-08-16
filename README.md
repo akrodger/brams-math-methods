@@ -35,10 +35,10 @@ Q: How do I compile it?
 -------------------------------------------------
 | Section 0: Least Square Regressional Analysis |
 -------------------------------------------------
-This program generates a scatterplot using a trigonometric series with white noise added in. Then, it uses a 15 term polynomial to approximate that trig series. (See video.) The method used is the well known finite dimensional least squares regressive formula. (See derivation.)
+This program generates a scatterplot using a trigonometric series with white noise added in. Then, it uses a 15 term polynomial to approximate that trig series. (See video LeastSquare.mp4) The method used is the well known finite dimensional least squares regressive formula. (Derivation coming soon, need to write LaTeX doc.)
 
 -------------------------------------------------
 | Section 1: Fourier Analysis Via Least Squares |
 -------------------------------------------------
-By setting the functions used in Least Squares to be trig functions, we actually can compute Fourier Coeficients of a scatterplot. The algorithm is the same, however we dynamically compute the trig functions used instead of requiring a set of function pointers. For details, see the header file in the main branch. (For visual, see video.)
+By setting the functions used in Least Squares to be trig functions, we actually can compute Fourier Coeficients of a scatterplot. The algorithm is the same, however we dynamically compute the trig functions used instead of requiring a set of function pointers. For details, see the header file in the main branch. (For visual, see video FourierTransform.mp4)
 
