@@ -644,7 +644,65 @@ void meanPolynomial(long int path, Stack *combo, long int num_points,
  * algebra an some multivariable calculus. I did my undergraduate thesis on this
  * subject, you can email me for my writing on this. It is also on Wikipedia,
  * although the Wikipedia article is a little dense.
+ *
+ * @param n the number of input data points
+ *
+ * @param x[n] array of x-axis data points
+ *
+ * @param y[n] array of y-axis data points
+ *
+ * @param m the number of functions
+ *
+ * @param (*phi[m])(double) array of pointers to functions which take a
+ * 							double and return a double.
+ *
+ * @param result[m] array of coeficients to functions (*phi[m])(double)
  */
 void discreteLeastSquares(int n, double x[n], double y[n], int m,
 							double (*phi[m])(double), double result[m]);
+
+/**
+ *	Function: discreteFourier()
+ *	Well known to data scientists, electrical engineers, computer scientists,
+ *	mathematicians, physicists, mechanical engineers, annoyed undergrads, 
+ *	annoyed grads, and electronic music enthusiasts alike, the Fourier Transform
+ *	is a function which just can't seem to loose its mass appeal.
+ *
+ *	The most well known version of the Fourier Transform is the fft() "fast
+ *	Fourier Transform" algorithm. This algorithm takes advantage of some facts
+ *	about the evaluation of trig functions and runs at O( n*log(n) ). The 
+ *	algorithm we use here is a lot slower, running at O(n^3). However, this is
+ *	comes with benefits.
+ *
+ *	This is a high-speed implementation of the Least Squares Fourier Transform.
+ *	The advantage here is that we chose numFreqs < n, (n = number data points.)
+ *	We then do an algorithm which acts as a low-pass filter to fit a relatively
+ *	low frequency function to the input data. The idea here is to filter out
+ *	noise to find the general trend of the (x,y) pairs without having to write
+ *	and guess what functions the trend actually follows.
+ *
+ * 	About 95% of the code here is the same as discreteLeastSquares(), but we
+ *	have the additional advantage of not needing to write a whole bunch of 
+ *	precompilable double-to-double functions. The point here is that we know
+ *	Fourier is a common method of best-fit, so I am building it directly in.
+ *
+ * @param n the number of input data points
+ *
+ * @param x[n] array of x-axis data points
+ *
+ * @param y[n] array of y-axis data points
+ *
+ * @param numFreqs 	(number of freuencies) This is the highest
+ *					integer frequency you would like to use. The lowest
+ *					frequency is always 1. If you want to look at even lower
+ *					frequencies than 1, I recommend you rescale your data
+ *					before using this function. There is 1 cosine and 1 sine
+ *					term for each frequeny.
+ *
+ * @param cosines[numFreqs] This is an array with all the cosine coeficients.
+ *
+ * @param sines[numFreqs] This is an array with all the sine coeficients.
+ */
+void discreteFourier(int n, double x[n], double y[n], int numFreqs, 
+						double cosines[numFreqs], double sines[numFreqs]);
 #endif /* MATHMETHODS_H */

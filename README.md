@@ -27,9 +27,12 @@ If you wish to download and use my code in particular, I would be curious to kno
 ----------------------------
 Program located in folder bmm.
 Library Dependencies: 
-	- gcc
-	- make
-	- gnuplot
+
+- gcc
+
+- make
+
+- gnuplot
 
 Usage:
 
@@ -37,7 +40,7 @@ Usage:
 
 - LinAlg : This program is a showcase of the Linear Algebra operations. It loads a matrix with values that are known to be invertible (the i-j entry is just i to the power of j). It then inverts this matrix and multiplies the inverse by the original matrix to confirm that a matrix times its inverse is the identity. run ./LinAlg for usage instructions. (You get to choose the dimensions. Note that if you give it a non-square matrix, the inverse has no actual meaning, nor does the resultant multiplication)
 
-- interpolator : This program reads in a list of (x,y) data pairs from the file "bmm/fio/InterpolatorPoints.txt". Then it will run meanInterpolate() on those points.
+- interpolator : This program reads in a list of (x,y) data pairs from the file "bmm/fio/InterpolatorPoints.txt". Then it will run meanPolynomial() on those points.
 
 InterpolatorPoints.txt formatting:
 

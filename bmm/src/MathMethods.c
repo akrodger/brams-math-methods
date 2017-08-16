@@ -102,8 +102,8 @@ static void copyArray(int n, double *from, double *to)
  */
 void getRow(int m, int n, double (*mat)[n], int r, double store[n])
 {
-	int j;
-	for (j = 0; j < n; j++) {
+	int j=0;
+	for (; j < n; j++) {
 		store[j] = mat[r][j];
 	}
 	return;
@@ -125,7 +125,7 @@ void getRow(int m, int n, double (*mat)[n], int r, double store[n])
  */
 void getCol(int m, int n, double (*mat)[n], int c, double store[n])
 {
-	int i;
+	int i = 0;
 	for (i = 0; i < m; i++) {
 		store[i] = mat[i][c];
 	}
@@ -147,7 +147,7 @@ void getCol(int m, int n, double (*mat)[n], int c, double store[n])
 double dotProduct(int m, double (*v1)[1], double (*v2)[1])
 {
 	double dot = 0;
-	int i;
+	int i = 0;
 	for (i = 0; i < m; i++) {
 		dot += v1[i][0] * v2[i][0];
 	}
@@ -166,7 +166,7 @@ double dotProduct(int m, double (*v1)[1], double (*v2)[1])
 double euclideanNorm(int m, double (*v)[1])
 {
 	double squareOfMagnitude = 0;
-	int j;
+	int j=0;
 	for( j = 0; j < m; j++)
 	{
 		squareOfMagnitude += v[j][0] * v[j][0];
@@ -191,7 +191,7 @@ double euclideanNorm(int m, double (*v)[1])
  */
 void swapRows(int n, double (*mat)[n], int r1, int r2)
 {
-	int j;
+	int j=0;
 	double temp;
 	for (j = 0; j < n; j++) {
 		temp = mat[r1][j];
@@ -217,7 +217,7 @@ void swapRows(int n, double (*mat)[n], int r1, int r2)
  */
 void scaleRow(int n, double (*mat)[n], int r, double scaleBy)
 {
-	int j;
+	int j=0;
 	for (j = 0; j < n; j++) {
 		mat[r][j] *= scaleBy;
 	}
@@ -245,7 +245,7 @@ void scaleRow(int n, double (*mat)[n], int r, double scaleBy)
  */
 void elimRow(int n, double (*mat)[n], int r1, int r2, double elimBy)
 {
-	int j;
+	int j=0;
 	for (j = 0; j < n; j++) {
 	mat[r1][j] -= elimBy * mat[r2][j];
 	}
@@ -269,8 +269,8 @@ void elimRow(int n, double (*mat)[n], int r1, int r2, double elimBy)
  */
 void copyMatrix(int m, int n, double (*from)[n], double (*to)[n])
 {
-	int i;
-	int j;
+	int i=0;
+	int j=0;
 
 	for (i = 0; i < m; i++) {
 		for (j = 0; j < n; j++) {
@@ -307,11 +307,11 @@ void copyMatrix(int m, int n, double (*from)[n], double (*to)[n])
 void transpose(int m, int n, double (*mat)[n], double (*matTranspose)[m])
 {
 	//iterators
-	int i = 1;
+	int i = 0;
 	int j = 0;
 	
-	for(; i < m; i++){
-		for(; j < n; j++){
+	for(i = 0; i < m; i++){
+		for(j = 0; j < n; j++){
 			matTranspose[j][i] = mat[i][j];
 		}
 	}
@@ -441,11 +441,11 @@ double rref(int m, int n, double (*mat)[n])
 {
 	double det = ref(m, n, mat);
 	//these are our loop iterators, x and y:
-	int x;
-	int y;
+	int x=0;
+	int y=0;
 	//these are the values of the row/column we are working on
 	int i = m - 1;
-	int j;
+	int j = 0;
 	//first find the first nonzero row from the bottom up:
 	//this is the thing that tells us we found a pivot column
 	int foundPivotFlag = 0;
@@ -499,8 +499,8 @@ double rref(int m, int n, double (*mat)[n])
 double invert(int m, int n, double (*mat)[n])
 {
 	double det = 0;
-	int i;
-	int j;
+	int i=0;
+	int j=0;
 
 	if (m != n) {
 		return 0;
@@ -574,8 +574,9 @@ double invert(int m, int n, double (*mat)[n])
 void matrixMultiply(int m, int n, int p, double (*left)[n], double (*right)[p],
 		double (*product)[p])
 {
-	int i;
-	int j;
+
+	int i = 0;
+	int j = 0;
 	double (*v1)[1] = calloc(n, sizeof(double));
 	double (*v2)[1] = calloc(n, sizeof(double));;
 	for (i = 0; i < m; i++) {
@@ -585,6 +586,7 @@ void matrixMultiply(int m, int n, int p, double (*left)[n], double (*right)[p],
 			product[i][j] = dotProduct(n, v1, v2);
 		}
 	}
+
 	free(v1);
 	free(v2);
 }
@@ -676,7 +678,7 @@ double rectIntegral(double (*funct)(double), double a, double b)
 	//value of a reimann sum
 	double riemann = 0;
 	//index to calulate an integral with
-	double index;
+	double index = 0;
 	//a flag and swap value for when you integrate from higher to lower
 	double backwards = 1;
 
@@ -1246,7 +1248,28 @@ void meanPolynomial(long int path, Stack *combo, long int num_points,
  * algebra an some multivariable calculus. I did my undergraduate thesis on this
  * subject, you can email me for my writing on this. It is also on Wikipedia,
  * although the Wikipedia article is a little dense.
+ *
+ * @param n the number of input data points
+ *
+ * @param x[n] array of x-axis data points
+ *
+ * @param y[n] array of y-axis data points
+ *
+ * @param m the number of functions
+ *
+ * @param (*phi[m])(double) array of pointers to functions which take a
+ * 							double and return a double.
+ *
+ * @param result[m] array of coeficients to functions (*phi[m])(double)
  */
+#include <gba_console.h>
+#include <gba_video.h>
+#include <gba_interrupt.h>
+#include <gba_systemcalls.h>
+#include <gba_input.h>
+#define LCD_WRITE(x, y, r, g, b) \
+                    ((unsigned short*)0x06000000)[(x)+(y)*SCREEN_WIDTH]  = \
+                                                            RGB8((r), (g), (b))
 void discreteLeastSquares(int n, double x[n], double y[n], int m,
 							double (*phi[m])(double), double result[m])
 {
@@ -1265,32 +1288,88 @@ void discreteLeastSquares(int n, double x[n], double y[n], int m,
 	//This matrix is the n by n+1 which will have bMatTr*bMat in first n by n
 	//entries. In the last column, we have bMatTr*y. We do rref() on this matrix
 	//and the result in the last column is the least squares coordinates.
-	double (*leastSqr)[n+1];
-	initMat(n, n+1, leastSqr);
+	double (*leastSqr)[m+1];
+	initMat(m, m+1, leastSqr);
 	//This n by n matrix has the sole purpose of being the product of
 	//and bMatTr. It will be copied into leastSqr.
-	double (*tempMat)[n];
-	initMat(n, n, tempMat);
-	for(i = 0; i < m; i++){
-		for(j = 0; j < n; j++){
+	
+	double (*tempMat)[m];
+	initMat(m, m, tempMat);
+	for(i = 0; i < n; i++){
+		for(j = 0; j < m; j++){
 			bMat[i][j] = (*phi[j])(x[i]);
 		}
 	}
 	transpose(n, m, bMat, bMatTr);	
-	matrixMultiply(n, m, n, bMat, bMatTr, tempMat);
+	matrixMultiply(m, n, m, bMatTr, bMat, tempMat);
 	//Now multiply bMatTr and y. Not using matrix multiply because y is
 	//in the wrong format. We also load tempMat into leastSqr.
-	for(i = 0; i < n; i++){
+	for(i = 0; i < m; i++){
 		for(j = 0; j < n; j++){
-			leastSqr[i][n] += bMatTr[i][j] * y[j];
-			leastSqr[i][j] = tempMat[i][j];
+			leastSqr[i][m] += bMatTr[i][j] * y[j];
+			if(j < m){
+				leastSqr[i][j] = tempMat[i][j];
+			}
 		}
 	}
 	//solve the system of equations arrising from the least squares condition
-	rref(n, n+1, leastSqr);
+	rref(m, m+1, leastSqr);
 	for(i=0; i < m; i++){
-		result[i] = leastSqr[i][n];
+		result[i] = leastSqr[i][m];
 	}
+	free(bMat);
+	free(bMatTr);
+	free(leastSqr);
+	free(tempMat);
+}
+
+void discreteFourier(int n, double x[n], double y[n], int numFreqs, 
+						double cosines[numFreqs], double sines[numFreqs])
+{
+	int i = 0;
+	int j = 0;
+	//matrix of phi functions evaluated at x values
+	double (*bMat)[2*numFreqs];
+	initMat(n, 2*numFreqs, bMat);
+	//the transpose of bMat
+	double (*bMatTr)[n];
+	initMat(2*numFreqs, n, bMatTr);
+	//This matrix is the n by n+1 which will have bMatTr*bMat in first n by n
+	//entries. In the last column, we have bMatTr*y. We do rref() on this matrix
+	//and the result in the last column is the least squares coordinates.
+	double (*leastSqr)[(2*numFreqs)+1];
+	initMat(2*numFreqs, (2*numFreqs)+1, leastSqr);
+	//This n by n matrix has the sole purpose of being the product of
+	//and bMatTr. It will be copied into leastSqr.
+	double (*tempMat)[2*numFreqs];
+	initMat(2*numFreqs, 2*numFreqs, tempMat);
+	
+	for(i = 0; i < n; i++){
+		for(j = 0; j < numFreqs; j++){
+			bMat[i][2*j] = cos(2*M_PI * (j+1) * (x[i]));
+			bMat[i][(2*j)+1] = sin(2*M_PI *(j+1) * (x[i]));
+		}
+	}
+	transpose(n, 2*numFreqs, bMat, bMatTr);	
+	matrixMultiply(2*numFreqs, n, 2*numFreqs, bMatTr, bMat, tempMat);
+	//Now multiply bMatTr and y. Not using matrix multiply because y is
+	//in the wrong format. We also load tempMat into leastSqr.
+	for(i = 0; i < 2*numFreqs; i++){
+		//leastSqr[i][2*numFreqs] = 0;
+		for(j = 0; j < n; j++){
+			leastSqr[i][2*numFreqs] += bMatTr[i][j] * y[j];
+			if(j < 2*numFreqs){
+				leastSqr[i][j] = tempMat[i][j];
+			}
+		}
+	}
+	//solve the system of equations arrising from the least squares condition
+	rref((2*numFreqs), (2*numFreqs)+1, leastSqr);
+	for(i=0; i < numFreqs; i++){
+		cosines[i] = leastSqr[2*i][2*numFreqs];
+		sines[i] = leastSqr[(2*i)+1][2*numFreqs];
+	}
+
 	free(bMat);
 	free(bMatTr);
 	free(leastSqr);
