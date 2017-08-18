@@ -1,5 +1,5 @@
 LeastSquares.o: \
- /home/bram/mywork/MathMethods/LeastSquares/source/LeastSquares.c \
+ /home/bram/mywork/MathMethods/gba_branch/LeastSquares/source/LeastSquares.c \
  /home/bram/devkitPro/libgba/include/gba_console.h \
  /home/bram/devkitPro/libgba/include/gba_base.h \
  /home/bram/devkitPro/libgba/include/gba_types.h \
@@ -7,8 +7,8 @@ LeastSquares.o: \
  /home/bram/devkitPro/libgba/include/gba_interrupt.h \
  /home/bram/devkitPro/libgba/include/gba_systemcalls.h \
  /home/bram/devkitPro/libgba/include/gba_input.h \
- /home/bram/mywork/MathMethods/LeastSquares/source/MathMethods.h \
- /home/bram/mywork/MathMethods/LeastSquares/source/Stack.h
+ /home/bram/mywork/MathMethods/gba_branch/LeastSquares/source/MathMethods.h \
+ /home/bram/mywork/MathMethods/gba_branch/LeastSquares/source/Stack.h
 
 /home/bram/devkitPro/libgba/include/gba_console.h:
 
@@ -24,6 +24,6 @@ LeastSquares.o: \
 
 /home/bram/devkitPro/libgba/include/gba_input.h:
 
-/home/bram/mywork/MathMethods/LeastSquares/source/MathMethods.h:
+/home/bram/mywork/MathMethods/gba_branch/LeastSquares/source/MathMethods.h:
 
-/home/bram/mywork/MathMethods/LeastSquares/source/Stack.h:
+/home/bram/mywork/MathMethods/gba_branch/LeastSquares/source/Stack.h:

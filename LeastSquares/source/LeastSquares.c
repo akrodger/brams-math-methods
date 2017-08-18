@@ -133,6 +133,7 @@ int main(void) {
 	//polyValue: used to sum over the coeficients of a polynomial for graphing 
 	double polyValue = 0;
 	double errorValue = 0;
+	double meanOfData = 0;
 	consoleDemoInit();	
 	iprintf("\x1b[6;1HThis demo generates a");
 	iprintf("\x1b[7;1Hnoisy waveform (red),");
@@ -149,6 +150,7 @@ int main(void) {
 		for(i = 0; i < NUM_FUNS; i++){
 			amps[i] = ((double)rand()/RAND_MAX*1.2-0.6	);
 		}
+		meanOfData = ((double)rand()/RAND_MAX*2.0-1.0);
 		//evaluate a trig series. We approximate the trig series by a polynomial
 		//store those values into polyWave
 		for(i = 0; i < SCREEN_WIDTH; i++){
@@ -162,6 +164,7 @@ int main(void) {
 			//this line adds randomness to polyWave (make some NOISEEEEE)
 			errorValue = ((double)rand()/RAND_MAX*0.25);
 			polyWave[i] += errorValue*((double)rand()/RAND_MAX*2.0-1.0);
+			polyWave[i] += meanOfData;
 		}
 		//compute an approximation of polyWave, store the coeficients of
 		//that approximation into polyCoefs
@@ -192,6 +195,7 @@ int main(void) {
 			for(j = 0; j < NUM_FUNS; j++){
 				polyValue += polyCoefs[j]*(*phi[j])(xCoords[i]);
 			}
+			
 			LCD_WRITE(i,
 					(int) (-(SCREEN_HEIGHT/4)*(polyValue) + SCREEN_HEIGHT/2), 
 					0, 0, 255);

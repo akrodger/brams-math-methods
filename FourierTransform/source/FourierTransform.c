@@ -61,6 +61,7 @@ int main(void) {
 	unsigned int randCounter = 0;
 	double waveValue = 0;
 	double errorValue = 0;
+	double meanOfData = 0;
 	consoleDemoInit();	
 	iprintf("\x1b[6;1HThis demo generates");
 	iprintf("\x1b[7;1Hnoisy waveforms (red),");
@@ -78,6 +79,7 @@ int main(void) {
 		for(i = 0; i < NUM_FREQS*2; i++){
 			amps[i] = ((double)rand()/RAND_MAX*2.0-1.0);
 		}
+		meanOfData = ((double)rand()/RAND_MAX*2.0-1.0);
 		//evaluate all the trig functions at the x coordinates
 		//store those value in sineWave
 		for(i = 0; i < SCREEN_WIDTH; i++){
@@ -91,10 +93,12 @@ int main(void) {
 			//make some NOISE! WOOOOO
 			errorValue = ((double)rand()/RAND_MAX*0.5);
 			sineWave[i] += errorValue*((double)rand()/RAND_MAX*2.0-1.0);
-	
+			
+			sineWave[i] += meanOfData;
+
 			xCoords[i] = ((double) i)/(SCREEN_WIDTH);
 		}
-		discreteFourier(SCREEN_WIDTH,
+		meanOfData = discreteFourier(SCREEN_WIDTH,
 						xCoords,
 						sineWave,
 						NUM_FREQS,
@@ -115,10 +119,11 @@ int main(void) {
 								(SCREEN_HEIGHT/2)), 255, 0, 0);
 			waveValue = 0;
 			for(j = 0; j < NUM_FREQS; j++){
-				waveValue += 
+				waveValue +=
 				(sin(M_PI * 2*(j+1)*i / SCREEN_WIDTH))*fourierSin[j]+
 				(cos(M_PI * 2*(j+1) * i / SCREEN_WIDTH))*(fourierCos[j]);
 			}
+			waveValue += meanOfData;
 			LCD_WRITE(i,
 				(int) (-(SCREEN_HEIGHT/8)*(waveValue) + SCREEN_HEIGHT/2), 
 						0, 0, 255);

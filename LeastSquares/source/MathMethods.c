@@ -1323,11 +1323,13 @@ void discreteLeastSquares(int n, double x[n], double y[n], int m,
 	free(tempMat);
 }
 
-void discreteFourier(int n, double x[n], double y[n], int numFreqs, 
+double discreteFourier(int n, double x[n], double y[n], int numFreqs, 
 						double cosines[numFreqs], double sines[numFreqs])
 {
 	int i = 0;
 	int j = 0;
+	//This double contains the constant term of the fourier transform
+	double meanOfData = 0;
 	//matrix of phi functions evaluated at x values
 	double (*bMat)[2*numFreqs];
 	initMat(n, 2*numFreqs, bMat);
@@ -1345,6 +1347,7 @@ void discreteFourier(int n, double x[n], double y[n], int numFreqs,
 	initMat(2*numFreqs, 2*numFreqs, tempMat);
 	
 	for(i = 0; i < n; i++){
+		meanOfData += y[i];
 		for(j = 0; j < numFreqs; j++){
 			bMat[i][2*j] = cos(2*M_PI * (j+1) * (x[i]));
 			bMat[i][(2*j)+1] = sin(2*M_PI *(j+1) * (x[i]));
@@ -1355,7 +1358,6 @@ void discreteFourier(int n, double x[n], double y[n], int numFreqs,
 	//Now multiply bMatTr and y. Not using matrix multiply because y is
 	//in the wrong format. We also load tempMat into leastSqr.
 	for(i = 0; i < 2*numFreqs; i++){
-		//leastSqr[i][2*numFreqs] = 0;
 		for(j = 0; j < n; j++){
 			leastSqr[i][2*numFreqs] += bMatTr[i][j] * y[j];
 			if(j < 2*numFreqs){
@@ -1369,9 +1371,9 @@ void discreteFourier(int n, double x[n], double y[n], int numFreqs,
 		cosines[i] = leastSqr[2*i][2*numFreqs];
 		sines[i] = leastSqr[(2*i)+1][2*numFreqs];
 	}
-
 	free(bMat);
 	free(bMatTr);
 	free(leastSqr);
 	free(tempMat);
+	return meanOfData / n;
 }
