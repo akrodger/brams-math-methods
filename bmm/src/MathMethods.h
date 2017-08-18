@@ -702,7 +702,9 @@ void discreteLeastSquares(int n, double x[n], double y[n], int m,
  * @param cosines[numFreqs] This is an array with all the cosine coeficients.
  *
  * @param sines[numFreqs] This is an array with all the sine coeficients.
+ *
+ * @return The mean value of y[n], that is the constant term of the Fourier.
  */
-void discreteFourier(int n, double x[n], double y[n], int numFreqs, 
+double discreteFourier(int n, double x[n], double y[n], int numFreqs, 
 						double cosines[numFreqs], double sines[numFreqs]);
 #endif /* MATHMETHODS_H */
