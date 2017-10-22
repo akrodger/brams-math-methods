@@ -4,7 +4,8 @@
 #
 
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -Werror
+LFLAGS = -lm
 
 SRCPATH = src/
 
@@ -40,15 +41,15 @@ TESTING = "testing"
 default: brams-math-methods
 
 brams-math-methods: $(NUM_OBJS) $(LIN_OBJS) $(LP_OBJS)
-	$(CC) $(CLFAGS) $(NUM_OBJS) -lm -o $(INTERPOLATOR)
-	$(CC) $(CLFAGS) $(LIN_OBJS) -lm -o $(LINEAR_ALGEBRA)
-	$(CC) $(CLFAGS) $(LP_OBJS) -lm -o $(LP_CIRCLE)
+	$(CC) $(NUM_OBJS) $(LFLAGS) -o $(INTERPOLATOR)
+	$(CC) $(LIN_OBJS) $(LFLAGS) -o $(LINEAR_ALGEBRA)
+	$(CC) $(LP_OBJS) $(LFLAGS) -o $(LP_CIRCLE)
 	mkdir -p -- "obj"
 	mv *.o $(OBJPATH)
     
 
 %.o : $(SRCPATH)%.c
-	$(CC) $(CFLAGS) -lm -c $<
+	$(CC) $(CFLAGS) -c $<
 
 #
 #make using the object files stored in the obj folder. crashes if obects not 
@@ -75,10 +76,4 @@ objects:
 clean:
 	mkdir -p -- "obj"
 	rm -f obj/*
-	rm -f $(LINEAR_ALGEBRA)
-	rm -f $(INTERPOLATOR)
-	rm -f $(LP_CIRCLE)
-	rm -f $(TESTING)
-	rm -f gnuplot*
-	rm -f *.png
-
+	rm -f $(LINEAR_ALGEBRA) $(INTERPOLATOR) $(LP_CIRCLE) $(TESTING) "gnuplot*" "*.png" "*.o"		

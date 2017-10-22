@@ -686,9 +686,11 @@ void discreteLeastSquares(int n, double x[n], double y[n], int m,
  *	precompilable double-to-double functions. The point here is that we know
  *	Fourier is a common method of best-fit, so I am building it directly in.
  *
+ *
  * @param n the number of input data points
  *
- * @param x[n] array of x-axis data points
+ * @param x[n] array of x-axis data points.
+ *						We assume this set is ordered increasing.
  *
  * @param y[n] array of y-axis data points
  *
@@ -705,6 +707,6 @@ void discreteLeastSquares(int n, double x[n], double y[n], int m,
  *
  * @return The mean value of y[n], that is the constant term of the Fourier.
  */
-double discreteFourier(int n, double x[n], double y[n], int numFreqs, 
+double discreteFourier(int n, double x[n], double y[n],	int numFreqs, 
 						double cosines[numFreqs], double sines[numFreqs]);
 #endif /* MATHMETHODS_H */

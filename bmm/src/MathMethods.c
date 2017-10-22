@@ -87,17 +87,17 @@ static void copyArray(int n, double *from, double *to)
  ******************************************************************************/
 
 /**
- * Function: getRow() 
+ * Function: getRow()
  * Fetch the values of the r number row and store the in the argument "store"
- * 
+ *
  * @param m the number of rows of the matrix mat
- * 
+ *
  * @param n the number of cols of the matrix mat
- * 
+ *
  * @param mat the matrix you wish to read a row from
- * 
+ *
  * @param r the row you want to read
- * 
+ *
  * @param store the array you wish to store into
  */
 void getRow(int m, int n, double (*mat)[n], int r, double store[n])
@@ -109,18 +109,18 @@ void getRow(int m, int n, double (*mat)[n], int r, double store[n])
 	return;
 }
 
-/** 
+/**
  * Function: getCol()
  * Fetch the values of the c number col and store the in the argument "store"
- * 
+ *
  * @param m the number of rows of the matrix mat
- * 
+ *
  * @param n the number of cols of the matrix mat
- * 
+ *
  * @param mat the matrix you wish to read a column from
- * 
+ *
  * @param c the column you want to read
- * 
+ *
  * @the store the array you wish to store into
  */
 void getCol(int m, int n, double (*mat)[n], int c, double store[n])
@@ -139,9 +139,9 @@ void getCol(int m, int n, double (*mat)[n], int c, double store[n])
  * @param m the length of the vectors v1 and v2
  * 
  * @param v1 the left vector in the product
- * 
+ *
  * @param v2 the right vector in the product
- * 
+ *
  * @return the dot product of v1 and v2
  */
 double dotProduct(int m, double (*v1)[1], double (*v2)[1])
@@ -282,7 +282,7 @@ void copyMatrix(int m, int n, double (*from)[n], double (*to)[n])
  * Function: transpose()
  * The transpose of an m by n matrix A is the n by m matrix A' such that the
  * elements of the rows of A are the elements of the columns of A'.
- * 
+ *
  * Other single-matrix manipulation functions in this library directly
  * manipulate the given matrix. (See ref and invert functions as examples.)
  * However an m by n and an n by m 2D array might not be handled the same way
@@ -309,7 +309,7 @@ void transpose(int m, int n, double (*mat)[n], double (*matTranspose)[m])
 	//iterators
 	int i = 0;
 	int j = 0;
-	
+
 	for(i = 0; i < m; i++){
 		for(j = 0; j < n; j++){
 			matTranspose[j][i] = mat[i][j];
@@ -836,7 +836,7 @@ void adamsBash3(int n, void (*vecField)(double[n], double[n]),
 	double tj = 0;
 	time[0] = tj;
 	copyArray(n, y_initial[0], yjm2);
-	
+
 	//These Several lines are equivalent to the MATLAB code:
 	//yjm1 = y0 + DT*0.5*(vecField(y0+DT*vecField(y0,)) + vecField(y0));
 	vecField(y_initial[0], tempVec1);
@@ -852,7 +852,7 @@ void adamsBash3(int n, void (*vecField)(double[n], double[n]),
 	if(1 == iostep){
 		time[1] = tj;
 	}
-	
+
 	//These lines are equivalent to the MATLAB code: (fun is vecField)
 	//yj = yjm1 + DT*0.5*(fun(yjm1+DT*fun(yjm1)) + fun(yjm1));
 	vecField(yjm1, tempVec1);
@@ -870,7 +870,7 @@ void adamsBash3(int n, void (*vecField)(double[n], double[n]),
 	//}
 	//Store the current solution values:
 	for (j = 0; j < n; j++) {
-		y_solve[j][0] = yjm2[j];		
+		y_solve[j][0] = yjm2[j];
 		numSaved++;
 	}
 	if(1 == iostep){
@@ -883,10 +883,10 @@ void adamsBash3(int n, void (*vecField)(double[n], double[n]),
 		for (j = 0; j < n; j++) {
 			y_solve[j][numSaved] = yj[j];
 		}
-		time[numSaved] = tj;	
+		time[numSaved] = tj;
 		numSaved++;
 	}
-	
+
 	//Done with kickstart, starting the AB3 iterations
 	i = 3;
 	while(i < numPnts){
@@ -905,7 +905,7 @@ void adamsBash3(int n, void (*vecField)(double[n], double[n]),
 		arrayScale(n, tempVec1, deltaT/12.0, tempVec1);
 		arrayAdd(n, yj, tempVec1, yjp1);
 		//Every iostep iterations, we must save the state of the ODE at time tj:
-		if( (i % iostep == 0) && 
+		if( (i % iostep == 0) &&
 				(numSaved < (numPnts - (numPnts % iostep))/iostep)){
 			for (j = 0; j < n; j++) {
 				y_solve[j][numSaved] = yjp1[j];
@@ -926,25 +926,25 @@ void adamsBash3(int n, void (*vecField)(double[n], double[n]),
 		if(iostep == 1){//numPnts == 1 means only return inital condition.
 			for (j = 0; j < n; j++) {
 					y_solve[j][0] = yjm2[j];
-				}		
+				}
 			time[0] = 0;
 		}
 		if(iostep == 2){//numPnts == 2 means only return 1 step forward
 			for (j = 0; j < n; j++) {
 					y_solve[j][0] = yjm1[j];
-				}		
+				}
 			time[0] = deltaT;
 		}
 		if(iostep == 3){//numPnts == 3 means only return 2 steps foward.
 			for (j = 0; j < n; j++) {
 					y_solve[j][0] = yj[j];
-				}		
+				}
 			time[0] = deltaT + deltaT;
 		}
 		if(iostep > 3){//numPnts == 1 means only return late position
 			for (j = 0; j < n; j++) {
 					y_solve[j][0] = yjp1[j];
-				}		
+				}
 			time[0] = tj;
 		}
 	}
@@ -959,7 +959,7 @@ void adamsBash3(int n, void (*vecField)(double[n], double[n]),
 /**
  * Function: binomialCoef()
  * Finds the "n choose r" value. also known as the binomial coefficient.
- * 
+ *
  * @param n the size of the set to choose from
  * @param r the number choose from a set.
  */
@@ -974,8 +974,8 @@ long int binomialCoef( long int n, long int r )
 	}
 
 	if ((r * 2) > n) {
-		//the binomial coefficient is symmetric about the center of 
-		//Pascal's triangle, so we use this one trick:
+		//the binomial coefficient is symmetric about the center of
+		//Pascal's triangle, so we use this one weird trick:
 		r = n-r; //click here to find out my one trick! mathematicians hate me!
 	}
 
@@ -994,14 +994,14 @@ long int binomialCoef( long int n, long int r )
 /**
  * Function: vanderInterpolate()
  * This function will make a polynomial of degree n-1 given n points. It uses
- * an algorithm known as Vandermonde Interpolation. The function executes in the 
+ * an algorithm known as Vandermonde Interpolation. The function executes in the
  * following manner:
  *
- *		(let n-1 be the order/degree for simplicity) 
- *			  
+ *		(let n-1 be the order/degree for simplicity)
+ *
  *		1) -> Take n pairs of  x and y data points
  *		2) -> For the set of points, load them into a matrix like so:
- *			  
+ *
  *              [  (1)    (x[0])    (x[0])^2   ...   (x[0])^(d)  ]
  *              [  (1)    (x[1])    (x[1])^2   ...   (x[1])^(d)  ]
  *         X =  [                               .                ]
@@ -1042,24 +1042,24 @@ long int binomialCoef( long int n, long int r )
  *			   power's coefficient.
  */
 void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
-{   
+{
 	//loop iterators
 
 	int i = 0;
 	int j = 0;
-	
+
 	//n is the number of coefficients. it is also the length of c, x, and y
 	//this is essentially the most important number to the algorithm
-	
+
 	//matrix of x values raised to powers
 	double xMat[n][n];
 	//intialize xMat right after declaring
 	//(to avoid eldritch C memory issues.)
 	for(i = 0; i < n; i++) {
 		for(j = 0; j < n; j++) {
-			xMat[i][j] = pow(x[i] , j); 
+			xMat[i][j] = pow(x[i] , j);
 			//value of of the (i,j) entry is the i number to the j power
-		} 
+		}
 	}
 
 	//column vector of y values
@@ -1072,26 +1072,26 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
 	for(i = 0; i < n; i++) {
 		yMat[i][0] = y[i];
 	}
-	
-	//column vector which is the product of inverse(xMat) and yMat   
+
+	//column vector which is the product of inverse(xMat) and yMat
 	double pMat[n][1];
 	//intialize pMat right after declaring
 	//(to avoid eldritch C memory issues.)
 	for(i = 0; i < n; i++) {
 		pMat[i][0] = 0;
-	} 
-	
+	}
+
 	//now building a single polynomial:
-	//take the inverse of the xMat matrix so we can find the 
+	//take the inverse of the xMat matrix so we can find the
 	//coefficients of our polynomial
-	
+
 	invert(n, n, xMat);
-	
-	//multiply this inverse matrix by yMat to get  one of the 
+
+	//multiply this inverse matrix by yMat to get  one of the
 	//polynomial coefficient vectors
-	
+
 	matrixMultiply(n, n, 1, xMat, yMat, pMat);
-	
+
 	//now that we have the coefficients of our polynomial,
 	//load the output into c.
 	for(i = 0; i < n; i++) {
@@ -1196,7 +1196,7 @@ void meanPolynomial(long int path, Stack *combo, long int num_points,
 		StackPush(combo, path);
 	}
 	//if we have a subset (not end of path)
-	if(StackGetSize(combo) == num_coefs) { 
+	if(StackGetSize(combo) == num_coefs) {
 		//process combinatorial data
 		for(i = 0; i < num_coefs; i++) {
 			//make the placeholder arrays equal to the specific x, y values
@@ -1214,19 +1214,19 @@ void meanPolynomial(long int path, Stack *combo, long int num_points,
 		meanPolynomial(i, combo, num_points, x, y, num_coefs, c);
 	}
 	StackPop(combo, &popValue);
-	if(path == -1) {		
+	if(path == -1) {
 		StackFree(combo);
 
 		for(i = 0; i < num_coefs; i++) {
 			c[i] /= binomialCoef(num_points, num_coefs);
 		}
-	} 
+	}
 	return;
 }
 
 /**
  * Function: discreteLeastSquares()
- * The "meanPolynomial" function above computes the average polynomial of 
+ * The "meanPolynomial" function above computes the average polynomial of
  * a certain degree with repect to a data set. Here's a more general algorithm.
  *
  * Where as above, we had a polynomial of degree num_coefs-1. For brevity, say
@@ -1234,11 +1234,11 @@ void meanPolynomial(long int path, Stack *combo, long int num_points,
  * m functions. The goal of Least Squares approximation is to represent a data
  * set with a sum of many functions. Moreover, we don't want to iterate through
  * a huge number of subsets to do it. (Like in meanPolynomial.) We use linear
- * algebra to solve this problem. 
+ * algebra to solve this problem.
  *
  * Core idea:
  * double (*phi[m])(double) is an array of m mappings from doubles to doubles.
- * Assume they are linearly inderpendent of one another. Now sample each of the 
+ * Assume they are linearly inderpendent of one another. Now sample each of the
  * n many x-axis data points at every function. Store these in an m by n matrix.
  * Call this matrix B. Let B' be the transpose of B. Assume y is a vector with
  * all the y data points. The coordinate vector of the data set with respect to
@@ -1262,14 +1262,6 @@ void meanPolynomial(long int path, Stack *combo, long int num_points,
  *
  * @param result[m] array of coeficients to functions (*phi[m])(double)
  */
-#include <gba_console.h>
-#include <gba_video.h>
-#include <gba_interrupt.h>
-#include <gba_systemcalls.h>
-#include <gba_input.h>
-#define LCD_WRITE(x, y, r, g, b) \
-                    ((unsigned short*)0x06000000)[(x)+(y)*SCREEN_WIDTH]  = \
-                                                            RGB8((r), (g), (b))
 void discreteLeastSquares(int n, double x[n], double y[n], int m,
 							double (*phi[m])(double), double result[m])
 {
@@ -1292,7 +1284,6 @@ void discreteLeastSquares(int n, double x[n], double y[n], int m,
 	initMat(m, m+1, leastSqr);
 	//This n by n matrix has the sole purpose of being the product of
 	//and bMatTr. It will be copied into leastSqr.
-	
 	double (*tempMat)[m];
 	initMat(m, m, tempMat);
 	for(i = 0; i < n; i++){
@@ -1300,7 +1291,7 @@ void discreteLeastSquares(int n, double x[n], double y[n], int m,
 			bMat[i][j] = (*phi[j])(x[i]);
 		}
 	}
-	transpose(n, m, bMat, bMatTr);	
+	transpose(n, m, bMat, bMatTr);
 	matrixMultiply(m, n, m, bMatTr, bMat, tempMat);
 	//Now multiply bMatTr and y. Not using matrix multiply because y is
 	//in the wrong format. We also load tempMat into leastSqr.
@@ -1328,48 +1319,49 @@ double discreteFourier(int n, double x[n], double y[n], int numFreqs,
 {
 	int i = 0;
 	int j = 0;
+	register int TwiceNumFreqs = 2*numFreqs;
+	register double angularFreq = 2*M_PI/(x[n-1] - x[0]);
 	//This double contains the constant term of the fourier transform
 	double meanOfData = 0;
 	//matrix of phi functions evaluated at x values
-	double (*bMat)[2*numFreqs];
-	initMat(n, 2*numFreqs, bMat);
+	double (*bMat)[TwiceNumFreqs];
+	initMat(n, TwiceNumFreqs, bMat);
 	//the transpose of bMat
 	double (*bMatTr)[n];
-	initMat(2*numFreqs, n, bMatTr);
+	initMat(TwiceNumFreqs, n, bMatTr);
 	//This matrix is the n by n+1 which will have bMatTr*bMat in first n by n
 	//entries. In the last column, we have bMatTr*y. We do rref() on this matrix
 	//and the result in the last column is the least squares coordinates.
-	double (*leastSqr)[(2*numFreqs)+1];
-	initMat(2*numFreqs, (2*numFreqs)+1, leastSqr);
+	double (*leastSqr)[(TwiceNumFreqs)+1];
+	initMat(TwiceNumFreqs, (TwiceNumFreqs)+1, leastSqr);
 	//This n by n matrix has the sole purpose of being the product of
 	//and bMatTr. It will be copied into leastSqr.
-	double (*tempMat)[2*numFreqs];
-	initMat(2*numFreqs, 2*numFreqs, tempMat);
-	
+	double (*tempMat)[TwiceNumFreqs];
+	initMat(TwiceNumFreqs, TwiceNumFreqs, tempMat);
 	for(i = 0; i < n; i++){
 		meanOfData += y[i];
 		for(j = 0; j < numFreqs; j++){
-			bMat[i][2*j] = cos(2*M_PI * (j+1) * (x[i]));
-			bMat[i][(2*j)+1] = sin(2*M_PI *(j+1) * (x[i]));
+			bMat[i][2*j] = cos(angularFreq * (j+1) * (x[i]));
+			bMat[i][(2*j)+1] = sin(angularFreq *(j+1) * (x[i]));
 		}
 	}
-	transpose(n, 2*numFreqs, bMat, bMatTr);	
-	matrixMultiply(2*numFreqs, n, 2*numFreqs, bMatTr, bMat, tempMat);
+	transpose(n, TwiceNumFreqs, bMat, bMatTr);
+	matrixMultiply(TwiceNumFreqs, n, TwiceNumFreqs, bMatTr, bMat, tempMat);
 	//Now multiply bMatTr and y. Not using matrix multiply because y is
 	//in the wrong format. We also load tempMat into leastSqr.
-	for(i = 0; i < 2*numFreqs; i++){
+	for(i = 0; i < TwiceNumFreqs; i++){
 		for(j = 0; j < n; j++){
-			leastSqr[i][2*numFreqs] += bMatTr[i][j] * y[j];
-			if(j < 2*numFreqs){
+			leastSqr[i][TwiceNumFreqs] += bMatTr[i][j] * y[j];
+			if(j < TwiceNumFreqs){
 				leastSqr[i][j] = tempMat[i][j];
 			}
 		}
 	}
 	//solve the system of equations arrising from the least squares condition
-	rref((2*numFreqs), (2*numFreqs)+1, leastSqr);
+	rref((TwiceNumFreqs), (TwiceNumFreqs)+1, leastSqr);
 	for(i=0; i < numFreqs; i++){
-		cosines[i] = leastSqr[2*i][2*numFreqs];
-		sines[i] = leastSqr[(2*i)+1][2*numFreqs];
+		cosines[i] = leastSqr[2*i][TwiceNumFreqs];
+		sines[i] = leastSqr[(2*i)+1][TwiceNumFreqs];
 	}
 	free(bMat);
 	free(bMatTr);
