@@ -22,10 +22,10 @@ void StackInit(Stack **stack, long int size)
     {
         return;
     }
-    *stack = calloc(1, sizeof(Stack));
+    *stack = (Stack*) calloc(1, sizeof(Stack));
     (*stack)->currentItemIndex = -1;
     (*stack)->MAX_SIZE = size;
-    (*stack)->stackItems = calloc(size, sizeof(long int));
+    (*stack)->stackItems = (long int*) calloc(size, sizeof(long int));
 
     return;
 }

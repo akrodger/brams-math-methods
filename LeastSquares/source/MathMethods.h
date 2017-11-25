@@ -548,7 +548,7 @@ long int binomialCoef( long int n, long int r );
  *			   the polynomial. c[0] is the constant term, c[d] is the highest
  *			   power's coefficient.
  */
-void vanderInterpolate(long int n, double x[n], double y[n], double c[n]);
+void vanderInterpolate(long int n, double* x, double* y, double* c);
 
 /**
  * Function: lagrangeInterpolate()

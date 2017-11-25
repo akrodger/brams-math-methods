@@ -848,12 +848,12 @@ void adamsBash3(int n, void (*vecField)(double*, double*),
 				double *time)
 {
 	//Initialize all memory needed to solve ODE:
-	double *tempVec1 = calloc(n, sizeof(double));
-	double *tempVec2 = calloc(n, sizeof(double));
-	double *yjm2 = calloc(n, sizeof(double));
-	double *yjm1 = calloc(n, sizeof(double));
-	double *yj = calloc(n, sizeof(double));
-	double *yjp1 = calloc(n, sizeof(double));
+	double *tempVec1 = (double*) calloc(n, sizeof(double));
+	double *tempVec2 = (double*) calloc(n, sizeof(double));
+	double *yjm2 = (double*) calloc(n, sizeof(double));
+	double *yjm1 = (double*) calloc(n, sizeof(double));
+	double *yj = (double*) calloc(n, sizeof(double));
+	double *yjp1 = (double*) calloc(n, sizeof(double));
 	long int i = 0;	
 	int j = 0;
 	int numSaved = -1;
@@ -1206,8 +1206,8 @@ void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n])
  *			   power's coefficient.
  */
 void meanPolynomial(long int path, Stack *combo, long int num_points, 
-					double x[num_points], double y[num_points], 
-					long int num_coefs, double c[num_coefs])
+					double* x, double* y, 
+					long int num_coefs, double* c)
 {   	
 	//loop iterator
 	long int i = 0;
@@ -1343,8 +1343,8 @@ void discreteLeastSquares(int n, double* x, double* y, int m,
 	freeMat(m, &tempMat);
 }
 
-double discreteFourier(int n, double x[n], double y[n], int numFreqs, 
-						double cosines[numFreqs], double sines[numFreqs])
+double discreteFourier(int n, double* x, double* y, int numFreqs, 
+						double* cosines, double* sines)
 {
 	int i = 0;
 	int j = 0;
