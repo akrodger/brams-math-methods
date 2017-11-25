@@ -1,5 +1,5 @@
 # brams-math-methods
-A collection of math computation C libraries written by Abram "Bram" Rodgers.
+A collection of math computation C/C++ libraries written by Abram "Bram" Rodgers.
 README by Abram Rodgers
 # Contact: AKS.Rodgers (at) gmail (dot) com
 -------------
@@ -12,10 +12,12 @@ README by Abram Rodgers
 - Section 4: Integer Stack Implementation
 - Section 5: Special Thanks
 
----------------------------------
-| Intro: Origin of this Library |
----------------------------------
-This program was initially the primary content for a school report. When I was a student in MATH 181 History of Mathematics (Winter 2016) at UC Santa Cruz, we all had to do a historical report on a famous mathematician. We also had to showcase some of that mathematician's work. I chose to write about Carl Gauss and showcase Gaussian Elimination, a particular matrix algorithm which can find a solution for systems of linear equations of nth order. Since this is a pretty standard exercise for students in a computer science course, I figured I could probably write my own version of the very famous algorithm for my math course. After approval from the professor, I wrote up the code over the course of a week or so and included it in my historical report with gratuitous comments and documentation (since he did not know C). The school project was very successful and writing more in the library became more of a side project.
+-----------------
+| Introduction: |
+-----------------
+This library is compatible with C++ as of 24 Nov 2017.
+
+This program was initially the primary content for a school report. When I was a student in MATH 181 History of Mathematics (Winter 2016) at UC Santa Cruz, we all had to do a historical report on a famous mathematician. We also had to showcase some of that mathematician's work. I chose to write about Carl Gauss and showcase Gaussian Elimination, a particular matrix algorithm which can find a solution for systems of linear equations of nth order. Since this is a pretty standard exercise for students in a computer science course, I figured I could probably write my own version of the very famous algorithm for my math course. After approval from the professor, I wrote up the code over the course of a week or so and included it in my historical report with gratuitous comments and documentation (since the professor did not know C). The school project was very successful and writing more in the library has become a long term software project.
 
 Today the library sits on GitHub to show some of my personal coding skills. Since no algorithm in this package was particularly novel, simply my own take on various computational problems, I decided to make it all public domain at first. Plenty of alternate versions of the Linear Algebra algorithms are open source. However, after writing the numerical methods functions, I decided to open source the whole package, since statistical software is a bit more novel than some intro Linear Algebra algorithms.
 
@@ -28,7 +30,7 @@ If you wish to download and use my code in particular, I would be curious to kno
 Program located in folder bmm.
 Library Dependencies: 
 
-- gcc
+- gcc or g++
 
 - make
 
