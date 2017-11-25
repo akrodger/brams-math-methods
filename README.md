@@ -103,7 +103,7 @@ Currently, the design problem with QR is how to represent complex eigenvalues. I
 There are several functions here:
 - Two types of finite integral with small delta approximation
 - Derivative with small delta approximation
-- Adams-Bashforth Orinary 3 step Differential Equation Solver
+- Adams-Bashforth 3 step Orinary Differential Equation Solver
 - Vandermonde polynomial interpolation
 - Mean Polynomial approximation
 - Least Squares Approximation (Unstable, still in testing)
