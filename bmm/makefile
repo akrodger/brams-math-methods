@@ -51,15 +51,35 @@ brams-math-methods: $(NUM_OBJS) $(LIN_OBJS) $(LP_OBJS)
 %.o : $(SRCPATH)%.c
 	$(CC) $(CFLAGS) -c $<
 
+
 #
-#make using the object files stored in the obj folder. crashes if obects not 
-#present.
+#Here are the the commands to make each individual app.
 #
+
+lin-alg: $(LIN_OBJS)
+	$(CC) $(LIN_OBJS) $(LFLAGS) -o $(LINEAR_ALGEBRA)
+	mkdir -p -- "obj"
+	mv *.o $(OBJPATH)
+
+interp: $(NUM_OBJS)
+	$(CC) $(NUM_OBJS) $(LFLAGS) -o $(INTERPOLATOR)
+	mkdir -p -- "obj"
+	mv *.o $(OBJPATH)
+
+ode-solve: $(LP_OBJS)
+	$(CC) $(LP_OBJS) $(LFLAGS) -o $(LP_CIRCLE)
+	mkdir -p -- "obj"
+	mv *.o $(OBJPATH)
 
 tests: $(TEST_OBJS)
 	$(CC) $(CLFAGS) $(TEST_OBJS) -lm -o $(TESTING)
 	mkdir -p -- "obj"
 	mv *.o $(OBJPATH)
+
+#
+#make using the object files stored in the obj folder. crashes if obects not 
+#present.
+#
 
 objects:
 	mv obj/*.o .

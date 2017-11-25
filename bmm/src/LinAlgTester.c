@@ -37,8 +37,9 @@ int main(int argc, char **argv)
 	}
 
     //double myMatrix = topRow;
-    double myMatrix[ROWS][COLS];
-    
+    double** myMatrix;
+	initMat(ROWS, COLS, &myMatrix);    
+
     for(i = 0; i < ROWS; i++)
     {
         for(j = 0; j < COLS; j++)
@@ -47,10 +48,13 @@ int main(int argc, char **argv)
         }
     }
 
-    double copiedMat[ROWS][COLS];
+    double** copiedMat;
 
-    double product[ROWS][COLS];
+	initMat(ROWS,COLS, &copiedMat);
 
+    double** product;
+
+	initMat(ROWS, COLS, &product);
 
     copyMatrix(ROWS, COLS, myMatrix, copiedMat);
 
@@ -108,6 +112,8 @@ int main(int argc, char **argv)
 
 
     printf("\n\nYou did it, Hooray!\n");
-
+	freeMat(ROWS, &myMatrix);
+	freeMat(ROWS, &copiedMat);
+	freeMat(ROWS, &product);
     return 0;
 }

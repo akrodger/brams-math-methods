@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 {
     
     //flush(stdout);
-    FILE *pointsFile = fopen( INTERPOLATOR_FILE_LOCATION, "r" );
+    FILE* pointsFile = (FILE*) fopen( INTERPOLATOR_FILE_LOCATION, "r" );
     
     
     if(pointsFile == NULL)
@@ -67,10 +67,10 @@ int main(int argc, char **argv)
     int i = 0;
     int numPoints = 0;
     int terms = 0;
-    double *x = calloc(MAX_NUM_POINTS, sizeof(double));
-    double *y = calloc(MAX_NUM_POINTS, sizeof(double));    
-    double *arr = calloc(MAX_NUM_POINTS, sizeof(double));
-    char *fileLine = calloc(FILE_MAX_LINE_LEN , sizeof(char));
+    double *x = (double*) calloc(MAX_NUM_POINTS, sizeof(double));
+    double *y = (double*) calloc(MAX_NUM_POINTS, sizeof(double));    
+    double *arr = (double*) calloc(MAX_NUM_POINTS, sizeof(double));
+    char *fileLine = (char*) calloc(FILE_MAX_LINE_LEN , sizeof(char));
     char *tokenizer;
     
     while(fscanLine(pointsFile, fileLine) != EOF)

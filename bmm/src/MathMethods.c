@@ -40,17 +40,11 @@ void setDelta(double d)
  *                                                                            *
  ******************************************************************************/
 /**
- * Macro: initMat()
+ * function: initMat()
  * just a shortcut for doing calloc() on a matrix.
  *
- * A Word on how memory is managed with matrices and vectors:
- * A m and n matrix is a n m by n 2D array of doubles with C99 representation.
- * An m by 1 matrix is a column vector.
- * Let vec be a column vector. the vec[0] is an an array of length n, almost.
- * It is the memory location of the the column vector, and therefore may be
- * used as such. An exploitation of this fact is in the matrixMultiply function.
+ * All memory is managed a pointer-pointers. This function allocates all needed memory.
  *
- * Actual definition is in header.
  * 
  * @param m the number of rows of the matrix mat
  * 
@@ -58,8 +52,34 @@ void setDelta(double d)
  * 
  * @param mat the matrix you wish to initialize
  */
-// #define initMat(m, n, mat) mat = calloc((m)*(n), sizeof(double))
+void initMat(int rows, int cols, double*** matPtr)
+{
+	int k = 0;
+	*matPtr = (double **) calloc(rows ,sizeof(double*));
+	for (k = 0; k < rows; k++) {
+		(*matPtr)[k] = (double *) calloc(cols, sizeof(double));
+	}
 
+}
+
+/**
+ * function: initMat()
+ * just a shortcut for freeing a matrix.
+ *
+ * All memory is managed a pointer-pointers. This function deallocates all used memory.
+ *
+ * 
+ * @param m the number of rows of the matrix mat
+ * 
+ * @param mat the matrix you wish to initialize
+ */
+void freeMat(int rows, double*** matPtr)
+{
+	for(int k = 0; k < rows; k++){
+		free((*matPtr)[k]);
+	}
+	free(*(matPtr));
+}
 /** 
  * Function: copyArry()
  * Copy the values of array "from" into array "to".
@@ -88,7 +108,8 @@ static void copyArray(int n, double *from, double *to)
 
 /**
  * Function: getRow()
- * Fetch the values of the r number row and store the in the argument "store"
+ * Fetch the values of the r number row and store the first column
+ * of the argument argument "store"
  *
  * @param m the number of rows of the matrix mat
  *
@@ -100,18 +121,19 @@ static void copyArray(int n, double *from, double *to)
  *
  * @param store the array you wish to store into
  */
-void getRow(int m, int n, double (*mat)[n], int r, double store[n])
+void getRow(int m, int n, double** mat, int r, double** store)
 {
 	int j=0;
 	for (; j < n; j++) {
-		store[j] = mat[r][j];
+		store[j][0] = mat[r][j];
 	}
 	return;
 }
 
 /**
  * Function: getCol()
- * Fetch the values of the c number col and store the in the argument "store"
+ * Fetch the values of the c number col and store the in the first column
+ * of the argument argument "store"
  *
  * @param m the number of rows of the matrix mat
  *
@@ -123,11 +145,11 @@ void getRow(int m, int n, double (*mat)[n], int r, double store[n])
  *
  * @the store the array you wish to store into
  */
-void getCol(int m, int n, double (*mat)[n], int c, double store[n])
+void getCol(int m, int n, double** mat, int c, double** store)
 {
 	int i = 0;
 	for (i = 0; i < m; i++) {
-		store[i] = mat[i][c];
+		store[i][0] = mat[i][c];
 	}
 	return;
 }
@@ -144,7 +166,7 @@ void getCol(int m, int n, double (*mat)[n], int c, double store[n])
  *
  * @return the dot product of v1 and v2
  */
-double dotProduct(int m, double (*v1)[1], double (*v2)[1])
+double dotProduct(int m, double** v1, double** v2)
 {
 	double dot = 0;
 	int i = 0;
@@ -163,7 +185,7 @@ double dotProduct(int m, double (*v1)[1], double (*v2)[1])
  * 
  * @param v the vector which will be evaluated
  */
-double euclideanNorm(int m, double (*v)[1])
+double euclideanNorm(int m, double** v)
 {
 	double squareOfMagnitude = 0;
 	int j=0;
@@ -189,7 +211,7 @@ double euclideanNorm(int m, double (*v)[1])
  * 
  * @param row2 your other row
  */
-void swapRows(int n, double (*mat)[n], int r1, int r2)
+void swapRows(int n, double** mat, int r1, int r2)
 {
 	int j=0;
 	double temp;
@@ -215,7 +237,7 @@ void swapRows(int n, double (*mat)[n], int r1, int r2)
  * @param scaleBy the scalar you wish to multiply the row by
  * 
  */
-void scaleRow(int n, double (*mat)[n], int r, double scaleBy)
+void scaleRow(int n, double** mat, int r, double scaleBy)
 {
 	int j=0;
 	for (j = 0; j < n; j++) {
@@ -243,7 +265,7 @@ void scaleRow(int n, double (*mat)[n], int r, double scaleBy)
  * @param elimBy the scalar to multiply by r2
  * 
  */
-void elimRow(int n, double (*mat)[n], int r1, int r2, double elimBy)
+void elimRow(int n, double** mat, int r1, int r2, double elimBy)
 {
 	int j=0;
 	for (j = 0; j < n; j++) {
@@ -267,7 +289,7 @@ void elimRow(int n, double (*mat)[n], int r1, int r2, double elimBy)
  * @param to the matrix to copy into
  *
  */
-void copyMatrix(int m, int n, double (*from)[n], double (*to)[n])
+void copyMatrix(int m, int n, double** from, double** to)
 {
 	int i=0;
 	int j=0;
@@ -304,7 +326,7 @@ void copyMatrix(int m, int n, double (*from)[n], double (*to)[n])
  *
  * @matTranspose the matrix to store the transpose in.
  */
-void transpose(int m, int n, double (*mat)[n], double (*matTranspose)[m])
+void transpose(int m, int n, double** mat, double** matTranspose)
 {
 	//iterators
 	int i = 0;
@@ -341,7 +363,7 @@ void transpose(int m, int n, double (*mat)[n], double (*matTranspose)[m])
  *		  if the matrix was not square, we return a zero, which is just a 
  *		  placeholder value so that we dont return garbage.
  */
-double ref(int m, int n, double (*mat)[n])
+double ref(int m, int n, double** mat)
 {
 	int x = 0;
 	int y = 0;
@@ -437,7 +459,7 @@ double ref(int m, int n, double (*mat)[n])
  *		  return zero. We assume you understand that this zero has no
  *		  correlation to a determinant for the m not equal to n case.
  */
-double rref(int m, int n, double (*mat)[n])
+double rref(int m, int n, double** mat)
 {
 	double det = ref(m, n, mat);
 	//these are our loop iterators, x and y:
@@ -496,7 +518,7 @@ double rref(int m, int n, double (*mat)[n])
  * @param return det(mat) if the matrix was invertible, return 0 otherwise
  * 
  */
-double invert(int m, int n, double (*mat)[n])
+double invert(int m, int n, double** mat)
 {
 	double det = 0;
 	int i=0;
@@ -507,21 +529,21 @@ double invert(int m, int n, double (*mat)[n])
 	}
 	
 	
-	double checkMat[m][n];
-
+	double** checkMat;
+	initMat(m, n, &checkMat);
 	//use this matrix to check what the determinant is before we try to find
 	//and inverse.
 
 	copyMatrix(m, n, mat, checkMat);
 
 	det = ref(m, n, checkMat);
-
+	freeMat(m, &checkMat);
 	if (fabs(det) < DELTA) {
 		return 0;
 	}
 	
-	double augMat[m][2 * n];
-
+	double** augMat;
+	initMat(m, 2*n, &augMat);
 	//instead of using the copy function, we must use a custom loop
 	//this is because copy function requires 2 matrices of the same dimensions
 
@@ -545,8 +567,8 @@ double invert(int m, int n, double (*mat)[n])
 			mat[i][j - n] = augMat[i][j];
 		}
 	}
-
-	return det;
+	freeMat(m, &augMat);
+	return 1/det;
 
 }
 
@@ -571,24 +593,26 @@ double invert(int m, int n, double (*mat)[n])
  * @param product the result of our multiplication
  * 
  */
-void matrixMultiply(int m, int n, int p, double (*left)[n], double (*right)[p],
-		double (*product)[p])
+void matrixMultiply(int m, int n, int p, double** left, double** right,
+		double** product)
 {
 
 	int i = 0;
 	int j = 0;
-	double (*v1)[1] = calloc(n, sizeof(double));
-	double (*v2)[1] = calloc(n, sizeof(double));;
+	double** v1;
+	double** v2;
+	initMat(n, 1, &v1);
+	initMat(n, 1, &v2);
 	for (i = 0; i < m; i++) {
 		for (j = 0; j < p; j++) {
-			getRow(m, n, left, i, v1[0]);
-			getCol(n, p, right, j, v2[0]);
+			getRow(m, n, left, i, v1);
+			getCol(n, p, right, j, v2);
 			product[i][j] = dotProduct(n, v1, v2);
 		}
 	}
 
-	free(v1);
-	free(v2);
+	freeMat(n, &v1);
+	freeMat(n, &v2);
 }
 
 /**
@@ -646,8 +670,8 @@ void arrayScale(int m, double *arr, double scaleBy, double *scaled)
  *
  * @param sum the sum of the left and the right
  */
-void matrixAdd(int m, int n, double (*left)[n], double (*right)[n], 
-				double (*sum)[n])
+void matrixAdd(int m, int n, double** left, double** right, 
+				double** sum)
 {
 	int j;
 	for(j = 0; j < n; j++){
@@ -817,19 +841,19 @@ double simpleDerivative(double (*funct)(double), double a)
  *
  * @param *time an array containing the time at each point.
  */
-void adamsBash3(int n, void (*vecField)(double[n], double[n]),
-				double (*y_initial)[1], double deltaT, 
+void adamsBash3(int n, void (*vecField)(double*, double*),
+				double** y_initial, double deltaT, 
 				int iostep, long int numPnts,
-				double (*y_solve)[(numPnts - (numPnts % iostep))/iostep], 
+				double *(*y_solve),//[(numPnts - (numPnts % iostep))/iostep], 
 				double *time)
 {
 	//Initialize all memory needed to solve ODE:
-	double *tempVec1 = calloc(n, sizeof(double));
-	double *tempVec2 = calloc(n, sizeof(double));
-	double *yjm2 = calloc(n, sizeof(double));
-	double *yjm1 = calloc(n, sizeof(double));
-	double *yj = calloc(n, sizeof(double));
-	double *yjp1 = calloc(n, sizeof(double));
+	double *tempVec1 = (double*) calloc(n, sizeof(double));
+	double *tempVec2 = (double*) calloc(n, sizeof(double));
+	double *yjm2 = (double*) calloc(n, sizeof(double));
+	double *yjm1 = (double*) calloc(n, sizeof(double));
+	double *yj = (double*) calloc(n, sizeof(double));
+	double *yjp1 = (double*) calloc(n, sizeof(double));
 	long int i = 0;	
 	int j = 0;
 	int numSaved = -1;
@@ -852,7 +876,7 @@ void adamsBash3(int n, void (*vecField)(double[n], double[n]),
 	if(1 == iostep){
 		time[1] = tj;
 	}
-
+	
 	//These lines are equivalent to the MATLAB code: (fun is vecField)
 	//yj = yjm1 + DT*0.5*(fun(yjm1+DT*fun(yjm1)) + fun(yjm1));
 	vecField(yjm1, tempVec1);
@@ -1041,7 +1065,7 @@ long int binomialCoef( long int n, long int r )
  *			   the polynomial. c[0] is the constant term, c[d] is the highest
  *			   power's coefficient.
  */
-void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
+void vanderInterpolate(long int n, double* x, double* y, double* c)
 {
 	//loop iterators
 
@@ -1052,7 +1076,8 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
 	//this is essentially the most important number to the algorithm
 
 	//matrix of x values raised to powers
-	double xMat[n][n];
+	double** xMat;
+	initMat(n, n, &xMat);
 	//intialize xMat right after declaring
 	//(to avoid eldritch C memory issues.)
 	for(i = 0; i < n; i++) {
@@ -1063,7 +1088,8 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
 	}
 
 	//column vector of y values
-	double yMat[n][1];
+	double** yMat;
+	initMat(n, 1, &yMat);
 	//initialize yMat right after declaring
 	//(to avoid eldritch C memory issues.)
 	//This may seem odd, but it is done so we can use the linear algebra
@@ -1074,7 +1100,8 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
 	}
 
 	//column vector which is the product of inverse(xMat) and yMat
-	double pMat[n][1];
+	double** pMat;
+	initMat(n, 1, &pMat);
 	//intialize pMat right after declaring
 	//(to avoid eldritch C memory issues.)
 	for(i = 0; i < n; i++) {
@@ -1086,7 +1113,6 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
 	//coefficients of our polynomial
 
 	invert(n, n, xMat);
-
 	//multiply this inverse matrix by yMat to get  one of the
 	//polynomial coefficient vectors
 
@@ -1097,6 +1123,9 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n])
 	for(i = 0; i < n; i++) {
 		c[i] = pMat[i][0];
 	}
+	freeMat(n, &xMat);
+	freeMat(n, &yMat);
+	freeMat(n, &pMat);
 	//done
 	return;
 }
@@ -1177,8 +1206,8 @@ void lagrangeInterpolate(long int n, double x[n], double y[n], double c[n])
  *			   power's coefficient.
  */
 void meanPolynomial(long int path, Stack *combo, long int num_points, 
-					double x[num_points], double y[num_points], 
-					long int num_coefs, double c[num_coefs])
+					double* x, double* y, 
+					long int num_coefs, double* c)
 {   	
 	//loop iterator
 	long int i = 0;
@@ -1262,17 +1291,17 @@ void meanPolynomial(long int path, Stack *combo, long int num_points,
  *
  * @param result[m] array of coeficients to functions (*phi[m])(double)
  */
-void discreteLeastSquares(int n, double x[n], double y[n], int m,
-							double (*phi[m])(double), double result[m])
+void discreteLeastSquares(int n, double* x, double* y, int m,
+							double (*(*phi))(double), double* result)
 {
 	int i = 0;
 	int j = 0;
 	//matrix of phi functions evaluated at x values
-	double (*bMat)[m];
-	initMat(n, m, bMat);
+	double *(*bMat);
+	initMat(n, m, &bMat);
 	//the transpose of bMat
-	double (*bMatTr)[n];
-	initMat(m, n, bMatTr);
+	double *(*bMatTr);
+	initMat(m, n, &bMatTr);
 	/* bMat is n by m, which goes against the usual convention of alphabetical
 	*  order of the size. I do this though because I prefer the convention
 	*  of letting n represent the data set, as in previous function fit models.
@@ -1280,12 +1309,12 @@ void discreteLeastSquares(int n, double x[n], double y[n], int m,
 	//This matrix is the n by n+1 which will have bMatTr*bMat in first n by n
 	//entries. In the last column, we have bMatTr*y. We do rref() on this matrix
 	//and the result in the last column is the least squares coordinates.
-	double (*leastSqr)[m+1];
-	initMat(m, m+1, leastSqr);
+	double *(*leastSqr);
+	initMat(m, m+1, &leastSqr);
 	//This n by n matrix has the sole purpose of being the product of
 	//and bMatTr. It will be copied into leastSqr.
-	double (*tempMat)[m];
-	initMat(m, m, tempMat);
+	double *(*tempMat);
+	initMat(m, m, &tempMat);
 	for(i = 0; i < n; i++){
 		for(j = 0; j < m; j++){
 			bMat[i][j] = (*phi[j])(x[i]);
@@ -1308,14 +1337,14 @@ void discreteLeastSquares(int n, double x[n], double y[n], int m,
 	for(i=0; i < m; i++){
 		result[i] = leastSqr[i][m];
 	}
-	free(bMat);
-	free(bMatTr);
-	free(leastSqr);
-	free(tempMat);
+	freeMat(n, &bMat);
+	freeMat(m, &bMatTr);
+	freeMat(m, &leastSqr);
+	freeMat(m, &tempMat);
 }
 
-double discreteFourier(int n, double x[n], double y[n], int numFreqs, 
-						double cosines[numFreqs], double sines[numFreqs])
+double discreteFourier(int n, double* x, double* y, int numFreqs, 
+						double* cosines, double* sines)
 {
 	int i = 0;
 	int j = 0;
@@ -1324,20 +1353,20 @@ double discreteFourier(int n, double x[n], double y[n], int numFreqs,
 	//This double contains the constant term of the fourier transform
 	double meanOfData = 0;
 	//matrix of phi functions evaluated at x values
-	double (*bMat)[TwiceNumFreqs];
-	initMat(n, TwiceNumFreqs, bMat);
+	double *(*bMat);
+	initMat(n, TwiceNumFreqs, &bMat);
 	//the transpose of bMat
-	double (*bMatTr)[n];
-	initMat(TwiceNumFreqs, n, bMatTr);
+	double *(*bMatTr);
+	initMat(TwiceNumFreqs, n, &bMatTr);
 	//This matrix is the n by n+1 which will have bMatTr*bMat in first n by n
 	//entries. In the last column, we have bMatTr*y. We do rref() on this matrix
 	//and the result in the last column is the least squares coordinates.
-	double (*leastSqr)[(TwiceNumFreqs)+1];
-	initMat(TwiceNumFreqs, (TwiceNumFreqs)+1, leastSqr);
+	double *(*leastSqr);
+	initMat(TwiceNumFreqs, (TwiceNumFreqs)+1, &leastSqr);
 	//This n by n matrix has the sole purpose of being the product of
 	//and bMatTr. It will be copied into leastSqr.
-	double (*tempMat)[TwiceNumFreqs];
-	initMat(TwiceNumFreqs, TwiceNumFreqs, tempMat);
+	double *(*tempMat);
+	initMat(TwiceNumFreqs, TwiceNumFreqs, &tempMat);
 	for(i = 0; i < n; i++){
 		meanOfData += y[i];
 		for(j = 0; j < numFreqs; j++){
@@ -1363,9 +1392,9 @@ double discreteFourier(int n, double x[n], double y[n], int numFreqs,
 		cosines[i] = leastSqr[2*i][TwiceNumFreqs];
 		sines[i] = leastSqr[(2*i)+1][TwiceNumFreqs];
 	}
-	free(bMat);
-	free(bMatTr);
-	free(leastSqr);
-	free(tempMat);
+	freeMat(n, &bMat);
+	freeMat(TwiceNumFreqs, &bMatTr);
+	freeMat(TwiceNumFreqs, &leastSqr);
+	freeMat(TwiceNumFreqs, &tempMat);
 	return meanOfData / n;
 }

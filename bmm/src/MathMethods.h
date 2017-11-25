@@ -46,18 +46,11 @@ void setDelta(double d);
  ******************************************************************************/
 
 /**
- * Macro: initMat()
- * just a shortcut for doing calloc() on a matrix. Calloc initializes values to
- * zero. 
+ * function: initMat()
+ * just a shortcut for doing calloc() on a matrix.
  *
- * A Word on how memory is managed with matrices and vectors:
- * A m and n matrix is a n m by n 2D array of doubles with C99 representation.
- * An m by 1 matrix is a column vector.
- * Let vec be a column vector. the vec[0] is an an array of length n, almost.
- * It is the memory location of the the column vector, and therefore may be
- * used as such. An exploitation of this fact is in the matrixMultiply function.
+ * All memory is managed a pointer-pointers. This function allocates all needed memory.
  *
- * Actual definition is in header.
  * 
  * @param m the number of rows of the matrix mat
  * 
@@ -65,10 +58,20 @@ void setDelta(double d);
  * 
  * @param mat the matrix you wish to initialize
  */
-#ifndef initMat
-#define initMat(m, n, mat) mat = calloc((m)*(n), sizeof(double))
-#endif
+void initMat(int rows, int cols, double*** matPtr);
 
+/**
+ * function: initMat()
+ * just a shortcut for freeing a matrix.
+ *
+ * All memory is managed a pointer-pointers. This function deallocates all used memory.
+ *
+ * 
+ * @param m the number of rows of the matrix mat
+ * 
+ * @param mat the matrix you wish to initialize
+ */
+void freeMat(int rows, double*** matPtr);
 /******************************************************************************
  *                                                                            *
  *                         LINEAR ALGEBRA OPERATIONS                          *
@@ -89,7 +92,7 @@ void setDelta(double d);
  * 
  * @param store the array you wish to store into
  */
-void getRow(int m, int n, double (*mat)[n], int r, double store[n]);
+void getRow(int m, int n, double** mat, int r, double** store);
 
 /** 
  * Function: getCol()
@@ -105,7 +108,7 @@ void getRow(int m, int n, double (*mat)[n], int r, double store[n]);
  * 
  * @the store the array you wish to store into
  */
-void getCol(int m, int n, double (*mat)[n], int c, double store[n]);
+void getCol(int m, int n, double *(*mat), int c, double** store);
 
 /** 
  * Function: dotProduct()
@@ -119,7 +122,7 @@ void getCol(int m, int n, double (*mat)[n], int c, double store[n]);
  * 
  * @return the dot product of v1 and v2
  */
-double dotProduct(int m, double (*v1)[1], double (*v2)[1]);
+double dotProduct(int m, double** v1, double** v2);
 
 /** 
  * Function: euclideanNorm()
@@ -130,7 +133,7 @@ double dotProduct(int m, double (*v1)[1], double (*v2)[1]);
  * 
  * @param v the vector which will be evaluated
  */
-double euclideanNorm(int m, double (*v)[1]);
+double euclideanNorm(int m, double** v);
 
 /**
  *  Function: vectorProject();
@@ -145,7 +148,7 @@ double euclideanNorm(int m, double (*v)[1]);
  *
  * @param proj the stored result of the projection computation
  */
-void vectorProject(int m, double (*v1)[1], double (*v2)[1], double (*proj)[1]);
+void vectorProject(int m, double** v1, double** v2, double** proj);
 
 /** 
  * Function: SwapRows()
@@ -161,7 +164,7 @@ void vectorProject(int m, double (*v1)[1], double (*v2)[1], double (*proj)[1]);
  * 
  * @param row2 your other row
  */
-void swapRows(int n, double (*mat)[n], int r1, int r2);
+void swapRows(int n, double *(*mat), int r1, int r2);
 
 /** 
  * Function: ScaleRow()
@@ -177,7 +180,7 @@ void swapRows(int n, double (*mat)[n], int r1, int r2);
  * @param scaleBy the scalar you wish to multiply the row by
  * 
  */
-void scaleRow(int n, double (*mat)[n], int r, double scaleBy);
+void scaleRow(int n, double *(*mat), int r, double scaleBy);
 
 /** 
  * Function: elimRow()
@@ -198,7 +201,7 @@ void scaleRow(int n, double (*mat)[n], int r, double scaleBy);
  * @param elimBy the scalar to multiply by r2
  * 
  */
-void elimRow(int n, double (*mat)[n], int r1, int r2, double elimBy);
+void elimRow(int n, double *(*mat), int r1, int r2, double elimBy);
 
 /** 
  * Function: copyMatrix()
@@ -215,7 +218,7 @@ void elimRow(int n, double (*mat)[n], int r1, int r2, double elimBy);
  * @param to the matrix to copy into
  *
  */
-void copyMatrix(int m, int n, double (*from)[n], double (*to)[n]);
+void copyMatrix(int m, int n, double *(*from), double *(*to));
 
 /**
  * Function: transpose()
@@ -243,7 +246,7 @@ void copyMatrix(int m, int n, double (*from)[n], double (*to)[n]);
  *
  * @matTranspose the matrix to store the transpose in.
  */
-void transpose(int m, int n, double (*mat)[n], double (*matTranspose)[m]);
+void transpose(int m, int n, double *(*mat), double *(*matTranspose));
 
 /** 
  * Function: ref() AKA Row Echelon Form
@@ -269,7 +272,7 @@ void transpose(int m, int n, double (*mat)[n], double (*matTranspose)[m]);
  *          if the matrix was not square, we return a zero, which is just a 
  *          placeholder value so that we dont return garbage.
  */
-double ref(int m, int n, double (*mat)[n]);
+double ref(int m, int n, double *(*mat));
 
 /** 
  * Function: rref() AKA Reduced Row Echelon Form
@@ -296,7 +299,7 @@ double ref(int m, int n, double (*mat)[n]);
  *          return zero. We assume you understand that this zero has no
  *          correlation to a determinant for the m not equal to n case.
  */
-double rref(int m, int n, double (*mat)[n]);
+double rref(int m, int n, double *(*mat));
 
 /** 
  * Function: invert()
@@ -313,7 +316,7 @@ double rref(int m, int n, double (*mat)[n]);
  * @param return det(mat) if the matrix was invertible, return 0 otherwise
  * 
  */
-double invert(int m, int n, double (*mat)[n]);
+double invert(int m, int n, double *(*mat));
 
 /** 
  * Function: matrixMultiply()
@@ -336,8 +339,8 @@ double invert(int m, int n, double (*mat)[n]);
  * @param product the result of our multiplication
  * 
  */
-void matrixMultiply(int m, int n, int p, double left[][n], double right[][p],
-        double (*product)[p]);
+void matrixMultiply(int m, int n, int p, double** left, double** right,
+        double** product);
 /**
  * Function: arrayAdd()
  * Add the corresponding elements of two 1D arrays of doubles. 
@@ -380,8 +383,8 @@ void arrayScale(int m, double *arr, double scaleBy, double *scaled);
  *
  * @param sum the sum of the left and the right
  */
-void matrixAdd(int m, int n, double (*left)[n], double (*right)[n], 
-				double (*sum)[n]);
+void matrixAdd(int m, int n, double *(*left), double *(*right), 
+				double *(*sum));
 /******************************************************************************
  *                                                                            *
  *                 NUMERICAL ANALYSIS AND CALCULUS OPERATIONS                 *
@@ -480,10 +483,10 @@ double simpleDerivative(double (*funct)(double), double a);
  *
  * @param *time an array containing the time at each point.
  */
-void adamsBash3(int n, void (*vecField)(double[n], double[n]),
-				double (*y_initial)[1], double deltaT, 
+void adamsBash3(int n, void (*vecField)(double*, double*),
+				double** y_initial, double deltaT, 
 				int iostep, long int numPnts,
-				double (*y_solve)[(numPnts - (numPnts % iostep))/iostep], 
+				double** y_solve,//[(numPnts - (numPnts % iostep))/iostep], 
 				double *time);
 
 /**
@@ -545,7 +548,7 @@ long int binomialCoef( long int n, long int r );
  *			   the polynomial. c[0] is the constant term, c[d] is the highest
  *			   power's coefficient.
  */
-void vanderInterpolate(long int n, double x[n], double y[n], double c[n]);
+void vanderInterpolate(long int n, double* x, double* y, double* c);
 
 /**
  * Function: lagrangeInterpolate()
@@ -617,8 +620,8 @@ void vanderInterpolate(long int n, double x[n], double y[n], double c[n]);
  *               power's coefficient.
  */
 void meanPolynomial(long int path, Stack *combo, long int num_points, 
-                    double x[num_points], double y[num_points], 
-                    long int num_coefs, double c[num_coefs]);
+                    double* x, double* y, 
+                    long int num_coefs, double* c);
 
 /**
  * Function: discreteLeastSquares()
@@ -658,8 +661,8 @@ void meanPolynomial(long int path, Stack *combo, long int num_points,
  *
  * @param result[m] array of coeficients to functions (*phi[m])(double)
  */
-void discreteLeastSquares(int n, double x[n], double y[n], int m,
-							double (*phi[m])(double), double result[m]);
+void discreteLeastSquares(int n, double* x, double* y, int m,
+							double (*(*phi))(double), double* result);
 
 /**
  *	Function: discreteFourier()
@@ -707,6 +710,6 @@ void discreteLeastSquares(int n, double x[n], double y[n], int m,
  *
  * @return The mean value of y[n], that is the constant term of the Fourier.
  */
-double discreteFourier(int n, double x[n], double y[n],	int numFreqs, 
-						double cosines[numFreqs], double sines[numFreqs]);
+double discreteFourier(int n, double* x, double* y,	int numFreqs, 
+						double* cosines, double* sines);
 #endif /* MATHMETHODS_H */

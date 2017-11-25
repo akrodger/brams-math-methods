@@ -104,7 +104,7 @@ gnuplot_ctrl * gnuplot_init(void)
      */
     handle = (gnuplot_ctrl*)malloc(sizeof(gnuplot_ctrl)) ;
     handle->nplots = 0 ;
-    gnuplot_setstyle(handle, "points") ;
+    gnuplot_setstyle(handle, (char*)"points") ;
     handle->ntmp = 0 ;
 
     handle->gnucmd = popen("gnuplot", "w") ;
@@ -469,17 +469,17 @@ void gnuplot_plot_once(
   if (style!=NULL) {
       gnuplot_setstyle(handle, style);
   } else {
-      gnuplot_setstyle(handle, "lines");
+      gnuplot_setstyle(handle, (char*)"lines");
   }
   if (label_x!=NULL) {
       gnuplot_set_xlabel(handle, label_x);
   } else {
-      gnuplot_set_xlabel(handle, "X");
+      gnuplot_set_xlabel(handle, (char*)"X");
   }
   if (label_y!=NULL) {
       gnuplot_set_ylabel(handle, label_y);
   } else {
-      gnuplot_set_ylabel(handle, "Y");
+      gnuplot_set_ylabel(handle, (char*)"Y");
   }
   if (y==NULL) {
       gnuplot_plot_x(handle, x, n, title);
@@ -500,8 +500,9 @@ void gnuplot_plot_slope(
 )
 {
     char const *    cmd    = (handle->nplots > 0) ? "replot" : "plot";
-    title                  = (title == NULL)      ? "(none)" : title;
-
+    if(title == NULL)
+        title = (char*)"(none)";
+        
     gnuplot_cmd(handle, "%s %.18e * x + %.18e title \"%s\" with %s",
                   cmd, a, b, title, handle->pstyle) ;
 
@@ -517,7 +518,8 @@ void gnuplot_plot_equation(
 )
 {
     char const *    cmd    = (h->nplots > 0) ? "replot" : "plot";
-    title                  = (title == NULL)      ? "(none)" : title;
+    if(title == NULL)
+        title = (char*)"(none)";
 
     gnuplot_cmd(h, "%s %s title \"%s\" with %s",
                   cmd, equation, title, h->pstyle) ;

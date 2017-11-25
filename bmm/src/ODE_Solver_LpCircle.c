@@ -87,8 +87,8 @@ int main(int argc, char **argv)
 	}
 	
 	
-	double (*y0)[1];
-	initMat(2, 1, y0);
+	double** y0;
+	initMat(2, 1, &y0);
 	
 	y0[0][0] = 1;
 	y0[1][0] = 0;
@@ -97,12 +97,12 @@ int main(int argc, char **argv)
 	
 	long int memLevel = (NUM_PNTS - (NUM_PNTS % IO_STEP))/IO_STEP;
 	
-	double *t = calloc(memLevel, sizeof(double));
-	double (*yPlot)[memLevel];
-	initMat(2, memLevel, yPlot);
+	double *t = (double*) calloc(memLevel, sizeof(double));
+	double** yPlot;
+	initMat(2, memLevel, &yPlot);
 	
-	double *cosineWave = calloc(memLevel, sizeof(double));
-	double *sineWave = calloc(memLevel, sizeof(double));
+	double *cosineWave = (double*) calloc(memLevel, sizeof(double));
+	double *sineWave = (double*) calloc(memLevel, sizeof(double));
 	
 	printf("\nBeginning Computation of ODE...\n");
 	adamsBash3(2, &LP_OSC, y0, DT, IO_STEP, NUM_PNTS, yPlot, t);
@@ -116,29 +116,29 @@ int main(int argc, char **argv)
 		//			yPlot[0][j],yPlot[1][j], t[j]);
 	}
     gnuplot_resetplot(h1) ;
-    gnuplot_setstyle(h1, "linespoints") ;
+    gnuplot_setstyle(h1, (char*)"linespoints") ;
 	gnuplot_cmd(h1, "set terminal png");
 	gnuplot_cmd(h1, "set output \"Lp_cosine.png\"");
-    gnuplot_plot_xy(h1, t, cosineWave, memLevel, "Lp Cosine");
+    gnuplot_plot_xy(h1, t, cosineWave, memLevel, (char*)"Lp Cosine");
 	sleep(2);
 	printf("\nDone with cosine. Saved to \"Lp_cosine.png\"\n");
 	gnuplot_cmd(h1, "set output \"Lp_sine.png\"");
     gnuplot_resetplot(h1) ;
-    gnuplot_plot_xy(h1, t, sineWave, memLevel, "Lp Sine");
+    gnuplot_plot_xy(h1, t, sineWave, memLevel, (char*) "Lp Sine");
 	sleep(2);
 	printf("\nDone with sine. Saved to \"Lp_sine.png\"\n");
 	
 	
     gnuplot_resetplot(h1) ;
 	gnuplot_cmd(h1, "set output \"Lp_Circ.png\"");
-    gnuplot_plot_xy(h1, cosineWave, sineWave, memLevel, "Lp Circle");
+    gnuplot_plot_xy(h1, cosineWave, sineWave, memLevel, (char*)"Lp Circle");
 	
 	
 	gnuplot_close(h1) ;
 	printf("\nDone with circle. Saved to \"Lp_Circ.png\"\n\n");
 	
-	free(y0[0]);
-	free(yPlot[0]);
+	freeMat(2, &y0);
+	freeMat(2, &yPlot);
 	free(t);
 	free(cosineWave);
 	free(sineWave);
