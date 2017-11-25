@@ -15,7 +15,6 @@
 #include "MathMethods.h"
 #include <stdlib.h>
 #include <math.h>
-//#include "Stack.h"
 
 /******************************************************************************
  *                                                                            *

@@ -6,11 +6,12 @@ README by Abram Rodgers
 | Contents: |
 -------------
 - Intro: Origin of this Library
-- Section 0: Library Usage
-- Section 1: Linear Algebra
-- Section 2: Calculus and Numerical Methods
+- Section 1: Library Usage
+- Section 2: Linear Algebra
+- Section 3: Calculus and Numerical Methods
 - Section 4: Integer Stack Implementation
-- Section 5: Special Thanks
+- Section 5: How to use this library with your code
+- Section 6: Special Thanks
 
 -----------------
 | Introduction: |
@@ -25,7 +26,7 @@ If you wish to download and use my code in particular, I would be curious to kno
 
 
 ----------------------------
-| Section 0: Library Usage |
+| Section 1: Library Usage |
 ----------------------------
 Program located in folder bmm.
 Library Dependencies: 
@@ -77,7 +78,7 @@ Example of a valid file:
 - OdeSovler : This program uses the Adams-Bashforth ODE solver to compute a trajector of an LpCircle. Plotting is done in gnuplot using freely available code by N. Devillard. (Devillard's code included in bmm/src folder.)
 
 -----------------------------
-| Section 1: Linear Algebra |
+| Section 2: Linear Algebra |
 -----------------------------
 This library contains several algorithms from an introductory Linear Algebra course.
 
@@ -98,7 +99,7 @@ Planned Functions:
 Currently, the design problem with QR is how to represent complex eigenvalues. I'm considering forking this library to C++ and using a complex numbers class. Considering that using complex numbers would minimally double the number of floating point operations per function. I'm not sure if this is a good idea. I may work on it just for the mathematical exercise though.
 
 ---------------------------------------------
-| Section 2: Calculus and Numerical Methods |
+| Section 3: Calculus and Numerical Methods |
 ---------------------------------------------
 There are several functions here:
 - Two types of finite integral with small delta approximation
@@ -121,12 +122,20 @@ We then compute the projection matrix of the x data points with respect to this 
 If you know what a Fourier Series is, then consider Least Squares to be generalization of Fourier. Instead of summing up a number of trig functions, we can sum up any set of linearly independent functions. However, the Fourier form of certain functions has the gaurantee of convergence (meaning error goes to zero). Least Squares only finds the smallest possible error, which may be nonzero.
 
 -------------------------------------------
-| Section 3: Integer Stack Implementation |
+| Section 4: Integer Stack Implementation |
 -------------------------------------------
 This is an implementation of a stack data structure written by me. The reason for this is simply because having a stack to run computations with is useful. Currently, it is only used in the Numerical Methods section. MathMethods depends on Stack, so make sure to have them in the same directory.
 
+-----------------------------------------------------
+| Section 4: How to use this library with your code |
+-----------------------------------------------------
+- 1) Navigate to bmm/src
+- 2) Copy the files MathMethods.c, MathMethods.h, Stack.c, and Stack.h
+- 3) Place them where the dependencies for your project are stored (must be all in same folder)
+- 4) Include "MathMethods.h". This will include both the Math-Methods and Stack files.
+
 -----------------------------
-| Section 4: Special Thanks |
+| Section 6: Special Thanks |
 -----------------------------
 - James Iwamasa
 
