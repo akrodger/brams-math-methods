@@ -673,8 +673,8 @@ void matrixAdd(int m, int n, double** left, double** right,
 				double** sum)
 {
 	int j;
-	for(j = 0; j < n; j++){
-		arrayAdd(m, left[j], right[j], sum[j]);
+	for(j = 0; j < m; j++){
+		arrayAdd(n, left[j], right[j], sum[j]);
 	}
 }
 
