@@ -15,7 +15,6 @@
 #include "MathMethods.h"
 #include <stdlib.h>
 #include <math.h>
-//#include "Stack.h"
 
 /******************************************************************************
  *                                                                            *
@@ -373,8 +372,8 @@ double ref(int m, int n, double** mat)
 	//this is the top row of the jth column. otherwise known as the ith row.
 	int j = 0;
 	//this is going to be the first nonzero column, starting from the left
-	//when this flag goes up, our matrix did 
-	int noPivotColFlag = 0;
+	//Index of maximum value in a column, used for pivoting.
+	int indexOfMax = 0;
 	//this next int flag is for if we find a row of zero (i.e. not invertible)
 	double det = 1;
 	//check if our matrix is square.
@@ -390,27 +389,23 @@ double ref(int m, int n, double** mat)
 		 * number and returns the real number's magnitude. "fabs" is short for
 		 * "floating point absolute value"
 		 */
-		if (fabs(mat[i][j]) < DELTA) {//if matrix's ij value is near zero
-			for (x = i; x < m; x++) {//iterate through rows (vertically)
-				if (fabs(mat[x][j]) > DELTA) {
-					//if we find a nonzero entry below, swap them
-					swapRows(n, mat, i, x);
-					det *= -1; //det -> negative det after a swap
-					break;
-				} else if (x == m - 1) {
-					//if we reach the bottom and they were all zero
-					//then the column we were looking at is all zeros
-					//below row i. We turn on a variable to signify this
-					noPivotColFlag = 1;
-				}
+		/* We will now do partial pivoting in the column. First, find the
+		 * largest (in magnitude) entry in this column.
+		 */
+		indexOfMax = i;
+		for(x = i; x < m; x++){//Here we search for index of the maximum
+			if(fabs(mat[x][j]) > fabs(mat[indexOfMax][j])){
+				indexOfMax = x;
 			}
 		}
-		//this checks if we just iterated through a column 
-		//without a pivot position
-		if (noPivotColFlag == 1) {
-			noPivotColFlag = 0; //if we did, turn the flag off
-			j++; //go to the next column
+		if(indexOfMax != i){//This checks if the current row is max index.
+			swapRows(n, mat, i, indexOfMax);
+			det *= -1; //det -> negative det after a swap
+		}
+		if (fabs(mat[i][j]) < DELTA) {//if matrix's ij value is near zero
+			//then there is no pivot in this column
 			det = 0; //we now know the determinant is zero
+			j++; //go to the next column
 			continue;
 		}
 		//we scale our current row next. adjust the determinant accordingly
