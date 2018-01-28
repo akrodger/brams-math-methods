@@ -469,7 +469,7 @@ double rref(int m, int n, double** mat)
 	while (i >= 0) {
 		//first we find the first pivot position, from the bottom up
 		for (x = i; x >= 0; x--) {
-			for (y = 0; y < n; y++) {
+			for (y = i; y < n; y++) {
 				if (mat[x][y] > DELTA) {
 					i = x;
 					j = y;
@@ -808,7 +808,7 @@ double simpleDerivative(double (*funct)(double), double a)
  *					 is because we don't need to solve for initial point. Also,
  *					 note that in the case of (iostep == numPnts) being true, we
  *					 actually simply return the last point in the iteration. So 
- *					 if Itell the solver to compute 5000 points and saved to
+ *					 if I tell the solver to compute 5000 points and saved to
  *					 y_solve once every 5000 poinths, then y_solve will be an n 
  *					 by 1 column vector containing the last point computed.
  *
