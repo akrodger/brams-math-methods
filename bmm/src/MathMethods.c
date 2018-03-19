@@ -376,6 +376,8 @@ double ref(int m, int n, double** mat)
 	int indexOfMax = 0;
 	//this next int flag is for if we find a row of zero (i.e. not invertible)
 	double det = 1;
+	//this double called temp is used for row swapping.
+	double temp = 0;
 	//check if our matrix is square.
 	if (m != n) {
 		det = 0;
@@ -399,7 +401,11 @@ double ref(int m, int n, double** mat)
 			}
 		}
 		if(indexOfMax != i){//This checks if the current row is max index.
-			swapRows(n, mat, i, indexOfMax);
+			for (y = j; y < n; y++) {
+				temp = mat[i][y];
+				mat[i][y] = mat[indexOfMax][y];
+				mat[indexOfMax][y] = temp;
+			}
 			det *= -1; //det -> negative det after a swap
 		}
 		if (fabs(mat[i][j]) < DELTA) {//if matrix's ij value is near zero
@@ -410,17 +416,21 @@ double ref(int m, int n, double** mat)
 		}
 		//we scale our current row next. adjust the determinant accordingly
 		det *= mat[i][j];
-		scaleRow(n, mat, i, 1 / mat[i][j]);
+		for (y = j+1; y < n; y++) {
+			mat[i][y] /= mat[i][j];
+		}
+		mat[i][j] = 1;
 		//we now do an elimination operation to each of the rows below.
 		//the upper limits of these loops
 		for (x = i + 1; x < m; x++) {
-			for (y = n - 1; y >= j; y--) {
+			for (y = n - 1; y > j; y--) {
 				//due to order of computation, this loop is computed backwards.
 				//We do not use the elimRow() function because the lower limit
 				//of the loop is j not necessarily zero.
 				//this saves a bit of computation time
 				mat[x][y] -= mat[i][y] * mat[x][j];
 			}
+			mat[x][j] = 0;
 		}
 		j++;
 		i++; //all good, iterate forward!
@@ -470,7 +480,7 @@ double rref(int m, int n, double** mat)
 		//first we find the first pivot position, from the bottom up
 		for (x = i; x >= 0; x--) {
 			for (y = i; y < n; y++) {
-				if (mat[x][y] > DELTA) {
+				if (fabs(mat[x][y] - 1) < DELTA) {
 					i = x;
 					j = y;
 					foundPivotFlag = 1;
@@ -478,19 +488,20 @@ double rref(int m, int n, double** mat)
 				}
 			}
 			if (foundPivotFlag == 1) {
-				foundPivotFlag = 0;
 				break;
 			}
 		}
 		//[i][j] is the location of the bottom most pivot position now
 		//Now we have to do an elimination operation, going up the matrix
-		for (x = i - 1; x >= 0; x--) {
-			for (y = n - 1; y >= j; y--) {
-				//due to order of computation, this loop is computer backwards.
-				//this is a rather advanced C topic. Think about it for a bit
-				//and perhaps it makes a bit more sense.
-				mat[x][y] -= mat[i][y] * mat[x][j];
+		if(foundPivotFlag == 1){
+			for (x = i - 1; x >= 0; x--) {
+				for (y = n - 1; y >= j; y--) {
+					//Due to upper triangular form, 
+					//this loop is computed backwards.
+					mat[x][y] -= mat[i][y] * mat[x][j];
+				}
 			}
+			foundPivotFlag = 0;
 		}
 		i--;
 	}
