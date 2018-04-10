@@ -44,7 +44,7 @@ int main(void) {
 	irqInit();
 	irqEnable(IRQ_VBLANK);
     irqSet(IRQ_VBLANK, VBLANK_ISR_FUNCTION);
-	
+
 	//sineWave: the function to be approximated
 	double *sineWave = calloc(SCREEN_WIDTH, sizeof(double));
 	//xCoords: the x coordinates of the graphs.
@@ -62,7 +62,7 @@ int main(void) {
 	double waveValue = 0;
 	double errorValue = 0;
 	double meanOfData = 0;
-	consoleDemoInit();	
+	consoleDemoInit();
 	iprintf("\x1b[6;1HThis demo generates");
 	iprintf("\x1b[7;1Hnoisy waveforms (red),");
 	iprintf("\x1b[8;1Hthen computes their");
@@ -70,11 +70,11 @@ int main(void) {
 	iprintf("\x1b[12;4HPress Any Key.");
 	while(keysDown()==0){
 		randCounter++;
-	}	
+	}
 	srand(randCounter);
 	iprintf("\x1b[14;8HWorking...");
 	while(1){
-		
+
 		//generate amplitudes -1 to 1
 		for(i = 0; i < NUM_FREQS*2; i++){
 			amps[i] = ((double)rand()/RAND_MAX*2.0-1.0);
@@ -93,7 +93,7 @@ int main(void) {
 			//make some NOISE! WOOOOO
 			errorValue = ((double)rand()/RAND_MAX*0.5);
 			sineWave[i] += errorValue*((double)rand()/RAND_MAX*2.0-1.0);
-			
+
 			sineWave[i] += meanOfData;
 
 			xCoords[i] = ((double) i)/(SCREEN_WIDTH);
@@ -102,20 +102,20 @@ int main(void) {
 						xCoords,
 						sineWave,
 						NUM_FREQS,
-						fourierCos, 
+						fourierCos,
 						fourierSin);
 		//set display to background drawing mode.
 		if(REG_DISPCNT != (BG2_ON | MODE_3)){
 			REG_DISPCNT = BG2_ON | MODE_3;
 		}
-		
+
 		for(i = 0; i < SCREEN_WIDTH; i++){
 			for(j = 0; j < SCREEN_HEIGHT; j++){
-			LCD_WRITE(i, j, 0, 0, 0);					
+			LCD_WRITE(i, j, 0, 0, 0);
 			}
-		}	
+		}
 		for(i = 0; i < SCREEN_WIDTH; i++){
-			LCD_WRITE(i, (int) (((-SCREEN_HEIGHT/8)*sineWave[i]) + 
+			LCD_WRITE(i, (int) (((-SCREEN_HEIGHT/8)*sineWave[i]) +
 								(SCREEN_HEIGHT/2)), 255, 0, 0);
 			waveValue = 0;
 			for(j = 0; j < NUM_FREQS; j++){
@@ -125,7 +125,7 @@ int main(void) {
 			}
 			waveValue += meanOfData;
 			LCD_WRITE(i,
-				(int) (-(SCREEN_HEIGHT/8)*(waveValue) + SCREEN_HEIGHT/2), 
+				(int) (-(SCREEN_HEIGHT/8)*(waveValue) + SCREEN_HEIGHT/2),
 						0, 0, 255);
 		}
 	}
